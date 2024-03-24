@@ -1,4 +1,4 @@
-package com.example.ma02mibu;
+package com.example.ma02mibu.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,9 +6,8 @@ import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.ma02mibu.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
