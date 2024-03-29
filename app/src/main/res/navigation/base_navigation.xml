@@ -24,4 +24,17 @@
         android:label="Services"
         tools:layout="@layout/products_page_fragment"
         />
+    <fragment
+        android:id="@+id/nav_event_creation"
+        android:name="com.example.ma02mibu.fragments.events.EventFormFragment"
+        android:label="Event Creation"
+        tools:layout="@layout/fragment_event_form"
+        />
+    <fragment
+        android:id="@+id/nav_explore_and_filter"
+        android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
+        android:label="Explore and Filter"
+        tools:layout="@layout/fragment_event_form"
+        />
+
 </navigation>
