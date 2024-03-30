@@ -39,7 +39,7 @@ public class EmployeePageFragment extends Fragment {
         employeesFake.add(employee2);
         employeesFake.add(employee3);
         FragmentTransition.to(EmployeeListFragment.newInstance(employeesFake), getActivity(),
-                false, R.id.scroll_employees_list, "employeesPage");
+                true, R.id.scroll_employees_list, "employeesPage");
 
         return root;
     }

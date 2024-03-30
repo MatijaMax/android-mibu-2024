@@ -6,59 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.employees.EmployeePageFragment">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/search_fields"
-            android:orientation="horizontal">
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search_first_name"
-                    app:queryHint="First name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/Base.Theme.MA02MIBU"
-                    android:layout_weight="1"
-                    />
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search_last_name"
-                    app:queryHint="Last name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/Base.Theme.MA02MIBU"
-                    android:layout_weight="1"
-                    />
-                <androidx.appcompat.widget.SearchView
-                    android:layout_weight="1"
-                    android:id="@+id/search_email"
-                    app:queryHint="Email"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/Base.Theme.MA02MIBU"
-                    />
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnFilters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:text="Search"
-            tools:ignore="TextContrastCheck"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_fields"
-            />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="5dp"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:id="@+id/scroll_employees_list"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnFilters"
             />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("productPage", 0);
                 return;
             }
+            if ("newEmployeePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
         }
         super.onBackPressed();
     }

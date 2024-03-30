@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.fragments.products.NewProduct;
 
 /**
  * A simple {@link Fragment} subclass.
