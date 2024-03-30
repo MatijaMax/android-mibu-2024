@@ -28,4 +28,16 @@
         app:popUpTo="@+id/nav_home"
         app:popUpToInclusive="true"
         />
+    <fragment
+        android:id="@+id/nav_employees"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeePageFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employee_page"
+        />
+    <fragment
+        android:id="@+id/nav_employee_registration"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employee_registration"
+        />
 </navigation>
