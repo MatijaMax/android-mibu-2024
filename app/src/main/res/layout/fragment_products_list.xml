@@ -7,6 +7,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="0.7"
+            android:text="Search products" />
+
+        <Button
+            android:id="@+id/new_product_button"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="+ New" />
+    </LinearLayout>
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
