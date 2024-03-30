@@ -53,7 +53,7 @@ public class EmployeeListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mEmployees = getArguments().getParcelableArrayList(ARG_EMPLOYEES);
-            adapter = new EmployeeListAdapter(getActivity(), mEmployees);
+            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
             setListAdapter(adapter);
         }
     }
