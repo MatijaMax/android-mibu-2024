@@ -43,7 +43,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Category category = getItem(position);
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.category_card,
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.category_managment_card,
                     parent, false);
         }
         TextView categoryName = convertView.findViewById(R.id.categoryName);
