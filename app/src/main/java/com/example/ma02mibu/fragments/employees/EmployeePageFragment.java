@@ -30,16 +30,19 @@ public class EmployeePageFragment extends Fragment {
         binding = FragmentEmployeePageBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Employee employee1 =
-                new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", 63124, R.drawable.product1);
+                new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar);
         Employee employee2 =
-                new Employee(2L, "Marko", "Ilic", "m12@gmail.com", "123", "Kornelija Stankovica 18, Novi Sad", 54848, R.drawable.employee_avatar);
+                new Employee(2L, "Marko", "Ilic", "m12@gmail.com", "123", "Kornelija Stankovica 18, Novi Sad", "054848", R.drawable.employee_avatar);
         Employee employee3 =
-                new Employee(1L, "Ivan", "Milic", "ivo@gmail.com", "123", "Augustina Makarica 6, Novi Sad", 838732, R.drawable.employee_avatar);
+                new Employee(3L, "Ivan", "Milic", "ivo@gmail.com", "123", "Augustina Makarica 6, Novi Sad", "0838732", R.drawable.product1);
+        Employee employee4 =
+                new Employee(4L, "Petar", "Peric", "pera@gmail.com", "123", "Ilariona Ruvarca 16, Novi Sad", "03245544", R.drawable.employee_avatar);
         employeesFake.add(employee1);
         employeesFake.add(employee2);
         employeesFake.add(employee3);
+        employeesFake.add(employee4);
         FragmentTransition.to(EmployeeListFragment.newInstance(employeesFake), getActivity(),
-                false, R.id.scroll_employees_list);
+                true, R.id.scroll_employees_list, "employeesPage");
 
         return root;
     }

@@ -9,10 +9,14 @@ import androidx.fragment.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.ma02mibu.FragmentTransition;
+import com.example.ma02mibu.R;
 import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.databinding.FragmentEmployeeCardBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
+import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.model.Employee;
 
 import java.util.ArrayList;
@@ -34,6 +38,13 @@ public class EmployeeListFragment extends ListFragment {
 
         binding = FragmentEmployeeListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Button newEmployeeButton = binding.btnAddNewEmployee;
+        newEmployeeButton.setOnClickListener(v -> {
+            FragmentTransition.to(EmployeeRegistrationFragment.newInstance("",""), getActivity(),
+                    true, R.id.scroll_employees_list, "newEmployeePage");
+        });
+
         return root;
     }
 
@@ -42,7 +53,7 @@ public class EmployeeListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mEmployees = getArguments().getParcelableArrayList(ARG_EMPLOYEES);
-            adapter = new EmployeeListAdapter(getActivity(), mEmployees);
+            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
             setListAdapter(adapter);
         }
     }

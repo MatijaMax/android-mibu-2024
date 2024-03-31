@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ma02mibu.R;
-import com.example.ma02mibu.fragments.products.NewProduct;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EmployeeRegistrationFragment#newInstance} factory method to
+ * Use the {@link EmployeeWorkCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmployeeRegistrationFragment extends Fragment {
+public class EmployeeWorkCalendarFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +26,7 @@ public class EmployeeRegistrationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EmployeeRegistrationFragment() {
+    public EmployeeWorkCalendarFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +36,11 @@ public class EmployeeRegistrationFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EmployeeRegistrationFragment.
+     * @return A new instance of fragment EmployeeWorkCalendarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EmployeeRegistrationFragment newInstance(String param1, String param2) {
-        EmployeeRegistrationFragment fragment = new EmployeeRegistrationFragment();
+    public static EmployeeWorkCalendarFragment newInstance(String param1, String param2) {
+        EmployeeWorkCalendarFragment fragment = new EmployeeWorkCalendarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -62,6 +61,6 @@ public class EmployeeRegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_employee_registration, container, false);
+        return inflater.inflate(R.layout.fragment_employee_work_calendar, container, false);
     }
 }
