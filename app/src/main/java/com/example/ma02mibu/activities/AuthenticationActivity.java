@@ -25,7 +25,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         btnSignUpPUP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(SignUpPUPFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer);
+                FragmentTransition.to(SignUpPUPFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer, "");
             }
         });
 
@@ -33,7 +33,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         btnSignUpOD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(SignUpODFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer);
+                FragmentTransition.to(SignUpODFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer, "");
             }
         });
 
@@ -41,7 +41,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(LoginFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer);
+                FragmentTransition.to(LoginFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer, "");
             }
         });
     }

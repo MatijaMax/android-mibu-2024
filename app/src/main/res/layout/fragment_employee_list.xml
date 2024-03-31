@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btnAddNewEmployee"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Add new employee"
+        tools:ignore="TextContrastCheck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnAddNewEmployee"
+        android:id="@+id/search_fields"
+        android:orientation="horizontal"
+        >
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_first_name"
+            app:queryHint="First name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/Base.Theme.MA02MIBU"
+            android:layout_weight="1"
+            />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_last_name"
+            app:queryHint="Last name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/Base.Theme.MA02MIBU"
+            android:layout_weight="1"
+            />
+        <androidx.appcompat.widget.SearchView
+            android:layout_weight="1"
+            android:id="@+id/search_email"
+            app:queryHint="Email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/Base.Theme.MA02MIBU"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search employees"
+        tools:ignore="TextContrastCheck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_fields"
+        />
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/fragment_employee_card"
+        app:layout_constraintTop_toBottomOf="@id/btnFilters"/>
+</LinearLayout>

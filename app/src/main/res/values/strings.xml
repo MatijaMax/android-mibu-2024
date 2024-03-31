@@ -32,4 +32,12 @@
     <!-- General authentication strings -->
     <string name="next" translatable="false">Next</string>
 
+
+    <string name="search_products">Search products</string>
+    <string name="product_name">Product name: </string>
+    <string name="description">Description:  </string>
+    <string name="min_price">Min price:  </string>
+    <string name="max_price">Max price:  </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

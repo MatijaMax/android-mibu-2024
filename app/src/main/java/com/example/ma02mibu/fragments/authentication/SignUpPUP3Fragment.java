@@ -70,7 +70,7 @@ public class SignUpPUP3Fragment extends Fragment {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(SignUpPUP4Fragment.newInstance(categories, eventTypes), getActivity(), true, R.id.authenticationFragmentContainer);
+                FragmentTransition.to(SignUpPUP4Fragment.newInstance(categories, eventTypes), getActivity(), true, R.id.authenticationFragmentContainer, "signUpPUP");
             }
         });
 
