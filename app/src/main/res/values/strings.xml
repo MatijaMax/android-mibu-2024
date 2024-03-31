@@ -3,4 +3,33 @@
     <string name="Products">Products</string>
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
+
+    <!-- Authentication strings -->
+    <string name="login" translatable="false">Login</string>
+    <string name="signUpOD" translatable="false">Sign up OD</string>
+    <string name="signUpPUP" translatable="false">Sign up PUP</string>
+    <string name="selectImage" translatable="false">Select Image</string>
+
+    <!-- Personal info authentication  -->
+    <string name="personalInfoInput" translatable="false">Enter your personal information</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="repeatPassword" translatable="false">Repeat password</string>
+    <string name="name" translatable="false">Name</string>
+    <string name="surname" translatable="false">Surname</string>
+    <string name="phoneNumber" translatable="false">Phone number</string>
+    <string name="addressOfResidence" translatable="false">Address of residence</string>
+
+    <!-- Company info authentication -->
+    <string name="companyInfoInput" translatable="false">Enter company information</string>
+    <string name="companyName" translatable="false">Company name</string>
+    <string name="companyEmail" translatable="false">Company email</string>
+    <string name="companyAddress" translatable="false">Company address</string>
+    <string name="companyPhoneNumber" translatable="false">Company phone number</string>
+    <string name="companyDescription" translatable="false">Company description</string>
+    <string name="companyWorkingHours" translatable="false">Company working hours</string>
+
+    <!-- General authentication strings -->
+    <string name="next" translatable="false">Next</string>
+
 </resources>

@@ -5,10 +5,78 @@
     android:layout_height="match_parent"
     tools:context=".fragments.authentication.SignUpODFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:text="@string/personalInfoInput"
+            android:textSize="30sp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:hint="@string/password"
+            android:inputType="textPassword"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:hint="@string/repeatPassword"
+            android:inputType="textPassword"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:hint="@string/name"
+                android:inputType="textPersonName"/>
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+
+                android:hint="@string/surname"
+                android:inputType="textPersonName"/>
+        </LinearLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:hint="@string/phoneNumber"
+            android:inputType="phone"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:hint="@string/addressOfResidence"
+            android:inputType="textPostalAddress"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:text="@string/selectImage"
+            android:id="@+id/btnSelectImage"
+            android:layout_margin="10dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:text="@string/signUpOD"
+            android:id="@+id/btnSignUpOD"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
 
 </FrameLayout>
