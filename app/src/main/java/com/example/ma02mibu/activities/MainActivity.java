@@ -102,15 +102,27 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("productPage", 0);
                 return;
             }
+            if ("ServicesDetailsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPage", 0);
+                return;
+            }
+            if ("newServicePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPage", 0);
+                return;
+            }
         }
         super.onBackPressed();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.new_product_page);
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("newProductPage");
+        Fragment fragment2 = getSupportFragmentManager().findFragmentByTag("newServicePage");
+        if (fragment1 != null && fragment1.isVisible()) {
+            fragment1.onActivityResult(requestCode, resultCode, data);
+        }
+        else if(fragment2 != null && fragment2.isVisible()){
+            fragment2.onActivityResult(requestCode, resultCode, data);
         }
     }
 

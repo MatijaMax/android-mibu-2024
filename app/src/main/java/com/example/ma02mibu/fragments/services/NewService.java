@@ -1,4 +1,4 @@
-package com.example.ma02mibu.fragments.products;
+package com.example.ma02mibu.fragments.services;
 
 import android.content.ClipData;
 import android.content.Intent;
@@ -9,38 +9,62 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ma02mibu.FragmentTransition;
-import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.NewProductBinding;
-import com.example.ma02mibu.databinding.ServicesPageFragmentBinding;
-import com.example.ma02mibu.fragments.HomeFragment;
-import com.example.ma02mibu.fragments.services.ServicesListFragment;
+import com.example.ma02mibu.databinding.NewServiceBinding;
 
-public class NewProduct extends Fragment {
-    NewProductBinding binding;
-    private LinearLayout imageContainer;
+import java.util.ArrayList;
+
+
+public class NewService extends Fragment {
+
+    int currentPage;
     private static final int PICK_IMAGES_REQUEST = 1;
-    public static NewProduct newInstance() {
-        return new NewProduct();
+    private LinearLayout imageContainer;
+    LinearLayout part1;
+    LinearLayout part2;
+    LinearLayout part3;
+    ArrayList<String> employees;
+    NewServiceBinding binding;
+    public static NewService newInstance() {
+        return new NewService();
     }
+    //tutorijal za rad sa listview-om i biranje iz listview-a: https://www.youtube.com/watch?v=l3BCsSUZoNE
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = NewProductBinding.inflate(inflater, container, false);
+        currentPage = 0;
+        binding = NewServiceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        Button galleryButton = binding.addImageButton;
-        galleryButton.setOnClickListener(v -> openGallery());
-        imageContainer = binding.imageContainer;
+        part1 = binding.layoutPart1;
+        part2 = binding.layoutPart2;
+        part3 = binding.layoutPart3;
+        imageContainer = binding.imageContainerService;
         ImageButton removeButton = binding.removeImagesButton;
         removeButton.setOnClickListener(v -> imageContainer.removeAllViews());
+        ListView listView = binding.employeesListView;
+        employees = getEmployees();
+        ArrayAdapter<String> employeesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, employees);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setAdapter(employeesAdapter);
+        Button switchPageButton = binding.switchPageButton;
+        Button galleryButton = binding.addImageButtonService;
+        galleryButton.setOnClickListener(v -> openGallery());
+        switchPageButton.setOnClickListener(v -> switchFormPages());
         return root;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -65,10 +89,6 @@ public class NewProduct extends Fragment {
             }
         }
     }
-        @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     private void addImageToContainer(Uri imageUri) {
         ImageView imageView = new ImageView(getActivity());
@@ -92,6 +112,34 @@ public class NewProduct extends Fragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(imageView);
         imageContainer.addView(layout);
+    }
+
+    private void switchFormPages(){
+        if(currentPage == 0) {
+            part1.setVisibility(View.GONE);
+            part2.setVisibility(View.VISIBLE);
+            part3.setVisibility(View.GONE);
+            currentPage = 1;
+        }
+        else if(currentPage == 1){
+            part1.setVisibility(View.GONE);
+            part2.setVisibility(View.GONE);
+            part3.setVisibility(View.VISIBLE);
+            currentPage = 2;
+        }
+        else{
+            part1.setVisibility(View.VISIBLE);
+            part2.setVisibility(View.GONE);
+            part3.setVisibility(View.GONE);
+            currentPage = 0;
+        }
+    }
+    private ArrayList<String> getEmployees(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("rope");
+        list.add("pera");
+        list.add("jova");
+        return list;
     }
 
     @Override
