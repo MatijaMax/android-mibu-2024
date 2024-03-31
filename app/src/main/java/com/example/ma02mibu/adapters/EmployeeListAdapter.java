@@ -19,6 +19,7 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.fragments.employees.EmployeeDetailsFragment;
 import com.example.ma02mibu.fragments.employees.EmployeeListFragment;
 import com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment;
+import com.example.ma02mibu.fragments.employees.EmployeeWorkCalendarFragment;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Product;
 
@@ -63,6 +64,8 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         TextView employeeEmail = convertView.findViewById(R.id.employee_email);
         Button detailsButton = convertView.findViewById(R.id.button_employee_details);
         handleDetailsButtonClick(detailsButton, imageView, employee);
+        Button workCalendarButton = convertView.findViewById(R.id.button_employee_calendar);
+        handleWorkCalendarButtonClick(workCalendarButton, imageView, employee);
         if(employee != null){
             imageView.setImageResource(employee.getImage());
             employeeFirstName.setText(employee.getFirstName());
@@ -76,8 +79,18 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(EmployeeDetailsFragment.newInstance(employee.getFirstName(), ""), currFragActivity,
+                FragmentTransition.to(EmployeeDetailsFragment.newInstance(employee, ""), currFragActivity,
                         true, R.id.scroll_employees_list, "EmployeeDetailsPage");
+            }
+        });
+    }
+
+    private void handleWorkCalendarButtonClick(Button detailsButton, ImageView imageView, Employee employee){
+        detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(EmployeeWorkCalendarFragment.newInstance("", ""), currFragActivity,
+                        true, R.id.scroll_employees_list, "EmployeeWorkCalendarPage");
             }
         });
     }

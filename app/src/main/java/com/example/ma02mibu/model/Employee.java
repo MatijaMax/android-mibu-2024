@@ -12,10 +12,10 @@ public class Employee implements Parcelable {
     private String email;
     private String password;
     private String address;
-    private int phoneNumber;
+    private String phoneNumber;
     private int image;
 
-    public Employee(Long id, String firstName, String lastName, String email, String password, String address, int phoneNumber, int image) {
+    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,7 +37,7 @@ public class Employee implements Parcelable {
         email = in.readString();
         password = in.readString();
         address = in.readString();
-        phoneNumber = in.readInt();
+        phoneNumber = in.readString();
         image = in.readInt();
     }
 
@@ -101,11 +101,11 @@ public class Employee implements Parcelable {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

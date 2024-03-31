@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.model.Employee;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,26 +26,16 @@ public class EmployeeDetailsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private Employee mEmployee;
     private String mParam2;
 
     public EmployeeDetailsFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EmployeeDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EmployeeDetailsFragment newInstance(String param1, String param2) {
+    public static EmployeeDetailsFragment newInstance(Employee param1, String param2) {
         EmployeeDetailsFragment fragment = new EmployeeDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +45,7 @@ public class EmployeeDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mEmployee = getArguments().getParcelable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -63,8 +55,20 @@ public class EmployeeDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_employee_details, container, false);
-        TextView title = view.findViewById(R.id.employee_details_name);
-        title.setText(mParam1);
+        TextView textFName = view.findViewById(R.id.firstNameTextView);
+        textFName.setText(mEmployee.getFirstName());
+        TextView textLName = view.findViewById(R.id.lastNameTextView);
+        textLName.setText(mEmployee.getLastName());
+        TextView textEmail = view.findViewById(R.id.emailText);
+        textEmail.setText(mEmployee.getEmail());
+//        TextView textPass = view.findViewById(R.id.passwordText);
+//        textPass.setText(mEmployee.getPassword());
+        TextView texAddress = view.findViewById(R.id.addressText);
+        texAddress.setText(mEmployee.getAddress());
+        TextView textPhone = view.findViewById(R.id.phoneNumberText);
+        textPhone.setText(mEmployee.getPhoneNumber());
+        ImageView imageView = view.findViewById(R.id.employeeImageView);
+        imageView.setImageResource(mEmployee.getImage());
         return view;
     }
 }
