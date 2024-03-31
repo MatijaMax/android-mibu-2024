@@ -28,5 +28,10 @@
             android:title="employees registration"
             android:icon="@drawable/ic_product"
             android:orderInCategory="400"/>
+
+        <item android:id="@+id/nav_admin_category_managment"
+            android:title="category managment"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="500"/>
     </group>
 </menu>
