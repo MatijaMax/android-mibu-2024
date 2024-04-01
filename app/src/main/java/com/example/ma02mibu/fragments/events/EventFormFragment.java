@@ -5,13 +5,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.databinding.EventListFragmentBinding;
+import com.example.ma02mibu.databinding.FragmentEventFormBinding;
+import com.example.ma02mibu.databinding.FragmentProductsFilterBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 /**
@@ -29,6 +38,8 @@ public class EventFormFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FragmentEventFormBinding binding;
 
     public EventFormFragment() {
         // Required empty public constructor
@@ -67,8 +78,22 @@ public class EventFormFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_form, container, false);
+        binding = FragmentEventFormBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        Button suggestionButton = binding.suggestion;
+        addToBackStack(getActivity(),"createEventPage");
+        suggestionButton.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.FullScreenBottomSheetDialog);
+            View dialogView = getLayoutInflater().inflate(R.layout.bottom_sheet_suggestion, null);
+            bottomSheetDialog.setContentView(dialogView);
+            bottomSheetDialog.show();
+        });
+        Button budgetButton = binding.budget;
+        budgetButton.setOnClickListener(v -> {
+            FragmentTransition.to(EventBudgetFragment.newInstance("",""), getActivity(),
+                    true, R.id.frameLayout2, "addBudgetPage");
+        });
+        return root;
     }
 
     @Override
@@ -80,5 +105,15 @@ public class EventFormFragment extends Fragment {
                 R.array.event_types_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEventType.setAdapter(adapter);
+    }
+
+    public void addToBackStack(FragmentActivity activity, String backStackTag) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        // Add the existing fragment's view to the back stack
+        transaction.addToBackStack(backStackTag);
+
+        transaction.commit();
     }
 }

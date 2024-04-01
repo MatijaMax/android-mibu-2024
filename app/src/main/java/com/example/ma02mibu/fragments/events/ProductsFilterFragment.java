@@ -73,7 +73,7 @@ public class ProductsFilterFragment extends ListFragment {
         Button eventButton = binding.btnFav;
         eventButton.setOnClickListener(v -> {
             FragmentTransition.to(EventListFragment.newInstance(eventsFake), getActivity(),
-                    true, R.id.scroll_products_list, "filterAllPage");
+                    true, R.id.scroll_products_list, "myEventsPage");
         });
 
 

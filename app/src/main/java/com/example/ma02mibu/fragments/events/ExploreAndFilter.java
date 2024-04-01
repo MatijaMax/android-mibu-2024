@@ -60,7 +60,7 @@ public class ExploreAndFilter extends Fragment {
         View root = binding.getRoot();
         prepareProductList(products);
         FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
-                false, R.id.scroll_products_list, "filterAllPage");
+                true, R.id.scroll_products_list, "filterAllPage");
 
         return root;
     }

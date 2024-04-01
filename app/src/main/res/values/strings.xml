@@ -25,4 +25,10 @@
     <string name="subcategory">Subcategory</string>
     <string name="price">Price</string>
     <string name="date">Date</string>
+
+    <string name="sugcat">Suggested categories:</string>
+    <string name="sugsubcat">Suggested subcategories:</string>
+    <string name="suggestions">Suggestions:</string>
+
+
 </resources>

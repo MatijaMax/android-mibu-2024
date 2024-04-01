@@ -112,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("filterAllPage", 0);
                 return;
             }
+            if ("addBudgetPage".equals(tag)) {
+                fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                return;
+            }
         }
         super.onBackPressed();
     }
