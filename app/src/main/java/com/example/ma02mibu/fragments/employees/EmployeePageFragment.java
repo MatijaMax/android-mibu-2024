@@ -17,6 +17,7 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -49,6 +50,8 @@ public class EmployeePageFragment extends Fragment {
         companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
         companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
         companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, LocalTime.NOON, LocalTime.of(15,30));
+        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14));
+        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22));
         employee1.setSchedule(companyWorkSchedule);
         employeesFake.add(employee1);
         employeesFake.add(employee2);
