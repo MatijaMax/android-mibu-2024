@@ -2,13 +2,20 @@ package com.example.ma02mibu.fragments.events;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.databinding.ProductsPageFragmentBinding;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.databinding.FragmentExploreAndFilterBinding;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,22 +29,9 @@ public class ExploreAndFilter extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static ArrayList<Product> products = new ArrayList<Product>();
+    private FragmentExploreAndFilterBinding binding;
 
-    public ExploreAndFilter() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ExploreAndFilter.
-     */
     // TODO: Rename and change types and number of parameters
     public static ExploreAndFilter newInstance(String param1, String param2) {
         ExploreAndFilter fragment = new ExploreAndFilter();
@@ -49,18 +43,31 @@ public class ExploreAndFilter extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    /*@Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_explore_and_filter, container, false);
+    } */
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentExploreAndFilterBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        prepareProductList(products);
+        FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
+                false, R.id.scroll_products_list, "filterAllPage");
+
+        return root;
     }
+
+    private void prepareProductList(ArrayList<Product> products){
+        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", "1900", R.drawable.product1));
+        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", "1900", R.drawable.product1));
+    }
+
 }

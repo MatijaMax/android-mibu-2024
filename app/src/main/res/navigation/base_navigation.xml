@@ -34,7 +34,7 @@
         android:id="@+id/nav_explore_and_filter"
         android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
         android:label="Explore and Filter"
-        tools:layout="@layout/fragment_event_form"
+        tools:layout="@layout/fragment_explore_and_filter"
         />
 
 </navigation>

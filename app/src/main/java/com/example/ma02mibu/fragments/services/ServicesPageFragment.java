@@ -20,7 +20,7 @@ public class ServicesPageFragment extends Fragment {
         View root = binding.getRoot();
 
         FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
-                false, R.id.scroll_services_list);
+                false, R.id.scroll_services_list, "filterAllPage");
 
         return root;
     }

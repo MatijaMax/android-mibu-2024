@@ -107,7 +107,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="560dp"
@@ -146,7 +146,7 @@
         android:layout_height="55dp"
         android:layout_marginTop="392dp"
         android:gravity="center"
-        android:text="Privacy"
+        android:text="Make Event Private"
         android:textSize="18sp"
         android:paddingStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"

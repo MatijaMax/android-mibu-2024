@@ -22,8 +22,9 @@ public class ProductsPageFragment extends Fragment {
         binding = ProductsPageFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         prepareProductList(products);
+
         FragmentTransition.to(ProductsListFragment.newInstance(products), getActivity(),
-                false, R.id.scroll_products_list);
+                true, R.id.scroll_products_list, "productPage");
 
         return root;
     }

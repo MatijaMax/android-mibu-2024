@@ -2,7 +2,6 @@ package com.example.ma02mibu.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -15,6 +14,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActionBar actionBar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private Set<Integer> topLevelDestinations = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-
     }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
@@ -85,4 +82,38 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.nav_menu, menu);
+        return true;
+    }
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+
+        if (backStackEntryCount > 0) {
+            FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1);
+            String tag = backStackEntry.getName();
+            if ("newProductPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("productPage", 0);
+                return;
+            }
+            if ("newEmployeePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("EmployeeDetailsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("myEventsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
 }
