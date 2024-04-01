@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -98,6 +98,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal">
 
         <TextView
@@ -134,6 +135,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal">
 
         <TextView
@@ -204,80 +206,6 @@
                 android:layout_marginStart="15dp"
                 />
         </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <LinearLayout
-            android:id="@+id/center_point"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_centerInParent="true">
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/center_point"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Type of event"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <CheckBox
-                android:id="@+id/checkBoxType1"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Type 1" />
-
-            <CheckBox
-                android:id="@+id/checkBoxType2"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Type 2" />
-
-            <CheckBox
-                android:id="@+id/checkBoxType3"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Type 3" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true"
-            android:layout_alignLeft="@+id/center_point"
-            >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Availability"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <CheckBox
-                android:id="@+id/checkBoxODAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Visible" />
-
-            <CheckBox
-                android:id="@+id/checkBoxBuyAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Available for buying" />
-        </LinearLayout>
-    </RelativeLayout>
 
     </LinearLayout>
     <LinearLayout
@@ -328,12 +256,118 @@
             android:inputType="textMultiLine"
             android:lines="1" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Confirm reservation"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Specificity"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/ServiceSpecificity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:layout_marginStart="15dp"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_part3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:id="@+id/center_point"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_centerInParent="true">
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/center_point"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Type of event"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxType1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Type 1" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxType2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Type 2" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxType3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Type 3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignLeft="@+id/center_point"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Availability"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxODAvailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Visible" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxBuyAvailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Available for buying" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Confirm reservation"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -353,36 +387,6 @@
                     android:layout_height="wrap_content"
                     android:text="Manually"/>
             </RadioGroup>
-
-    </LinearLayout>
-        <LinearLayout
-            android:id="@+id/layout_part3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Specificity"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <EditText
-                    android:id="@+id/ServiceSpecificity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:layout_marginStart="15dp"
-                    />
-            </LinearLayout>
             <Button
                 android:id="@+id/addImageButtonService"
                 android:layout_width="160dp"

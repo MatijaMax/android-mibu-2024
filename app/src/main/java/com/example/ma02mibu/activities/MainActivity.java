@@ -98,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
         if (backStackEntryCount > 0) {
             FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1);
             String tag = backStackEntry.getName();
-            if ("newProductPage".equals(tag)) {
+            if ("newProductPage".equals(tag) || "editProductPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("productPage", 0);
                 return;
             }
-            if ("ServicesDetailsPage".equals(tag)) {
+            if ("ServicesDetailsPage".equals(tag) || "editServicePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("servicesPage", 0);
                 return;
             }

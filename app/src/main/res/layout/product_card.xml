@@ -38,14 +38,31 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/product1"
         android:contentDescription="TODO" />
-    <ImageButton
-        android:id="@+id/right_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        android:contentDescription="TODO"
-        app:srcCompat="@drawable/right_button"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="2dp">
+        <ImageButton
+            android:id="@+id/more_button"
+            android:layout_width="25dp"
+            android:layout_height="35dp"
+            android:background="@color/white"
+            android:layout_marginStart="10dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/more"
+            />
+
+        <ImageButton
+            android:id="@+id/right_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="33dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/right_button" />
+    </LinearLayout>
 </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/event_type_tags"

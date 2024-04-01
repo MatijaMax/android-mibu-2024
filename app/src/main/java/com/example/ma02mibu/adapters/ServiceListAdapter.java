@@ -3,12 +3,14 @@ package com.example.ma02mibu.adapters;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.fragments.products.EditProductFragment;
+import com.example.ma02mibu.fragments.services.EditServiceFragment;
 import com.example.ma02mibu.fragments.services.ServiceDetailsFragment;
 
 import com.example.ma02mibu.model.Service;
@@ -70,8 +74,10 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         TextView duration = convertView.findViewById(R.id.service_duration);
         ImageButton rightButton = convertView.findViewById(R.id.right_button_service);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_service);
+        ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
         handleRightButtonClick(rightButton, imageView, service);
         handleLeftButtonClick(leftButton, imageView, service);
+        handleServiceMenuButtonClick(menuButton, service);
         handleCardClick(layout, service);
         if(service != null){
             int image = service.getImages().get(service.getCurrentImageIndex());
@@ -119,6 +125,27 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
             public void onClick(View v) {
                 FragmentTransition.to(ServiceDetailsFragment.newInstance(service), currFragActivity,
                         true, R.id.scroll_services_list, "ServicesDetailsPage");
+            }
+        });
+    }
+    private void handleServiceMenuButtonClick(ImageButton menuButton, Service service){
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(getContext(), menuButton);
+                popup.getMenuInflater()
+                        .inflate(R.menu.pup_pop_up_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getItemId() == R.id.edit){
+                            FragmentTransition.to(EditServiceFragment.newInstance(service), currFragActivity,
+                                    true, R.id.scroll_services_list, "editServicePage");
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
     }
