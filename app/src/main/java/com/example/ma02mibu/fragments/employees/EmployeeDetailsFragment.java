@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.WorkSchedule;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +70,10 @@ public class EmployeeDetailsFragment extends Fragment {
         textPhone.setText(mEmployee.getPhoneNumber());
         ImageView imageView = view.findViewById(R.id.employeeImageView);
         imageView.setImageResource(mEmployee.getImage());
+        TextView textMonday = view.findViewById(R.id.workingTable);
+        for (WorkSchedule workSchedule: mEmployee.getWorkSchedules()) {
+            textMonday.setText(workSchedule.toString());
+        }
         return view;
     }
 }

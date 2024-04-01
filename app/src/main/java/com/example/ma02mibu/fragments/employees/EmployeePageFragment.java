@@ -14,7 +14,10 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.FragmentEmployeePageBinding;
 import com.example.ma02mibu.fragments.employees.EmployeeListFragment;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.WorkSchedule;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class EmployeePageFragment extends Fragment {
@@ -37,6 +40,16 @@ public class EmployeePageFragment extends Fragment {
                 new Employee(3L, "Ivan", "Milic", "ivo@gmail.com", "123", "Augustina Makarica 6, Novi Sad", "0838732", R.drawable.product1);
         Employee employee4 =
                 new Employee(4L, "Petar", "Peric", "pera@gmail.com", "123", "Ilariona Ruvarca 16, Novi Sad", "03245544", R.drawable.employee_avatar);
+
+        WorkSchedule companyWorkSchedule = new WorkSchedule();
+        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, LocalTime.NOON, LocalTime.of(15,30));
+        employee1.setSchedule(companyWorkSchedule);
         employeesFake.add(employee1);
         employeesFake.add(employee2);
         employeesFake.add(employee3);
