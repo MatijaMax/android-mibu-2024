@@ -56,7 +56,8 @@ public class ProductFilterAdapter extends ArrayAdapter<Product> {
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
         if(product != null){
-            imageView.setImageResource(product.getImage());
+            int image = product.getImage().get(product.getCurrentImageIndex());
+            imageView.setImageResource(image);
             productName.setText(product.getName());
             productDescription.setText(product.getDescription());
             category.setText(product.getCategory());

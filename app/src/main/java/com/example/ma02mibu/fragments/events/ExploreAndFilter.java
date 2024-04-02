@@ -66,8 +66,11 @@ public class ExploreAndFilter extends Fragment {
     }
 
     private void prepareProductList(ArrayList<Product> products){
-        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", "1900", R.drawable.product1));
-        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", "1900", R.drawable.product1));
+        ArrayList<Integer> images = new ArrayList<>();
+        images.add(R.drawable.product1);
+        ArrayList<String> eventTypes = new ArrayList<>();
+        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", "2000", images, eventTypes, 5));
+        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", "2000", images, eventTypes, 5));
     }
 
 }
