@@ -20,13 +20,25 @@
             android:icon="@drawable/ic_product"
             android:orderInCategory="200"/>
 
+        <item android:id="@+id/nav_event_creation"
+            android:title="Create Event"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"/>
+
+        <item android:id="@+id/nav_explore_and_filter"
+            android:title="Explore and Filter"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"/>
+
         <item android:id="@+id/nav_employees"
             android:title="employees"
             android:icon="@drawable/ic_product"
             android:orderInCategory="300"/>
+            
         <item android:id="@+id/nav_employee_registration"
             android:title="employees registration"
             android:icon="@drawable/ic_product"
             android:orderInCategory="400"/>
+
     </group>
 </menu>

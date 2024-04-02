@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:layout_marginVertical="10dp"
+    android:id="@+id/product_card_item_fav"
+    >
+
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/product1"
+        tools:layout_editor_absoluteY="-11dp"
+        android:contentDescription="TODO" />
+
+
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:text="naziv"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/product_image"
+        />
+    <TextView
+        android:id="@+id/product_description"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_margin="5dp"
+        android:text="opis"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_name"
+        android:textStyle="italic"/>
+    <TextView
+        android:id="@+id/product_category"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:text="category: category1, category2..."
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_description"
+        />
+    <TextView
+        android:id="@+id/product_subcategory"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="5dp"
+        android:text="sub-category: category1, category2..."
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_category"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/product_subcategory"
+        >
+        <TextView
+            android:id="@+id/product_price"
+            android:layout_height="30dp"
+            android:layout_width="100dp"
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="1900 din"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="81dp"
+        android:layout_height="87dp"
+        android:layout_marginBottom="248dp"
+        android:text="⭐"
+        android:textSize="33dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonInfo"
+        android:layout_width="65dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="176dp"
+        android:text="❔"
+        android:textSize="21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
