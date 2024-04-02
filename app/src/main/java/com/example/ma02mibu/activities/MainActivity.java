@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
             }
             if ("addBudgetPage".equals(tag)) {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if ("EmployeeWorkCalendarPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
             }
         }

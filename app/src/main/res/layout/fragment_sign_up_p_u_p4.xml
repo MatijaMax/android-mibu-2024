@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.authentication.SignUpPUP4Fragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/categoryInputTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Select categories your company provides"/>
+
+        <ListView
+            android:id="@+id/categoryListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:choiceMode="multipleChoice"
+            tools:listitem="@layout/category_card"
+            app:layout_constraintTop_toBottomOf="@+id/categoryInputTextView"
+            app:layout_constraintBottom_toTopOf="@id/eventTypeInputTextView"/>
+
+        <TextView
+            android:id="@+id/eventTypeInputTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            app:layout_constraintTop_toBottomOf="@+id/categoryInputTextView"
+            app:layout_constraintBottom_toTopOf="@+id/btnSignUpPUP"
+            android:text="Select event types your company provides"/>
+
+        <ListView
+            android:id="@+id/eventTypeListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:choiceMode="multipleChoice"
+            tools:listitem="@layout/category_card"
+            app:layout_constraintTop_toBottomOf="@+id/eventTypeInputTextView"
+            app:layout_constraintBottom_toTopOf="@+id/btnSignUpPUP"/>
+
+        <Button
+            android:id="@+id/btnSignUpPUP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/signUpPUP"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</FrameLayout>

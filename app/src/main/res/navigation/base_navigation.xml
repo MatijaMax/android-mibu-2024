@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
-    app:startDestination="@+id/nav_products"
+    app:startDestination="@+id/nav_home"
     >
     <fragment
         android:id="@+id/nav_home"
@@ -17,12 +17,28 @@
         android:name="com.example.ma02mibu.fragments.products.ProductsPageFragment"
         android:label="Products"
         tools:layout="@layout/products_page_fragment"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
         />
     <fragment
         android:id="@+id/nav_services"
         android:name="com.example.ma02mibu.fragments.services.ServicesPageFragment"
         android:label="Services"
-        tools:layout="@layout/products_page_fragment"
+        tools:layout="@layout/services_page_fragment"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        />
+    <fragment
+        android:id="@+id/nav_employees"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeePageFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employee_page"
+        />
+    <fragment
+        android:id="@+id/nav_employee_registration"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employee_registration"
         />
     <fragment
         android:id="@+id/nav_event_creation"
