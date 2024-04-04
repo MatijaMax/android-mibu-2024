@@ -94,18 +94,11 @@ public class SignUpPUP3Fragment extends Fragment {
     }
 
     private void prepareEventTypes(){
-        eventTypes.add(new EventType(1L, "EventType1", "Some description of EventType 1"));
-        eventTypes.add(new EventType(2L, "EventType2", "Some description of EventType 2"));
-        eventTypes.add(new EventType(3L, "EventType3", "Some description of EventType 3"));
-        eventTypes.add(new EventType(4L, "EventType4", "Some description of EventType 4"));
-        eventTypes.add(new EventType(5L, "EventType5", "Some description of EventType 5"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6"));
+        eventTypes.add(new EventType(1L, "EventType1", "Some description of EventType 1", EventType.EVENTTYPESTATUS.DEACTIVATED));
+        eventTypes.add(new EventType(2L, "EventType2", "Some description of EventType 2", EventType.EVENTTYPESTATUS.DEACTIVATED));
+        eventTypes.add(new EventType(3L, "EventType3", "Some description of EventType 3", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType(4L, "EventType4", "Some description of EventType 4", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType(5L, "EventType5", "Some description of EventType 5", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6", EventType.EVENTTYPESTATUS.DEACTIVATED));
     }
 }

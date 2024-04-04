@@ -124,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("management", 0);
                 return;
             }
+            if ("eventTypeEdit".equals(tag)){
+                fragmentManager.popBackStackImmediate("eventTypeManagement", 0);
+                return;
+            }
         }
         super.onBackPressed();
     }

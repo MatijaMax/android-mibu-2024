@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.adminsManagement.EventTypeEditFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/enterEventTypeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Enter event type name:"/>
+        <EditText
+            android:id="@+id/eventTypeName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/enterEventTypeName"/>
+        <TextView
+            android:id="@+id/enterEventTypeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/eventTypeName"
+            android:text="Enter event type description:"/>
+        <EditText
+            android:id="@+id/eventTypeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:gravity="top|start"
+            app:layout_constraintTop_toBottomOf="@id/enterEventTypeDescription"
+            />
+        <ListView
+            android:id="@+id/subcategoryListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/eventTypeDescription"
+            app:layout_constraintBottom_toTopOf="@id/deactivateEventType"/>
+        <Button
+            android:id="@+id/deactivateEventType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_error"
+            app:layout_constraintBottom_toTopOf="@id/saveEventTypeChanges"
+            android:text="deactivate Event type"/>
+        <Button
+            android:id="@+id/saveEventTypeChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="save event type"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
