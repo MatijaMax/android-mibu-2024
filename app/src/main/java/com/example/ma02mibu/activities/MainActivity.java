@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("packagesPage", 0);
+            }
 
             if ("newEmployeePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
@@ -150,18 +151,18 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("management", 0);
                 return;
             }
-            if ("eventTypeEdit".equals(tag)){
+            if ("eventTypeEdit".equals(tag)) {
                 fragmentManager.popBackStackImmediate("eventTypeManagement", 0);
                 return;
             }
             if ("addBudgetPage".equals(tag)) {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
                 return;
             }
         }
         super.onBackPressed();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,6 +175,4 @@ public class MainActivity extends AppCompatActivity {
             fragment2.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-}
 }
