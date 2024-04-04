@@ -2,7 +2,6 @@ package com.example.ma02mibu.fragments.employees;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.FragmentEmployeeDetailsBinding;
-import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
+import com.example.ma02mibu.databinding.FragmentEmployeePersonalDetailsBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.WorkSchedule;
 
@@ -25,24 +24,24 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EmployeeDetailsFragment#newInstance} factory method to
+ * Use the {@link EmployeePersonalDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmployeeDetailsFragment extends Fragment {
+public class EmployeePersonalDetailsFragment extends Fragment {
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private Employee mEmployee;
     private String mParam2;
-    private FragmentEmployeeDetailsBinding binding;
+    private FragmentEmployeePersonalDetailsBinding binding;
 
-    public EmployeeDetailsFragment() {
+    public EmployeePersonalDetailsFragment() {
         // Required empty public constructor
     }
-    public static EmployeeDetailsFragment newInstance(Employee param1, String param2) {
-        EmployeeDetailsFragment fragment = new EmployeeDetailsFragment();
+
+    public static EmployeePersonalDetailsFragment newInstance(Employee param1, String param2) {
+        EmployeePersonalDetailsFragment fragment = new EmployeePersonalDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,12 +58,10 @@ public class EmployeeDetailsFragment extends Fragment {
         }
     }
 
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentEmployeeDetailsBinding.inflate(inflater, container, false);
+        binding = FragmentEmployeePersonalDetailsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         TextView textFName = view.findViewById(R.id.firstNameTextView);
         textFName.setText(mEmployee.getFirstName());
@@ -95,8 +92,8 @@ public class EmployeeDetailsFragment extends Fragment {
         listView.setAdapter(adapter);
         Button newEmployeeButton = binding.btnAddNewWorkTime;
         newEmployeeButton.setOnClickListener(v -> {
-            FragmentTransition.to(EmployeeWorkTimeEntryFragment.newInstance("",""), getActivity(),
-                    true, R.id.scroll_employees_list, "newWorkTimePage");
+            FragmentTransition.to(EmployeePersonalWorkCalendarFragment.newInstance(mEmployee,""), getActivity(),
+                    true, R.id.personal_employee, "EmployeePersonalWorkCalendar");
         });
         return view;
     }

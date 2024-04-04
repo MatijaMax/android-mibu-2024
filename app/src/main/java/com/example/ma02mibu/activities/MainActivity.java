@@ -112,6 +112,14 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
             }
+            if ("newWorkTimePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeeDetailsPage", 0);
+                return;
+            }
+            if ("EmployeePersonalWorkCalendar".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeePersonalPage", 0);
+                return;
+            }
         }
         super.onBackPressed();
     }

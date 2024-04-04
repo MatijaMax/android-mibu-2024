@@ -89,7 +89,7 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(EmployeeWorkCalendarFragment.newInstance("", ""), currFragActivity,
+                FragmentTransition.to(EmployeeWorkCalendarFragment.newInstance(employee, ""), currFragActivity,
                         true, R.id.scroll_employees_list, "EmployeeWorkCalendarPage");
             }
         });

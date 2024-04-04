@@ -2,7 +2,6 @@ package com.example.ma02mibu.fragments.employees;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,35 +11,29 @@ import android.view.ViewGroup;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.FragmentEmployeePageBinding;
-import com.example.ma02mibu.fragments.employees.EmployeeListFragment;
+import com.example.ma02mibu.databinding.FragmentEmployeePersonalBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
-public class EmployeePageFragment extends Fragment {
+public class EmployeePersonalFragment extends Fragment {
+    private FragmentEmployeePersonalBinding binding;
 
-    private FragmentEmployeePageBinding binding;
-    public static ArrayList<Employee> employeesFake = new ArrayList<>();
-
-    public EmployeePageFragment() {
+    public EmployeePersonalFragment() {
         // Required empty public constructor
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEmployeePageBinding.inflate(inflater, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        binding =  FragmentEmployeePersonalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Employee employee1 =
                 new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar);
-        Employee employee2 =
-                new Employee(2L, "Marko", "Ilic", "m12@gmail.com", "123", "Kornelija Stankovica 18, Novi Sad", "054848", R.drawable.employee_avatar);
-        Employee employee3 =
-                new Employee(3L, "Ivan", "Milic", "ivo@gmail.com", "123", "Augustina Makarica 6, Novi Sad", "0838732", R.drawable.product1);
-        Employee employee4 =
-                new Employee(4L, "Petar", "Peric", "pera@gmail.com", "123", "Ilariona Ruvarca 16, Novi Sad", "03245544", R.drawable.employee_avatar);
 
         WorkSchedule companyWorkSchedule = new WorkSchedule();
         companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
@@ -75,12 +68,9 @@ public class EmployeePageFragment extends Fragment {
         companyWorkSchedule3.setStartDay(LocalDate.of(2024, 3, 14));
         companyWorkSchedule3.setEndDay(LocalDate.of(2024, 7, 22));
         employee1.setSchedule(companyWorkSchedule3);
-        employeesFake.add(employee1);
-        employeesFake.add(employee2);
-        employeesFake.add(employee3);
-        employeesFake.add(employee4);
-        FragmentTransition.to(EmployeeListFragment.newInstance(employeesFake), getActivity(),
-                true, R.id.scroll_employees_list, "employeesPage");
+
+        FragmentTransition.to(EmployeePersonalDetailsFragment.newInstance(employee1, ""), getActivity(),
+                true, R.id.personal_employee, "EmployeePersonalPage");
 
         return root;
     }
@@ -90,6 +80,4 @@ public class EmployeePageFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 }

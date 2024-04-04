@@ -35,9 +35,9 @@
         tools:layout="@layout/fragment_employee_page"
         />
     <fragment
-        android:id="@+id/nav_employee_registration"
-        android:name="com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment"
-        android:label="Employees"
-        tools:layout="@layout/fragment_employee_registration"
+        android:id="@+id/nav_employee_personal"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeePersonalFragment"
+        android:label="Employee"
+        tools:layout="@layout/fragment_employee_personal"
         />
 </navigation>

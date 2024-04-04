@@ -3,8 +3,6 @@ package com.example.ma02mibu.fragments.employees;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,11 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.adapters.EventExpandableListAdapter;
+import com.example.ma02mibu.databinding.FragmentEmployeePersonalDetailsBinding;
+import com.example.ma02mibu.databinding.FragmentEmployeePersonalWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
 
@@ -35,10 +34,10 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EmployeeWorkCalendarFragment#newInstance} factory method to
+ * Use the {@link EmployeePersonalWorkCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmployeeWorkCalendarFragment extends Fragment {
+public class EmployeePersonalWorkCalendarFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -46,12 +45,14 @@ public class EmployeeWorkCalendarFragment extends Fragment {
     private Employee mEmployee;
     private String mParam2;
 
-    public EmployeeWorkCalendarFragment() {
+    private FragmentEmployeePersonalWorkCalendarBinding binding;
+
+    public EmployeePersonalWorkCalendarFragment() {
         // Required empty public constructor
     }
 
-    public static EmployeeWorkCalendarFragment newInstance(Employee param1, String param2) {
-        EmployeeWorkCalendarFragment fragment = new EmployeeWorkCalendarFragment();
+    public static EmployeePersonalWorkCalendarFragment newInstance(Employee param1, String param2) {
+        EmployeePersonalWorkCalendarFragment fragment = new EmployeePersonalWorkCalendarFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,41 +68,25 @@ public class EmployeeWorkCalendarFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     private TextView tvSelectedWeek;
     private TextView eventSelectedDay;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_employee_work_calendar, container, false);
-//        ExpandableListView expandableListView = view.findViewById((R.id.expandableListView));
-//        HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
-//
-//        List<EventModel> eventsList1 = new ArrayList<EventModel>();
-//        eventsList1.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-//        eventsList1.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
-//
-//        List<EventModel> eventsList2 = new ArrayList<EventModel>();
-//        eventsList2.add(new EventModel("dogadjaj3", LocalDate.of(2024, 4, 16), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-//        eventsList1.add(new EventModel("dogadjaj9", LocalDate.of(2024, 4, 16), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
-//        eventsList2.add(new EventModel("dogadjaj7", LocalDate.of(2024, 4, 16), LocalTime.of(15,30), LocalTime.of(16,0),"booked"));
-//
-//        expandableListDetail.put("DAN1", eventsList1);
-//        expandableListDetail.put("DAN2", eventsList2);
-//        List<String> expandableListTitle;
-//        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-//        EventExpandableListAdapter adapter = new EventExpandableListAdapter( getActivity(), expandableListTitle, expandableListDetail);
-//        expandableListView.setAdapter(adapter);
-        tvSelectedWeek = view.findViewById(R.id.tvSelectedWeek);
-        Button btnPickWeek = view.findViewById(R.id.btnPickWeek);
+        binding = FragmentEmployeePersonalWorkCalendarBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        tvSelectedWeek = binding.tvSelectedWeek;
+        Button btnPickWeek = binding.btnPickWeek;
         btnPickWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog(view);
             }
         });
-        eventSelectedDay = view.findViewById(R.id.eventSelectedDate);
-        Button btnPickEventDate = view.findViewById(R.id.btnNewEventDate);
+        eventSelectedDay = binding.eventSelectedDate;
+        Button btnPickEventDate = binding.btnNewEventDate;
         btnPickEventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +95,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         });
         return view;
     }
+
     private void showDatePickerDialog(View parentV) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -185,6 +171,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         List<EventModel> eventsList7 = new ArrayList<EventModel>();
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.getActiveWorkSchedule().ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
+
 
                         List<String> expandableListTitle;
                         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());

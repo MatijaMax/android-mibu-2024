@@ -72,7 +72,12 @@ public class WorkSchedule implements Parcelable {
     }
 
     public void setWorkTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
-        schedule.put(dayOfWeek, new WorkTime(startTime, endTime));
+        if(startTime == null || endTime == null){
+            schedule.put(dayOfWeek, null);
+        }
+        else {
+            schedule.put(dayOfWeek, new WorkTime(startTime, endTime));
+        }
     }
     public WorkTime getWorkTime(DayOfWeek dayOfWeek) {
         return schedule.get(dayOfWeek);
@@ -82,9 +87,22 @@ public class WorkSchedule implements Parcelable {
         StringBuilder output = new StringBuilder();
         output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
         for (DayOfWeek d : DayOfWeek.values()) {
-            output.append(d.toString()).append(" => ").append(schedule.get(d).toString()).append("\n");
+            output.append(d.toString()).append(" => ");
+            if(schedule.get(d) == null){
+                output.append("not working").append("\n");
+            }
+            else {
+                output.append(schedule.get(d).toString()).append("\n");
+            }
         }
         return output.toString();
+    }
+
+    public String ScheduleForDay(DayOfWeek d){
+        if(schedule.get(d) == null){
+            return "not working";
+        }
+        return schedule.get(d).toString();
     }
 
     public LocalDate getStartDay() {
