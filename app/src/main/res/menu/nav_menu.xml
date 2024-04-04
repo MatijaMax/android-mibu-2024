@@ -24,5 +24,36 @@
             android:title="packages"
             android:icon="@drawable/ic_product"
             android:orderInCategory="200"/>
+
+        <item android:id="@+id/nav_event_creation"
+            android:title="Create Event"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"/>
+
+        <item android:id="@+id/nav_explore_and_filter"
+            android:title="Explore and Filter"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"/>
+
+        <item android:id="@+id/nav_employees"
+            android:title="employees pup v"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="300"/>
+
+        <item android:id="@+id/nav_employee_personal"
+            android:title="employee pup z"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="400"/>
+
+        <item android:id="@+id/nav_admin_category_management"
+            android:title="category management"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="500"/>
+
+        <item android:id="@+id/nav_event_type_management"
+            android:title="event type management"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="600"/>
+
     </group>
 </menu>

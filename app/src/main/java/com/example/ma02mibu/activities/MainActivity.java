@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = binding.activityHomeBase.toolbar;
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
             actionBar.setHomeButtonEnabled(false);
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.nav_menu, menu);
         return true;
     }
+
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -112,6 +113,50 @@ public class MainActivity extends AppCompatActivity {
             }
             if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("packagesPage", 0);
+
+            if ("newEmployeePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("EmployeeDetailsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("myEventsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+            if ("EmployeeWorkCalendarPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("newWorkTimePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeeDetailsPage", 0);
+                return;
+            }
+            if ("EmployeePersonalWorkCalendar".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeePersonalPage", 0);
+                return;
+            }
+            if ("categoryManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("subcategoryManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("subcategoryRequestManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("eventTypeEdit".equals(tag)){
+                fragmentManager.popBackStackImmediate("eventTypeManagement", 0);
+                return;
+            }
+            if ("addBudgetPage".equals(tag)) {
+                fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 return;
             }
         }
@@ -130,4 +175,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+}
 }

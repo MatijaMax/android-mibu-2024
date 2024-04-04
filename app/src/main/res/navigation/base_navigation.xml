@@ -1,32 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
-    app:startDestination="@+id/nav_home"
-    >
+    android:label="Managing event types"
+    app:startDestination="@+id/nav_home">
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.ma02mibu.fragments.HomeFragment"
         android:label="Products"
-        tools:layout="@layout/home_fragment"
-        />
+        tools:layout="@layout/home_fragment" />
     <fragment
         android:id="@+id/nav_products"
         android:name="com.example.ma02mibu.fragments.products.ProductsPageFragment"
         android:label="Products"
-        tools:layout="@layout/products_page_fragment"
         app:popUpTo="@+id/nav_home"
         app:popUpToInclusive="true"
-        />
+        tools:layout="@layout/products_page_fragment" />
     <fragment
         android:id="@+id/nav_services"
         android:name="com.example.ma02mibu.fragments.services.ServicesPageFragment"
         android:label="Services"
-        tools:layout="@layout/services_page_fragment"
         app:popUpTo="@+id/nav_home"
         app:popUpToInclusive="true"
+        tools:layout="@layout/services_page_fragment" />
+    <fragment
+        android:id="@+id/nav_employees"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeePageFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employee_page" />
+
+    <fragment
+        android:id="@+id/nav_employee_personal"
+        android:name="com.example.ma02mibu.fragments.employees.EmployeePersonalFragment"
+        android:label="Employee"
+        tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_admin_category_management"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.CategoryManagementContainerFragment"
+        android:label="Category management"
+        tools:layout="@layout/fragment_category_management_container" />
+    <fragment
+        android:id="@+id/nav_event_type_management"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.EventTypeManagementContainerFragment"
+        android:label="Event type management"
+        tools:layout="@layout/fragment_event_type_management_container" />
+    <fragment
+        android:id="@+id/nav_event_creation"
+        android:name="com.example.ma02mibu.fragments.events.EventFormFragment"
+        android:label="Event Creation"
+        tools:layout="@layout/fragment_event_form"
+        />
+    <fragment
+        android:id="@+id/nav_explore_and_filter"
+        android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
+        android:label="Explore and Filter"
+        tools:layout="@layout/fragment_explore_and_filter"
         />
     <fragment
         android:id="@+id/nav_packages"
