@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,15 +19,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.fragments.packages.ChooseProductsListFragment;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
-import com.example.ma02mibu.fragments.products.NewProduct;
-import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
 
 import java.util.ArrayList;
@@ -33,12 +35,16 @@ import java.util.ArrayList;
 public class ProductListAdapter extends ArrayAdapter<Product> {
     private ArrayList<Product> aProducts;
     private FragmentActivity currFragActivity;
+    private ChooseProductsListFragment currFragment;
+    private boolean isFromPackage;
     Context context;
-    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity){
+    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment){
         super(context, R.layout.product_card, products);
         this.context = context;
+        this.isFromPackage = isFromPackage;
         aProducts = products;
         currFragActivity = fragmentActivity;
+        currFragment = myFragment;
     }
     @Override
     public int getCount() {
@@ -64,6 +70,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_card,
                     parent, false);
         }
+        CheckBox checkBox = convertView.findViewById(R.id.choose_product_cb);
         ImageView imageView = convertView.findViewById(R.id.product_image);
         TextView productName = convertView.findViewById(R.id.product_name);
         TextView productDescription = convertView.findViewById(R.id.product_description);
@@ -76,7 +83,6 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         ImageButton menuButton = convertView.findViewById(R.id.more_button);
         handleRightButtonClick(rightButton, imageView, product);
         handleLeftButtonClick(leftButton, imageView, product);
-        handleProductMenuButtonClick(menuButton, product);
         if(product != null){
             int image = product.getImage().get(product.getCurrentImageIndex());
             imageView.setImageResource(image);
@@ -93,6 +99,14 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         mRecyclerView.setLayoutManager(layoutManager);
         StringListAdapter listAdapter = new StringListAdapter(context, product.getEventTypes());
         mRecyclerView.setAdapter(listAdapter);
+
+        if(isFromPackage){
+            menuButton.setVisibility(View.GONE);
+            checkBox.setVisibility(View.VISIBLE);
+            handleProductCheck(checkBox, product);
+        }else {
+            handleProductMenuButtonClick(menuButton, product);
+        }
         return convertView;
     }
     private void handleRightButtonClick(ImageButton rightButton, ImageView imageView, Product product){
@@ -136,5 +150,17 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 popup.show();
             }
     });
+    }
+    private void handleProductCheck(CheckBox cb, Product product){
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    currFragment.productChosen(product.getId());
+                } else {
+                    currFragment.productUnChosen(product.getId());
+                }
+            }
+        });
     }
 }

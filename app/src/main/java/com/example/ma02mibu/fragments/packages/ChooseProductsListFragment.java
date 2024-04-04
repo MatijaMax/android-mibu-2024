@@ -1,0 +1,92 @@
+package com.example.ma02mibu.fragments.packages;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.ListFragment;
+
+import com.example.ma02mibu.FragmentTransition;
+import com.example.ma02mibu.R;
+import com.example.ma02mibu.adapters.ProductListAdapter;
+import com.example.ma02mibu.databinding.ChooseProductsListBinding;
+import com.example.ma02mibu.databinding.FragmentProductsListBinding;
+import com.example.ma02mibu.fragments.products.NewProduct;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Product;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.ArrayList;
+
+public class ChooseProductsListFragment extends ListFragment {
+    private ChooseProductsListBinding binding;
+    private ArrayList<Product> mProducts;
+    private ArrayList<Product> productsChosen;
+    private ProductListAdapter adapter;
+    private int productsChosenNum;
+    private static final String ARG_PARAM = "param";
+    public static ChooseProductsListFragment newInstance(ArrayList<Product> products){
+        ChooseProductsListFragment fragment = new ChooseProductsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, products);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        productsChosenNum = 0;
+        productsChosen = new ArrayList<>();
+        super.onCreate(savedInstanceState);
+        Log.i("ShopApp", "onCreate Products List Fragment");
+        if (getArguments() != null) {
+            mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, this);
+            setListAdapter(adapter);
+        }
+    }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i("ShopApp", "onCreateView Products List Fragment");
+        binding = ChooseProductsListBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        Button button = binding.submitProductsButton;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(NewPackage.newInstanceFromProducts(productsChosen), getActivity(),
+                        true, R.id.scroll_packages_list, "newPackagePage");
+            }
+        });
+        return root;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+    public void productChosen(Long id){
+        productsChosenNum++;
+        TextView textView = binding.productsChosenNum;
+        String s = productsChosenNum+ " products chosen";
+        textView.setText(s);
+        Product product = mProducts.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+        productsChosen.add(product);
+    }
+    public void productUnChosen(Long id){
+        productsChosenNum--;
+        TextView textView = binding.productsChosenNum;
+        String s = productsChosenNum+ " products chosen";
+        textView.setText(s);
+        productsChosen.removeIf(p -> p.getId() == id);
+    }
+}

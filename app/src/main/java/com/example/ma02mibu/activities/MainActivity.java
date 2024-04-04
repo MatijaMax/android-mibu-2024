@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("servicesPage", 0);
                 return;
             }
+            if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("packagesPage", 0);
+                return;
+            }
         }
         super.onBackPressed();
     }

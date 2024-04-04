@@ -47,7 +47,7 @@ public class ServicesListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mServices = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity());
+            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
             setListAdapter(adapter);
         }
     }

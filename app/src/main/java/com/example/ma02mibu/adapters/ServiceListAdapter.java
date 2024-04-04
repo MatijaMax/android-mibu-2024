@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -24,9 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
+import com.example.ma02mibu.fragments.services.ChooseServicesListFragment;
 import com.example.ma02mibu.fragments.services.EditServiceFragment;
 import com.example.ma02mibu.fragments.services.ServiceDetailsFragment;
 
+import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 
 import java.util.ArrayList;
@@ -35,11 +39,15 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
     private ArrayList<Service> aServices;
     private FragmentActivity currFragActivity;
     Context context;
-    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity){
+    private boolean isFromPackage;
+    ChooseServicesListFragment currFragment;
+    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseServicesListFragment fragment){
         super(context, R.layout.services_card, services);
         this.context = context;
         aServices = services;
         currFragActivity = fragmentActivity;
+        this.isFromPackage = isFromPackage;
+        currFragment = fragment;
     }
     @Override
     public int getCount() {
@@ -65,6 +73,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.services_card,
                     parent, false);
         }
+        CheckBox checkBox = convertView.findViewById(R.id.choose_service_cb);
         ConstraintLayout layout = convertView.findViewById(R.id.service_card_item);
         ImageView imageView = convertView.findViewById(R.id.service_image);
         TextView productName = convertView.findViewById(R.id.service_name);
@@ -77,7 +86,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
         handleRightButtonClick(rightButton, imageView, service);
         handleLeftButtonClick(leftButton, imageView, service);
-        handleServiceMenuButtonClick(menuButton, service);
+
         handleCardClick(layout, service);
         if(service != null){
             int image = service.getImages().get(service.getCurrentImageIndex());
@@ -95,6 +104,13 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         mRecyclerView.setLayoutManager(layoutManager);
         StringListAdapter listAdapter = new StringListAdapter(context, service.getEventTypes());
         mRecyclerView.setAdapter(listAdapter);
+        if(isFromPackage){
+            menuButton.setVisibility(View.GONE);
+            checkBox.setVisibility(View.VISIBLE);
+            handleServiceCheck(checkBox, service);
+        }else {
+            handleServiceMenuButtonClick(menuButton, service);
+        }
         return convertView;
     }
     private void handleRightButtonClick(ImageButton rightButton, ImageView imageView, Service service){
@@ -146,6 +162,18 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                     }
                 });
                 popup.show();
+            }
+        });
+    }
+    private void handleServiceCheck(CheckBox cb, Service service){
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    currFragment.serviceChosen(service.getId());
+                } else {
+                    currFragment.serviceUnChosen(service.getId());
+                }
             }
         });
     }
