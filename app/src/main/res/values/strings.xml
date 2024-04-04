@@ -4,6 +4,30 @@
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
 
+    <string name="filters">Filters</string>
+    <string name="fav">Event</string>
+    <string-array name="event_types_array">
+        <item>Party</item>
+        <item>Lecture</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="product">Product</string>
+    <string name="service">Service</string>
+    <string name="bundle">Bundle</string>
+    <string name="searchby">Search by:</string>
+    <string name="filvals">Filters:</string>
+    <string name="location">Location</string>
+    <string name="type">Type</string>
+    <string name="category">Category</string>
+    <string name="subcategory">Subcategory</string>
+    <string name="price">Price</string>
+    <string name="date">Date</string>
+
+    <string name="sugcat">Suggested categories:</string>
+    <string name="sugsubcat">Suggested subcategories:</string>
+    <string name="suggestions">Suggestions:</string>
+
     <!-- Authentication strings -->
     <string name="login" translatable="false">Login</string>
     <string name="signUpOD" translatable="false">Sign up OD</string>
@@ -32,6 +56,14 @@
     <!-- General authentication strings -->
     <string name="next" translatable="false">Next</string>
 
+    <!-- Category management -->
+    <string name="saveCategory" translatable="false">Save category</string>
+    <string name="deleteCategory" translatable="false">Delete category</string>
+    <string name="saveSubcategory" translatable="false">Save subcategory</string>
+    <string name="deleteSubcategory" translatable="false">Delete subcategory</string>
+    <string name="rejectSubcategoryRequest" translatable="false">Reject request</string>
+    <string name="acceptSubcategoryRequest" translatable="false">Accept request</string>
+    <string name="acceptSuggestedSubcategory" translatable="false">Accept suggestion</string>
 
     <string name="search_products">Search products</string>
     <string name="product_name">Product name: </string>

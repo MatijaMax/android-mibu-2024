@@ -9,20 +9,24 @@ public class EventType implements Parcelable {
     private Long id;
     private String name;
     private String description;
+    private EVENTTYPESTATUS status;
+    public enum EVENTTYPESTATUS  {ACTIVE, DEACTIVATED};
 
     public EventType() {
     }
 
-    public EventType(Long id, String name, String description) {
+    public EventType(Long id, String name, String description, EVENTTYPESTATUS status) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.status = status;
     }
 
     protected EventType(Parcel in){
         id = in.readLong();
         name = in.readString();
         description = in.readString();
+        status = EVENTTYPESTATUS.values()[in.readInt()];
     }
 
     public Long getId() {
@@ -49,6 +53,14 @@ public class EventType implements Parcelable {
         this.description = description;
     }
 
+    public EVENTTYPESTATUS getStatus() {
+        return status;
+    }
+
+    public void setStatus(EVENTTYPESTATUS status) {
+        this.status = status;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -59,6 +71,7 @@ public class EventType implements Parcelable {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(description);
+        dest.writeInt(status.ordinal());
     }
 
     public static final Creator<EventType> CREATOR = new Creator<EventType>() {

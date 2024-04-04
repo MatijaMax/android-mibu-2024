@@ -38,7 +38,7 @@ public class EventExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.event_card, null);
+            convertView = layoutInflater.inflate(R.layout.event_card_title, null);
         }
         TextView listTitleTextView = (TextView) convertView
                 .findViewById(R.id.listTitle);
