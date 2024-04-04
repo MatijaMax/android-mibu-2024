@@ -58,4 +58,12 @@
         android:label="Explore and Filter"
         tools:layout="@layout/fragment_explore_and_filter"
         />
+    <fragment
+        android:id="@+id/nav_packages"
+        android:name="com.example.ma02mibu.fragments.packages.PackagePageFragment"
+        android:label="Packages"
+        tools:layout="@layout/packages_page_fragment"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        />
 </navigation>

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="@string/search_products"
+            android:text="@string/search_services"
             android:textAlignment="viewStart"
             android:textSize="24sp"
             android:textStyle="italic" />
@@ -32,15 +32,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="2dp">
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="@string/product_name"
-           android:textSize="20sp"
-           >
-       </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/service_name"
+            android:textSize="20sp"
+            >
+        </TextView>
         <EditText
-            android:id="@+id/product_name_search"
+            android:id="@+id/service_name_search"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:inputType="text"/>
@@ -56,15 +56,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/description"
+            android:text="Employee"
             android:textSize="20sp"
             >
         </TextView>
         <EditText
-            android:id="@+id/description_search"
+            android:id="@+id/plain_text_input"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:layout_marginStart="40dp"
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -80,7 +82,7 @@
             >
         </TextView>
         <EditText
-            android:id="@+id/min_price"
+            android:id="@+id/min_price_service"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
             android:inputType="text"/>
@@ -93,7 +95,7 @@
             >
         </TextView>
         <EditText
-            android:id="@+id/max_price"
+            android:id="@+id/max_price_service"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
             android:inputType="text"/>
@@ -112,7 +114,7 @@
             >
         </TextView>
         <Spinner
-            android:id="@+id/product_category_search"
+            android:id="@+id/service_category_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -133,7 +135,7 @@
             >
         </TextView>
         <Spinner
-            android:id="@+id/product_subcategory_search"
+            android:id="@+id/service_subcategory_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -154,14 +156,14 @@
             >
         </TextView>
         <EditText
-            android:id="@+id/event_type_search"
+            android:id="@+id/event_type_search_service"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:inputType="text"/>
 
     </LinearLayout>
     <Button
-        android:id="@+id/search_button"
+        android:id="@+id/search_button_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.7"

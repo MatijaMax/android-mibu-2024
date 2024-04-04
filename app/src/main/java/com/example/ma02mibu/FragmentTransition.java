@@ -14,7 +14,7 @@ public class FragmentTransition {
                 .getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(layoutViewID, newFragment);
+                .replace(layoutViewID, newFragment, backStackTag);
         if(addToBackstack)
             transaction.addToBackStack(backStackTag);
 

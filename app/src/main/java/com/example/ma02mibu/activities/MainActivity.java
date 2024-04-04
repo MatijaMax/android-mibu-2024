@@ -9,11 +9,13 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -97,10 +99,21 @@ public class MainActivity extends AppCompatActivity {
         if (backStackEntryCount > 0) {
             FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1);
             String tag = backStackEntry.getName();
-            if ("newProductPage".equals(tag)) {
+            if ("newProductPage".equals(tag) || "editProductPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("productPage", 0);
                 return;
             }
+            if ("ServicesDetailsPage".equals(tag) || "editServicePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPage", 0);
+                return;
+            }
+            if ("newServicePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPage", 0);
+                return;
+            }
+            if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("packagesPage", 0);
+
             if ("newEmployeePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
@@ -143,9 +156,24 @@ public class MainActivity extends AppCompatActivity {
             }
             if ("addBudgetPage".equals(tag)) {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 return;
             }
         }
         super.onBackPressed();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("newProductPage");
+        Fragment fragment2 = getSupportFragmentManager().findFragmentByTag("newServicePage");
+        if (fragment1 != null && fragment1.isVisible()) {
+            fragment1.onActivityResult(requestCode, resultCode, data);
+        }
+        else if(fragment2 != null && fragment2.isVisible()){
+            fragment2.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+}
 }

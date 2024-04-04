@@ -16,15 +16,15 @@
         android:layout_marginRight="10dp">
 
         <Button
-            android:id="@+id/search_button"
+            android:id="@+id/search_button_packages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:layout_weight="0.7"
-            android:text="Search products" />
+            android:text="Search packages" />
 
         <Button
-            android:id="@+id/new_product_button"
+            android:id="@+id/new_package_button"
             android:layout_width="184dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
@@ -34,6 +34,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/product_card" />
+        tools:listitem="@layout/package_card" />
 
 </LinearLayout>

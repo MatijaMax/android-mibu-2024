@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,40 +10,41 @@
     android:paddingEnd="10dp"
     android:background="@drawable/card_border"
     android:layout_marginVertical="10dp"
-    android:id="@+id/product_card_item"
+    android:id="@+id/service_card_item"
     >
-<LinearLayout
-    android:id="@+id/image_layout"
-    android:layout_width="match_parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    android:gravity="center"
-    android:layout_height="170dp">
-    <ImageButton
-        android:id="@+id/left_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="10dp"
-        android:contentDescription="TODO"
-        app:srcCompat="@drawable/left_button"
-        />
-    <ImageView
-        android:id="@+id/product_image"
-        android:layout_width="290dp"
-        android:layout_height="170dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/product1"
-        android:contentDescription="TODO" />
+
     <LinearLayout
+        android:id="@+id/image_layout_service"
         android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center"
+        android:layout_height="170dp">
+        <ImageButton
+            android:id="@+id/left_button_service"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/left_button"
+            />
+        <ImageView
+            android:id="@+id/service_image"
+            android:layout_width="290dp"
+            android:layout_height="170dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:srcCompat="@drawable/product1"
+            android:contentDescription="TODO" />
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="2dp">
         <ImageButton
-            android:id="@+id/more_button"
+            android:id="@+id/more_button_service"
             android:layout_width="25dp"
             android:layout_height="35dp"
             android:background="@color/white"
@@ -52,88 +52,102 @@
             android:contentDescription="TODO"
             app:srcCompat="@drawable/more"
             />
-
         <ImageButton
-            android:id="@+id/right_button"
+            android:id="@+id/right_button_service"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginTop="33dp"
             android:contentDescription="TODO"
-            app:srcCompat="@drawable/right_button" />
+            app:srcCompat="@drawable/right_button"
+            />
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/event_type_tags"
+        android:id="@+id/event_type_tags_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:listitem="@layout/event_type_tags"
-        app:layout_constraintTop_toBottomOf="@+id/image_layout"
+        app:layout_constraintTop_toBottomOf="@+id/image_layout_service"
         app:layout_constraintLeft_toLeftOf="parent"
         >
     </androidx.recyclerview.widget.RecyclerView>
     <TextView
-        android:id="@+id/product_name"
+        android:id="@+id/service_name"
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_margin="5dp"
         android:text="naziv"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/event_type_tags"
+        app:layout_constraintTop_toBottomOf="@+id/event_type_tags_service"
         />
     <TextView
-        android:id="@+id/product_description"
+        android:id="@+id/service_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="opis"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/product_name"
+        app:layout_constraintTop_toBottomOf="@+id/service_name"
         android:textStyle="italic"/>
-    <TextView
-        android:id="@+id/product_category"
+    <LinearLayout
+        android:id="@+id/categories_service_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/service_description"
+        >
+
+    <TextView
+        android:id="@+id/service_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="category: category1, category2..."
+        android:text="category1"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/product_description"
         />
     <TextView
-        android:id="@+id/product_subcategory"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="-"
+        android:textSize="16sp"
+        />
+    <TextView
+        android:id="@+id/service_subcategory"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginTop="2dp"
         android:layout_marginStart="5dp"
-        android:text="sub-category: category1, category2..."
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/product_category"
+        android:text="sub-category1"
+        android:textSize="16sp"
         />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/service_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="duration"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/categories_service_layout" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/product_subcategory"
+        app:layout_constraintTop_toBottomOf="@id/service_duration"
         >
         <TextView
-            android:id="@+id/product_price"
+            android:id="@+id/service_price"
             android:layout_height="30dp"
             android:layout_width="wrap_content"
             android:layout_margin="5dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="1900"/>
-        <TextView
-            android:id="@+id/old_price"
-            android:layout_height="30dp"
-            android:layout_width="wrap_content"
-            android:layout_margin="5dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="1900"/>
-        <CheckBox android:id="@+id/choose_product_cb"
+        <CheckBox android:id="@+id/choose_service_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
