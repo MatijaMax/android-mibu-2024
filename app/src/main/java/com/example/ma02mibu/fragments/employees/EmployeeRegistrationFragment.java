@@ -1,5 +1,6 @@
 package com.example.ma02mibu.fragments.employees;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
 
 /**
@@ -58,10 +61,27 @@ public class EmployeeRegistrationFragment extends Fragment {
         }
     }
 
+    private FragmentEmployeeRegistrationBinding binding;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_employee_registration, container, false);
+        binding = FragmentEmployeeRegistrationBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        Button btnSelectImage = binding.btnUploadImage;
+        btnSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+        return view;
+    }
+    private void chooseImage(){
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivity(i);
     }
 }

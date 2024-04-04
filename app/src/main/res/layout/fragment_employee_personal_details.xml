@@ -115,17 +115,23 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/listWorking"
-            android:layout_width="match_parent"
-            android:layout_height="440dp" />
-
         <Button
             android:id="@+id/btnAddNewWorkTime"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Go to work calendar"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Working hours:"
+            android:textSize="20sp"/>
+        <ListView
+            android:id="@+id/listWorking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 </FrameLayout>
