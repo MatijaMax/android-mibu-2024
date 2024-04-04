@@ -5,31 +5,32 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class SubCategory implements Parcelable {
+public class SubCategoryRequest implements Parcelable {
     private Long id;
     private Long categoryId;
     private String name;
     private String description;
-    private SUBCATEGORYTYPE type;
-    public enum SUBCATEGORYTYPE { USLUGA, PROIZVOD }
+    private SubCategory.SUBCATEGORYTYPE type;
+    private Long userId;
 
-    public SubCategory() {
-    }
+    public SubCategoryRequest() { }
 
-    public SubCategory(Long id, Long categoryId, String name, String description, SUBCATEGORYTYPE type) {
+    public SubCategoryRequest(Long id, Long categoryId, String name, String description, SubCategory.SUBCATEGORYTYPE type, Long userId) {
         this.id = id;
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.type = type;
+        this.userId = userId;
     }
 
-    protected SubCategory(Parcel in){
+    protected SubCategoryRequest(Parcel in){
         id = in.readLong();
         name = in.readString();
         description = in.readString();
         categoryId = in.readLong();
-        type = SUBCATEGORYTYPE.values()[in.readInt()];
+        type = SubCategory.SUBCATEGORYTYPE.values()[in.readInt()];
+        userId = in.readLong();
     }
 
     public Long getId() {
@@ -64,12 +65,20 @@ public class SubCategory implements Parcelable {
         this.description = description;
     }
 
-    public SUBCATEGORYTYPE getType() {
+    public SubCategory.SUBCATEGORYTYPE getType() {
         return type;
     }
 
-    public void setType(SUBCATEGORYTYPE type) {
+    public void setType(SubCategory.SUBCATEGORYTYPE type) {
         this.type = type;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -84,17 +93,18 @@ public class SubCategory implements Parcelable {
         dest.writeString(description);
         dest.writeLong(categoryId);
         dest.writeInt(type.ordinal());
+        dest.writeLong(userId);
     }
 
-    public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
+    public static final Creator<SubCategoryRequest> CREATOR = new Creator<SubCategoryRequest>() {
         @Override
-        public SubCategory createFromParcel(Parcel in) {
-            return new SubCategory(in);
+        public SubCategoryRequest createFromParcel(Parcel in) {
+            return new SubCategoryRequest(in);
         }
 
         @Override
-        public SubCategory[] newArray(int size) {
-            return new SubCategory[size];
+        public SubCategoryRequest[] newArray(int size) {
+            return new SubCategoryRequest[size];
         }
     };
 }

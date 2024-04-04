@@ -117,12 +117,27 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
             }
+            if ("categoryManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("subcategoryManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("subcategoryRequestManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("management", 0);
+                return;
+            }
+            if ("eventTypeEdit".equals(tag)){
+                fragmentManager.popBackStackImmediate("eventTypeManagement", 0);
+                return;
+            }
             if ("addBudgetPage".equals(tag)) {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
             }
             }
             super.onBackPressed();
-        }
-
     }
+}

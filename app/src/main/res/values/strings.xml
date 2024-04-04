@@ -56,6 +56,14 @@
     <!-- General authentication strings -->
     <string name="next" translatable="false">Next</string>
 
+    <!-- Category management -->
+    <string name="saveCategory" translatable="false">Save category</string>
+    <string name="deleteCategory" translatable="false">Delete category</string>
+    <string name="saveSubcategory" translatable="false">Save subcategory</string>
+    <string name="deleteSubcategory" translatable="false">Delete subcategory</string>
+    <string name="rejectSubcategoryRequest" translatable="false">Reject request</string>
+    <string name="acceptSubcategoryRequest" translatable="false">Accept request</string>
+    <string name="acceptSuggestedSubcategory" translatable="false">Accept suggestion</string>
 
     <string name="search_products">Search products</string>
     <string name="product_name">Product name: </string>
