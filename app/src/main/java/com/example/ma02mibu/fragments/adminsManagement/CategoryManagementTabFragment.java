@@ -48,17 +48,16 @@ public class CategoryManagementTabFragment extends Fragment {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                categoryListAdapter.getItem(position);
-                FragmentTransition.to(CategoryEditFragment.newInstance(false, categoryListAdapter.getItem(position)
-                ), getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
+                FragmentTransition.to(CategoryEditFragment.newInstance(false, categoryListAdapter.getItem(position)),
+                        getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
             }
         });
 
         ((FloatingActionButton) view.findViewById(R.id.addNewCategory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(CategoryEditFragment.newInstance(true, new Category()
-                ), getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
+                FragmentTransition.to(CategoryEditFragment.newInstance(true, new Category()),
+                        getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
             }
         });
 

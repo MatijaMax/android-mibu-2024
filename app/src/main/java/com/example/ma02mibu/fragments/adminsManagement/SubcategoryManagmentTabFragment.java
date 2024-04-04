@@ -7,19 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.adapters.adminsManagment.SubcategoryListAdapter;
 import com.example.ma02mibu.model.SubCategory;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SubcategoryManagmentTabFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SubcategoryManagmentTabFragment extends Fragment {
 
     private SubcategoryListAdapter subCategoryListAdapter;
@@ -48,6 +46,21 @@ public class SubcategoryManagmentTabFragment extends Fragment {
 
         ListView subCategoryListView = view.findViewById(R.id.subCategoriesListView);
         subCategoryListView.setAdapter(subCategoryListAdapter);
+        subCategoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransition.to(SubcategoryEditFragment.newInstance(false, subCategoryListAdapter.getItem(position)),
+                        getActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement");
+            }
+        });
+
+        ((FloatingActionButton) view.findViewById(R.id.addNewSubcategory)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(SubcategoryEditFragment.newInstance(true, new SubCategory()),
+                        getActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement");
+            }
+        });
 
         return view;
     }

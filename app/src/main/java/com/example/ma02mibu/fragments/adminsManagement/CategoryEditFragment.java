@@ -61,12 +61,14 @@ public class CategoryEditFragment extends Fragment {
             }
         });
 
-        ((Button) view.findViewById(R.id.deleteCategory)).setOnClickListener(new View.OnClickListener() {
+        Button deleteCategory = view.findViewById(R.id.deleteCategory);
+        deleteCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO
             }
         });
+        deleteCategory.setEnabled(!isCategoryNew);
     }
 
 }

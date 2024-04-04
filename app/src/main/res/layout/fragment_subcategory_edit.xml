@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.adminsManagement.SubcategoryEditFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/enterSubcategoryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Enter subcategory name:"/>
+        <EditText
+            android:id="@+id/subcategoryName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryName"/>
+        <TextView
+            android:id="@+id/enterSubcategoryDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryName"
+            android:text="Enter subcategory description:"/>
+        <EditText
+            android:id="@+id/subcategoryDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:gravity="top|start"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryDescription"
+            />
+        <Spinner
+            android:id="@+id/subcategoryType"
+            android:tooltipText="type"
+            android:contentDescription="Subcategory type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryDescription"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/enterSubcategoryCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryType"
+            android:text="Enter subcategory category id"/>
+        <EditText
+            android:id="@+id/subcategoryCategory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryCategory"/>
+        <Button
+            android:id="@+id/deleteSubcategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_error"
+            app:layout_constraintBottom_toTopOf="@id/saveSubcategoryChanges"
+            android:text="@string/deleteSubcategory"/>
+        <Button
+            android:id="@+id/saveSubcategoryChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/saveSubcategory"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
