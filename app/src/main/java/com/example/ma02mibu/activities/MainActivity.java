@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = binding.activityHomeBase.toolbar;
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
             actionBar.setHomeButtonEnabled(false);
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.nav_menu, menu);
         return true;
     }
+
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
             }
             if ("EmployeeDetailsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
+                return;
+            }
+            if ("myEventsPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
                 return;
             }
             if ("EmployeeWorkCalendarPage".equals(tag)) {
@@ -128,8 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("eventTypeManagement", 0);
                 return;
             }
-        }
-        super.onBackPressed();
+            if ("addBudgetPage".equals(tag)) {
+                fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                return;
+            }
+            }
+            super.onBackPressed();
     }
-
 }
