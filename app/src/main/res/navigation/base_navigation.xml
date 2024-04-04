@@ -33,7 +33,6 @@
         android:id="@+id/nav_employee_registration"
         android:name="com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment"
         android:label="Employees"
-<<<<<<< HEAD
         tools:layout="@layout/fragment_employee_registration" />
     <fragment
         android:id="@+id/nav_admin_category_management"
@@ -45,9 +44,6 @@
         android:name="com.example.ma02mibu.fragments.adminsManagement.EventTypeManagementContainerFragment"
         android:label="Event type management"
         tools:layout="@layout/fragment_event_type_management_container" />
-=======
-        tools:layout="@layout/fragment_employee_registration"
-        />
     <fragment
         android:id="@+id/nav_event_creation"
         android:name="com.example.ma02mibu.fragments.events.EventFormFragment"
@@ -60,6 +56,4 @@
         android:label="Explore and Filter"
         tools:layout="@layout/fragment_explore_and_filter"
         />
-
->>>>>>> main
 </navigation>
