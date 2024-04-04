@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.employees.EmployeeDetailsFragment">
+    tools:context=".fragments.employees.EmployeePersonalDetailsFragment">
 
     <LinearLayout
         android:padding="5dp"
@@ -25,7 +25,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="First name"
+                    android:text="firstName"
                     android:textSize="18sp" />
 
                 <!-- Last Name -->
@@ -114,12 +114,6 @@
 
             </LinearLayout>
         </LinearLayout>
-<!--        <TextView-->
-<!--            android:id="@+id/workingTable"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="working hours"-->
-<!--            android:textSize="18sp" />-->
 
         <ListView
             android:id="@+id/listWorking"
@@ -130,10 +124,8 @@
             android:id="@+id/btnAddNewWorkTime"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Add new working hours"
+            android:text="Go to work calendar"
             />
     </LinearLayout>
-
-
 
 </FrameLayout>

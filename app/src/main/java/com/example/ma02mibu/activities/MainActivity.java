@@ -117,6 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
             }
+            if ("newWorkTimePage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeeDetailsPage", 0);
+                return;
+            }
+            if ("EmployeePersonalWorkCalendar".equals(tag)) {
+                fragmentManager.popBackStackImmediate("EmployeePersonalPage", 0);
+                return;
+            }
             if ("categoryManagement".equals(tag)) {
                 fragmentManager.popBackStackImmediate("management", 0);
                 return;
@@ -137,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
             }
-            }
-            super.onBackPressed();
+        }
+        super.onBackPressed();
     }
 }

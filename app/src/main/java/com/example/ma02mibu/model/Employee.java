@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
 public class Employee implements Parcelable {
     private Long id;
     private String firstName;
@@ -14,6 +18,7 @@ public class Employee implements Parcelable {
     private String address;
     private String phoneNumber;
     private int image;
+    private ArrayList<WorkSchedule> workSchedules;
 
     public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image) {
         this.id = id;
@@ -24,6 +29,7 @@ public class Employee implements Parcelable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.image = image;
+        this.workSchedules = new ArrayList<>();
     }
 
     protected Employee(Parcel in) {
@@ -39,6 +45,19 @@ public class Employee implements Parcelable {
         address = in.readString();
         phoneNumber = in.readString();
         image = in.readInt();
+        workSchedules = in.createTypedArrayList(WorkSchedule.CREATOR);
+    }
+
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(firstName);
+        parcel.writeString(lastName);
+        parcel.writeString(email);
+        parcel.writeString(address);
+        parcel.writeInt(image);
+        parcel.writeTypedList(workSchedules);
     }
 
     public static final Creator<Employee> CREATOR = new Creator<Employee>() {
@@ -52,7 +71,26 @@ public class Employee implements Parcelable {
             return new Employee[size];
         }
     };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    public WorkSchedule getActiveWorkSchedule() {
+        return workSchedules.get(0);
+    }
+
+    public ArrayList<WorkSchedule> getWorkSchedules() {
+        return workSchedules;
+    }
+
+    public void setWorkSchedules(ArrayList<WorkSchedule> workSchedules) {
+        this.workSchedules = workSchedules;
+    }
+
+    public void setSchedule(WorkSchedule workSchedule) {
+        this.workSchedules.add(workSchedule);
+    }
     public Long getId() {
         return id;
     }
@@ -117,18 +155,5 @@ public class Employee implements Parcelable {
         this.image = image;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeString(firstName);
-        parcel.writeString(lastName);
-        parcel.writeString(email);
-        parcel.writeString(address);
-        parcel.writeInt(image);
-    }
 }
