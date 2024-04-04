@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.adminsManagement.SubcategoryRequestReviewEditFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/enterSubcategoryRequestName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Enter subcategory request name:"/>
+        <EditText
+            android:id="@+id/subcategoryRequestName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryRequestName"/>
+        <TextView
+            android:id="@+id/enterSubcategoryRequestDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryRequestName"
+            android:text="Enter subcategory description:"/>
+        <EditText
+            android:id="@+id/subcategoryRequestDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:gravity="top|start"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryRequestDescription"
+            />
+        <Spinner
+            android:id="@+id/subcategoryRequestType"
+            android:tooltipText="type"
+            android:contentDescription="Subcategory request type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryRequestDescription"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/enterSubcategoryRequestCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/subcategoryRequestType"
+            android:text="Enter subcategory category id"/>
+        <EditText
+            android:id="@+id/subcategoryRequestCategory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/enterSubcategoryRequestCategory"/>
+        <Spinner
+            android:id="@+id/suggestedSubcategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tooltipText="type"
+            android:contentDescription="Assign existing subcategory subcategory"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rejectSubcategoryRequest"/>
+
+        <Button
+            android:id="@+id/acceptSuggestedSubcategory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/suggestedSubcategories"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rejectSubcategoryRequest"
+            android:text="@string/acceptSuggestedSubcategory"/>
+
+        <Button
+            android:id="@+id/rejectSubcategoryRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_error"
+            app:layout_constraintBottom_toTopOf="@id/acceptSubcategoryRequest"
+            android:text="@string/rejectSubcategoryRequest"/>
+        <Button
+            android:id="@+id/acceptSubcategoryRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/acceptSubcategoryRequest"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

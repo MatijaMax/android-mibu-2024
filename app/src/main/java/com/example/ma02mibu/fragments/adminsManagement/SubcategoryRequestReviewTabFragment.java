@@ -2,48 +2,32 @@ package com.example.ma02mibu.fragments.adminsManagement;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.adapters.adminsManagment.SubcategoryRequestListAdapter;
+import com.example.ma02mibu.model.SubCategory;
+import com.example.ma02mibu.model.SubCategoryRequest;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SubcategoryRequestReviewTabFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class SubcategoryRequestReviewTabFragment extends Fragment {
+    private SubcategoryRequestListAdapter subcategoryRequestListAdapter;
+    private ArrayList<SubCategoryRequest> subCategoryRequests = new ArrayList<>();
+    public SubcategoryRequestReviewTabFragment() { }
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SubcategoryRequestReviewTabFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SubcategoryRequestReviewTabFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SubcategoryRequestReviewTabFragment newInstance(String param1, String param2) {
+    public static SubcategoryRequestReviewTabFragment newInstance() {
         SubcategoryRequestReviewTabFragment fragment = new SubcategoryRequestReviewTabFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,10 +35,8 @@ public class SubcategoryRequestReviewTabFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        createSubCategoryRequests();
+        subcategoryRequestListAdapter = new SubcategoryRequestListAdapter(getActivity(), subCategoryRequests);
     }
 
     @Override
@@ -62,5 +44,30 @@ public class SubcategoryRequestReviewTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_subcategory_request_review_tab, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ListView subcategoryRequestListView = view.findViewById(R.id.subCategoriesRequestsListView);
+        subcategoryRequestListView.setAdapter(subcategoryRequestListAdapter);
+        subcategoryRequestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransition.to(SubcategoryRequestReviewEditFragment.newInstance(subcategoryRequestListAdapter.getItem(position)),
+                        getActivity(), true, R.id.categoryManagementContainer, "subcategoryRequestManagement");
+            }
+        });
+    }
+
+    private void createSubCategoryRequests(){
+        subCategoryRequests.add(new SubCategoryRequest(1L, 1L, "Ime podkategorije 1", "Opis podkategorije 1", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(2L, 2L, "Ime podkategorije 2", "Opis podkategorije 2", SubCategory.SUBCATEGORYTYPE.USLUGA, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(3L, 2L, "Ime podkategorije 3", "Opis podkategorije 3", SubCategory.SUBCATEGORYTYPE.USLUGA, 3L));
+        subCategoryRequests.add(new SubCategoryRequest(4L, 2L, "Ime podkategorije 4", "Opis podkategorije 4", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 2L));
+        subCategoryRequests.add(new SubCategoryRequest(5L, 4L, "Ime podkategorije 5", "Opis podkategorije 5", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(6L, 1L, "Ime podkategorije 6", "Opis podkategorije 6", SubCategory.SUBCATEGORYTYPE.USLUGA, 6L));
+        subCategoryRequests.add(new SubCategoryRequest(7L, 4L, "Ime podkategorije 7", "Opis podkategorije 7", SubCategory.SUBCATEGORYTYPE.USLUGA, 9L));
+        subCategoryRequests.add(new SubCategoryRequest(8L, 1L, "Ime podkategorije 8", "Opis podkategorije 8", SubCategory.SUBCATEGORYTYPE.USLUGA, 6L));
+        subCategoryRequests.add(new SubCategoryRequest(9L, 1L, "Ime podkategorije 9", "Opis podkategorije 9", SubCategory.SUBCATEGORYTYPE.USLUGA, 4L));
     }
 }
