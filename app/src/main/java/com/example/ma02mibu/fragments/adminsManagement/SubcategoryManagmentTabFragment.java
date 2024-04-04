@@ -1,4 +1,4 @@
-package com.example.ma02mibu.fragments.adminsManagment;
+package com.example.ma02mibu.fragments.adminsManagement;
 
 import android.os.Bundle;
 

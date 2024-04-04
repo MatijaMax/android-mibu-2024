@@ -32,6 +32,9 @@
     <!-- General authentication strings -->
     <string name="next" translatable="false">Next</string>
 
+    <!-- Category management -->
+    <string name="saveCategory" translatable="false">Save category</string>
+    <string name="deleteCategory" translatable="false">Delete category</string>
 
     <string name="search_products">Search products</string>
     <string name="product_name">Product name: </string>

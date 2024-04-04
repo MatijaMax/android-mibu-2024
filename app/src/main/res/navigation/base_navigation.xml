@@ -41,8 +41,8 @@
         tools:layout="@layout/fragment_employee_registration"
         />
     <fragment
-        android:id="@+id/nav_admin_category_managment"
-        android:name="com.example.ma02mibu.fragments.adminsManagment.CategoriesManagmentFragment"
+        android:id="@+id/nav_admin_category_management"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.CategoryManagementContainerFragment"
         android:label="Category managment"
-        tools:layout="@layout/fragment_categories_managment" />
+        tools:layout="@layout/fragment_category_management_container" />
 </navigation>
