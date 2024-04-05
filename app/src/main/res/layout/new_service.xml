@@ -8,6 +8,7 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:paddingTop="2dp"
+    android:windowSoftInputMode="adjustPan | adjustResize"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -434,6 +435,7 @@
                 android:layout_marginTop="2dp"
                 android:text="Switch page" />
             <TextView
+                android:id="@+id/service_create_page_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"

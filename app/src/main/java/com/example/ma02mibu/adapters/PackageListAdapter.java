@@ -14,13 +14,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.fragments.packages.EditPackageFragment;
+import com.example.ma02mibu.fragments.packages.PackageDetailsFragment;
+import com.example.ma02mibu.fragments.services.ServiceDetailsFragment;
 import com.example.ma02mibu.model.Package;
+import com.example.ma02mibu.model.Service;
 
 import java.util.ArrayList;
 
@@ -68,7 +73,9 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
         ImageButton menuButton = convertView.findViewById(R.id.more_button_package);
         handleRightButtonClick(rightButton, imageView, aPackage);
         handleLeftButtonClick(leftButton, imageView, aPackage);
-        //handleProductMenuButtonClick(menuButton, product);
+        ConstraintLayout layout = convertView.findViewById(R.id.package_card_item);
+        handleCardClick(layout, aPackage);
+        handleProductMenuButtonClick(menuButton, aPackage);
         if(aPackage != null){
             int image = aPackage.getImages().get(aPackage.getCurrentImageIndex());
             imageView.setImageResource(image);
@@ -104,8 +111,8 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
                 imageView.setImageResource(image);
             }
         });
-    }/*
-    private void handleProductMenuButtonClick(ImageButton menuButton, Product product){
+    }
+    private void handleProductMenuButtonClick(ImageButton menuButton, Package aPackage){
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +123,8 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getItemId() == R.id.edit){
-                            FragmentTransition.to(EditProductFragment.newInstance(product), currFragActivity,
-                                    true, R.id.scroll_products_list, "editProductPage");
+                            FragmentTransition.to(EditPackageFragment.newInstance(aPackage), currFragActivity,
+                                    true, R.id.scroll_packages_list, "editPackagePage");
                         }
                         return true;
                     }
@@ -125,5 +132,15 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
                 popup.show();
             }
         });
-    }*/
+    }
+
+    private void handleCardClick(ConstraintLayout layout, Package mPacakage){
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(PackageDetailsFragment.newInstance(mPacakage), currFragActivity,
+                        true, R.id.scroll_packages_list, "PackagesDetailsPage");
+            }
+        });
+    }
 }

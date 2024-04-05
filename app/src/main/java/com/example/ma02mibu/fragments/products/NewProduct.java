@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +28,14 @@ import com.example.ma02mibu.fragments.services.ServicesListFragment;
 
 public class NewProduct extends Fragment {
     NewProductBinding binding;
+    boolean newSubCatShow;
     private LinearLayout imageContainer;
     private static final int PICK_IMAGES_REQUEST = 1;
     public static NewProduct newInstance() {
         return new NewProduct();
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        newSubCatShow = false;
         binding = NewProductBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Button galleryButton = binding.addImageButton;
@@ -40,7 +43,17 @@ public class NewProduct extends Fragment {
         imageContainer = binding.imageContainer;
         ImageButton removeButton = binding.removeImagesButton;
         removeButton.setOnClickListener(v -> imageContainer.removeAllViews());
+        ImageButton newSubCat = binding.newSubCategory;
+        newSubCat.setOnClickListener(v -> toggleNewSubCategory());
         return root;
+    }
+    private void toggleNewSubCategory(){
+        TextView subCatText = binding.SubCategoryRecommendation;
+        if(newSubCatShow)
+            subCatText.setVisibility(View.VISIBLE);
+        else
+            subCatText.setVisibility(View.GONE);
+        newSubCatShow = !newSubCatShow;
     }
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
