@@ -112,6 +112,7 @@
         app:layout_constraintTop_toBottomOf="@+id/product_category"
         />
     <LinearLayout
+        android:id="@+id/product_price_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -142,5 +143,13 @@
             android:visibility="gone"
             android:text="Choose"/>
     </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="5dp"
+        android:text="Available to buy, visible"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_price_layout"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
