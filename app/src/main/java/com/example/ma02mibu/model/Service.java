@@ -19,9 +19,14 @@ public class Service implements Parcelable {
     private int priceByHour;
     private int minHourDuration;
     private int maxHourDuration;
+    private int minMinutesDuration;
+    private int maxMinutesDuration;
     private String location;
     private String reservationDeadline;
     private String cancellationDeadline;
+    private boolean visible;
+    private boolean availableToBuy;
+    private boolean confirmAutomatically;
     private ArrayList<Integer> images;
     private ArrayList<String> eventTypes;
     private ArrayList<String> persons;
@@ -31,8 +36,8 @@ public class Service implements Parcelable {
         this.discount = 0;
     }
 
-    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int maxHourDuration, String location, String reservationDeadline,
-                   String cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons) {
+    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, String reservationDeadline,
+                   String cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons, boolean confirmAutomatically) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,6 +47,8 @@ public class Service implements Parcelable {
         this.priceByHour = priceByHour;
         this.minHourDuration = minHourDuration;
         this.maxHourDuration = maxHourDuration;
+        this.minMinutesDuration = minMinutesDuration;
+        this.maxMinutesDuration = maxMinutesDuration;
         this.location = location;
         this.reservationDeadline = reservationDeadline;
         this.cancellationDeadline = cancellationDeadline;
@@ -50,6 +57,9 @@ public class Service implements Parcelable {
         this.persons = persons;
         this.currentImageIndex = 0;
         this.discount = 0;
+        this.confirmAutomatically = confirmAutomatically;
+        this.visible = true;
+        this.availableToBuy = true;
     }
 
     protected Service(Parcel in) {
@@ -132,6 +142,30 @@ public class Service implements Parcelable {
         this.specificity = specificity;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isAvailableToBuy() {
+        return availableToBuy;
+    }
+
+    public void setAvailableToBuy(boolean availableToBuy) {
+        this.availableToBuy = availableToBuy;
+    }
+
+    public boolean isConfirmAutomatically() {
+        return confirmAutomatically;
+    }
+
+    public void setConfirmAutomatically(boolean confirmAutomatically) {
+        this.confirmAutomatically = confirmAutomatically;
+    }
+
     public int getPriceByHour() {
         return priceByHour;
     }
@@ -156,12 +190,28 @@ public class Service implements Parcelable {
         this.maxHourDuration = maxHourDuration;
     }
 
+    public int getMinMinutesDuration() {
+        return minMinutesDuration;
+    }
+
+    public void setMinMinutesDuration(int minMinutesDuration) {
+        this.minMinutesDuration = minMinutesDuration;
+    }
+
+    public int getMaxMinutesDuration() {
+        return maxMinutesDuration;
+    }
+
+    public void setMaxMinutesDuration(int maxMinutesDuration) {
+        this.maxMinutesDuration = maxMinutesDuration;
+    }
+
     public String getDuration(){
-        if(minHourDuration != maxHourDuration){
-            return minHourDuration +"-"+maxHourDuration+" hours";
+        if(minHourDuration == maxHourDuration && minMinutesDuration == maxMinutesDuration){
+            return minHourDuration+" hours, "+ minMinutesDuration+" min";
         }
         else{
-            return minHourDuration+" hours";
+            return minHourDuration +":"+minMinutesDuration+" - "+ maxHourDuration+":"+maxMinutesDuration;
         }
     }
     public String getLocation() {

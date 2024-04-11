@@ -76,8 +76,8 @@ public class NewPackage extends Fragment {
         ArrayList<String> eventTypes = new ArrayList<>();
         eventTypes.add("Svadbe");
         eventTypes.add("rodjendani");
-        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", "2000", images, eventTypes, 5));
-        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", "2000", images, eventTypes, 5));
+        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes, 5));
+        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", 2000, images, eventTypes, 5));
     }
     private void prepareServicesList(ArrayList<Service> services){
         services.clear();
@@ -90,8 +90,8 @@ public class NewPackage extends Fragment {
         eventTypes.add("vencanje");
         ArrayList<String> persons = new ArrayList<>();
         persons.add("Jovan");
-        services.add(new Service(1L, "Usluga 1", "Opis 1", "kategorija 1", "podkategorija 1", "/", 1000, 2, 2, "Novi Sad", "2 meseca pred pocetak", "3 dana pred pocetak", images, eventTypes, persons));
-        services.add(new Service(2L, "Usluga 2", "Opis 2", "kategorija 2", "podkategorija 2", "specificnost", 1000, 2, 5, "Novi Sad", "1 mesec pred pocetak", "2 dana pred pocetak", images, eventTypes, persons));
+        services.add(new Service(1L, "Usluga 1", "Opis 1", "kategorija 1", "podkategorija 1", "/", 1000, 2, 0, 2, 0, "Novi Sad", "2 meseca pred pocetak", "3 dana pred pocetak", images, eventTypes, persons, true));
+        services.add(new Service(2L, "Usluga 2", "Opis 2", "kategorija 2", "podkategorija 2", "specificnost", 1000, 2, 30, 5, 0, "Novi Sad", "1 mesec pred pocetak", "2 dana pred pocetak", images, eventTypes, persons, true));
     }
     private void setPackageData(){
         if(!mChosenProducts.isEmpty()){

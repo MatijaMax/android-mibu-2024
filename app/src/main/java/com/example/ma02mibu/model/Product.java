@@ -13,12 +13,14 @@ public class Product implements Parcelable {
     private String description;
     private String category;
     private String subCategory;
-    private String price;
-    private int priceLowering;
+    private int price;
+    private int discount;
+    private boolean visible;
+    private boolean availableToBuy;
     private ArrayList<Integer> images;
     private ArrayList<String> eventTypes;
     private int currentImageIndex;
-    public Product(Long id, String name, String description, String category, String subCategory, String price, ArrayList<Integer> images, ArrayList<String> eventTypes, int priceLowering) {
+    public Product(Long id, String name, String description, String category, String subCategory, int price, ArrayList<Integer> images, ArrayList<String> eventTypes, int discount) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -28,7 +30,9 @@ public class Product implements Parcelable {
         this.images = images;
         this.eventTypes = eventTypes;
         this.currentImageIndex = 0;
-        this.priceLowering = priceLowering;
+        this.discount = discount;
+        this.visible = true;
+        this.availableToBuy = true;
     }
 
     public Product() {
@@ -84,27 +88,49 @@ public class Product implements Parcelable {
         this.subCategory = subCategory;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isAvailableToBuy() {
+        return availableToBuy;
+    }
+
+    public void setAvailableToBuy(boolean availableToBuy) {
+        this.availableToBuy = availableToBuy;
     }
 
     public ArrayList<Integer> getImage() {
         return images;
     }
 
-    public int getPriceLowering() {
-        return priceLowering;
+    public int getDiscount() {
+        return discount;
     }
 
-    public void setPriceLowering(int priceLowering) {
-        this.priceLowering = priceLowering;
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
     public String getNewPrice(){
-        return "1900 din";
+        if(discount == 0){
+            return price + " din";
+        }
+        else{
+            double newPrice = ((100-discount)/100.0)*price;
+            return newPrice+" din";
+        }
     }
     public void setImage(ArrayList<Integer> images) {
         this.images = images;

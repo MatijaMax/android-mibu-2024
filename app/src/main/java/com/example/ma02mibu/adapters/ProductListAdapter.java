@@ -1,6 +1,8 @@
 package com.example.ma02mibu.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,9 +92,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             productDescription.setText(product.getDescription());
             category.setText(product.getCategory());
             subCategory.setText(product.getSubCategory());
-            oldPrice.setText(product.getPrice());
             price.setText(product.getNewPrice());
-            oldPrice.setPaintFlags(oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            if(product.getDiscount() != 0) {
+                oldPrice.setVisibility(View.VISIBLE);
+                oldPrice.setText(String.valueOf(product.getPrice()));
+                oldPrice.setPaintFlags(oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
         }
         LinearLayoutManager layoutManager= new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = convertView.findViewById(R.id.event_type_tags);
@@ -143,6 +148,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                         if(item.getItemId() == R.id.edit){
                             FragmentTransition.to(EditProductFragment.newInstance(product), currFragActivity,
                                     true, R.id.scroll_products_list, "editProductPage");
+                        }
+                        else if(item.getItemId() == R.id.delete){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete product");
+                            builder.setMessage("Are you sure?");
+                            builder.setIcon(R.drawable.warning_icon);
+                            builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+                            builder.setPositiveButton("Yes", (dialog, id) -> {
+                                //obrisi proizvod
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
                         return true;
                     }

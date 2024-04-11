@@ -76,7 +76,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     />
@@ -95,6 +95,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -104,18 +105,39 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
-                    android:id="@+id/ServiceMinDurationEdit"
+                    android:id="@+id/ServiceMinDurationHours"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:layout_marginStart="15dp"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="H"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/ServiceMinDurationMinutes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:layout_marginStart="15dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="m"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -125,13 +147,33 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
-                    android:id="@+id/ServiceMaxDurationEdit"
+                    android:id="@+id/ServiceMaxDurationHours"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:layout_marginStart="15dp"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="H"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/ServiceMaxDurationMinutes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:layout_marginStart="15dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="m"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
@@ -348,15 +390,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginTop="2dp"
-                android:text="Switch page" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="26dp"
-                android:text="Page 1/2"
-                android:textAlignment="textEnd"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="Page 1/2" />
 
             <Button
                 android:id="@+id/submitButtonService"

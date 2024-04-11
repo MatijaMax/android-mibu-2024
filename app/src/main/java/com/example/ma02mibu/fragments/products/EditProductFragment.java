@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,13 @@ public class EditProductFragment extends Fragment {
         EditText productDescription = binding.ProductDescriptionEdit;
         productDescription.setText(mProduct.getDescription());
         EditText productPrice = binding.ProductPriceEdit;
-        productPrice.setText(mProduct.getPrice());
+        productPrice.setText(String.valueOf(mProduct.getPrice()));
+        EditText productDiscount = binding.ProductDiscountEdit;
+        productDiscount.setText(String.valueOf(mProduct.getDiscount()));
+        CheckBox visibleCheckBox = binding.checkBoxODAvailableEdit;
+        visibleCheckBox.setChecked(mProduct.isVisible());
+        CheckBox buyAvailableCheckBox = binding.checkBoxBuyAvailableEdit;
+        buyAvailableCheckBox.setChecked(mProduct.isAvailableToBuy());
         return root;
     }
 

@@ -116,7 +116,7 @@ public class NewService extends Fragment {
     }
 
     private void switchFormPages(){
-        TextView tv = binding.switchPageButton;
+        Button tv = binding.switchPageButton;
         if(currentPage == 0) {
             part1.setVisibility(View.GONE);
             part2.setVisibility(View.VISIBLE);
@@ -135,7 +135,7 @@ public class NewService extends Fragment {
             part3.setVisibility(View.GONE);
             currentPage = 0;
         }
-        String text = "Page" + currentPage + "/3";
+        String text = "Page " + (currentPage+1) + "/3";
         tv.setText(text);
     }
     private ArrayList<String> getEmployees(){

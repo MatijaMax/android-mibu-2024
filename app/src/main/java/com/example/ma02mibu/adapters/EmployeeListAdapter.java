@@ -38,7 +38,6 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         return aEmployees.size();
     }
 
-
     @Nullable
     @Override
     public Employee getItem(int position) {

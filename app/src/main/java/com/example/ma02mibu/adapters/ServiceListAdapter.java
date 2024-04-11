@@ -1,5 +1,6 @@
 package com.example.ma02mibu.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -157,6 +158,17 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                         if(item.getItemId() == R.id.edit){
                             FragmentTransition.to(EditServiceFragment.newInstance(service), currFragActivity,
                                     true, R.id.scroll_services_list, "editServicePage");
+                        }else if(item.getItemId() == R.id.delete){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete service");
+                            builder.setMessage("Are you sure?");
+                            builder.setIcon(R.drawable.warning_icon);
+                            builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+                            builder.setPositiveButton("Yes", (dialog, id) -> {
+                                //obrisi uslugu
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
                         return true;
                     }
