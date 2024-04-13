@@ -132,6 +132,17 @@ public class Product implements Parcelable {
             return newPrice+" din";
         }
     }
+
+    public int getNewPriceValue(){
+        if(discount == 0){
+            return price;
+        }
+        else{
+            double newPrice = ((100-discount)/100.0)*price;
+            return (int)newPrice;
+        }
+    }
+
     public void setImage(ArrayList<Integer> images) {
         this.images = images;
     }
@@ -159,6 +170,15 @@ public class Product implements Parcelable {
     public void setEventTypes(ArrayList<String> eventTypes) {
         this.eventTypes = eventTypes;
     }
+
+    public boolean containsEventType(String eventType){
+        for(String productEventType: eventTypes){
+            if(productEventType.toLowerCase().contains(eventType))
+                return true;
+        }
+        return false;
+    }
+
 
     @Override
     public int describeContents() {

@@ -48,7 +48,7 @@ public class ProductsPageFragment extends Fragment {
         ArrayList<String> eventTypes = new ArrayList<>();
         eventTypes.add("Svadbe");
         eventTypes.add("rodjendani");
-        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes, 5));
+        products.add(new Product(1L, "Product 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes, 5));
         products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", 2000, images, eventTypes, 0));
     }
 }

@@ -83,7 +83,7 @@
             android:id="@+id/min_price"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
-            android:inputType="text"/>
+            android:inputType="number"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:id="@+id/max_price"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
-            android:inputType="text"/>
+            android:inputType="number"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -166,12 +166,25 @@
         android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:text="Available for buying" />
-    <Button
-        android:id="@+id/search_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
+        android:orientation="horizontal"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="50dp"
-        android:text="Search" />
+        >
+        <Button
+            android:id="@+id/submit_search_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Search" />
+        <Button
+            android:id="@+id/reset_search_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Reset" />
+    </LinearLayout>
 
 </LinearLayout>

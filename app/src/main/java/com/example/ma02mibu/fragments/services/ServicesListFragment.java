@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentServicesListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
+import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -32,6 +35,7 @@ public class ServicesListFragment extends ListFragment {
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
     private ArrayList<Service> mServices;
+    private ArrayList<Service> mServicesBackup;
     private ServiceListAdapter adapter;
     private static final String ARG_PARAM = "param";
     public static ServicesListFragment newInstance(ArrayList<Service> services){
@@ -47,6 +51,7 @@ public class ServicesListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mServices = getArguments().getParcelableArrayList(ARG_PARAM);
+            mServicesBackup = new ArrayList<>(mServices);
             adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
             setListAdapter(adapter);
         }
@@ -67,6 +72,28 @@ public class ServicesListFragment extends ListFragment {
             Spinner spinnerSubCategories = bottomSheetDialog.findViewById(R.id.service_subcategory_search);
             spinnerCategories.setAdapter(setCategoriesSpinnerAdapter());
             spinnerSubCategories.setAdapter(setSubCategoriesSpinnerAdapter());
+            Button submitSearchButton = bottomSheetDialog.findViewById(R.id.search_button_service);
+            submitSearchButton.setOnClickListener(f -> {
+                EditText nameSearch = bottomSheetDialog.findViewById(R.id.service_name_search);
+                EditText employeeSearch = bottomSheetDialog.findViewById(R.id.employee_service_search);
+                EditText minPriceSearch = bottomSheetDialog.findViewById(R.id.min_price_service);
+                EditText maxPriceSearch = bottomSheetDialog.findViewById(R.id.max_price_service);
+                EditText eventTypeSearch = bottomSheetDialog.findViewById(R.id.event_type_search_service);
+                CheckBox availableToBuySearch = bottomSheetDialog.findViewById(R.id.available_service_search);
+                boolean availableToBuy = availableToBuySearch.isChecked();
+                String name = nameSearch.getText().toString();
+                String employee = employeeSearch.getText().toString();
+                String eventType = eventTypeSearch.getText().toString();
+                Integer minPrice = Integer.parseInt(minPriceSearch.getText().toString().isEmpty() ? "0" : minPriceSearch.getText().toString());
+                Integer maxPrice = Integer.parseInt(maxPriceSearch.getText().toString().isEmpty() ? "0" : maxPriceSearch.getText().toString());
+                searchService(name, employee, minPrice, maxPrice, eventType, availableToBuy);
+                bottomSheetDialog.dismiss();
+            });
+            Button resetBtn = bottomSheetDialog.findViewById(R.id.reset_search_service);
+            resetBtn.setOnClickListener(f -> {
+                resetServices();
+                bottomSheetDialog.dismiss();
+            });
             bottomSheetDialog.show();
         });
 
@@ -104,5 +131,28 @@ public class ServicesListFragment extends ListFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapter;
+    }
+
+    private void searchService(String name, String employeeName, Integer minPrice, Integer maxPrice, String eventType, boolean availableToBuy){
+        mServices = new ArrayList<>(mServicesBackup);
+        if (!name.isEmpty())
+            mServices.removeIf(s -> !s.getName().toLowerCase().contains(name.toLowerCase()));
+        if (!employeeName.isEmpty())
+            mServices.removeIf(s -> !s.containsPerson(employeeName));
+        if(minPrice != 0 || maxPrice != 0) {
+            mServices.removeIf(s -> minPrice > s.getPriceByHour());
+            mServices.removeIf(s -> maxPrice < s.getPriceByHour());
+        }
+        if(!eventType.isEmpty())
+            mServices.removeIf(s -> !s.containsEventType(eventType));
+        if(availableToBuy)
+            mServices.removeIf(s -> !s.isAvailableToBuy());
+        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+        setListAdapter(adapter);
+    }
+    private void resetServices(){
+        mServices = new ArrayList<>(mServicesBackup);
+        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+        setListAdapter(adapter);
     }
 }

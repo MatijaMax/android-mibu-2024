@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 public class ProductsListFragment extends ListFragment {
     private FragmentProductsListBinding binding;
     private ArrayList<Product> mProducts;
+    private ArrayList<Product> mProductsBackup;
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
     private ProductListAdapter adapter;
@@ -46,6 +49,7 @@ public class ProductsListFragment extends ListFragment {
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
             mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
+            mProductsBackup = new ArrayList<>(mProducts);
             adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
             setListAdapter(adapter);
         }
@@ -65,6 +69,26 @@ public class ProductsListFragment extends ListFragment {
             Spinner spinnerSubCategories = bottomSheetDialog.findViewById(R.id.product_subcategory_search);
             spinnerCategories.setAdapter(setCategoriesSpinnerAdapter());
             spinnerSubCategories.setAdapter(setSubCategoriesSpinnerAdapter());
+            Button submitSearchBtn = bottomSheetDialog.findViewById(R.id.submit_search_products);
+            submitSearchBtn.setOnClickListener(f -> {
+                EditText productName = bottomSheetDialog.findViewById(R.id.product_name_search);
+                EditText productDescription = bottomSheetDialog.findViewById(R.id.description_search);
+                EditText minPriceText = bottomSheetDialog.findViewById(R.id.min_price);
+                EditText maxPriceText = bottomSheetDialog.findViewById(R.id.max_price);
+                EditText productEventType = bottomSheetDialog.findViewById(R.id.event_type_search);
+                String name = productName.getText().toString();
+                String description = productDescription.getText().toString();
+                String eventType = productEventType.getText().toString();
+                Integer minPrice = Integer.parseInt(minPriceText.getText().toString().isEmpty() ? "0" : minPriceText.getText().toString());
+                Integer maxPrice = Integer.parseInt(maxPriceText.getText().toString().isEmpty() ? "0" : maxPriceText.getText().toString());
+                searchProducts(name, description, minPrice, maxPrice, eventType);
+                bottomSheetDialog.dismiss();
+            });
+            Button resetBtn = bottomSheetDialog.findViewById(R.id.reset_search_products);
+            resetBtn.setOnClickListener(f -> {
+                resetProducts();
+                bottomSheetDialog.dismiss();
+            });
             bottomSheetDialog.show();
         });
 
@@ -99,5 +123,26 @@ public class ProductsListFragment extends ListFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapter;
+    }
+
+    private void searchProducts(String name, String description, Integer minPrice, Integer maxPrice, String eventType){
+        mProducts = new ArrayList<>(mProductsBackup);
+        if (!name.isEmpty())
+            mProducts.removeIf(p -> !p.getName().toLowerCase().contains(name.toLowerCase()));
+        if (!description.isEmpty())
+            mProducts.removeIf(p -> !p.getDescription().toLowerCase().contains(description.toLowerCase()));
+        if(minPrice != 0 || maxPrice != 0) {
+            mProducts.removeIf(p -> minPrice > p.getNewPriceValue());
+            mProducts.removeIf(p -> maxPrice < p.getNewPriceValue());
+        }
+        if(!eventType.isEmpty())
+            mProducts.removeIf(p -> !p.containsEventType(eventType));
+        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+        setListAdapter(adapter);
+    }
+    private void resetProducts(){
+        mProducts = new ArrayList<>(mProductsBackup);
+        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+        setListAdapter(adapter);
     }
 }

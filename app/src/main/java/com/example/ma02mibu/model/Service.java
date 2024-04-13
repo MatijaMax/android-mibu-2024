@@ -262,6 +262,22 @@ public class Service implements Parcelable {
         this.persons = persons;
     }
 
+    public boolean containsPerson(String employee){
+        for(String person: persons){
+            if(person.toLowerCase().contains(employee))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean containsEventType(String eventType){
+        for(String productEventType: eventTypes){
+            if(productEventType.toLowerCase().contains(eventType))
+                return true;
+        }
+        return false;
+    }
+
     public int getCurrentImageIndex() {
         return currentImageIndex;
     }
