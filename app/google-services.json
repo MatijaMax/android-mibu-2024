@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "190647323759",
+    "project_id": "ma02mibuproj",
+    "storage_bucket": "ma02mibuproj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190647323759:android:8dd5be6d030a2b80f8d19a",
+        "android_client_info": {
+          "package_name": "com.example.ma02mibu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCok3026dj7euPOhcQHJxMEh_hVS4wj7m4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
