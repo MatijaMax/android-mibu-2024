@@ -20,6 +20,7 @@ import androidx.fragment.app.ListFragment;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.databinding.FragmentProductsListBinding;
 import com.example.ma02mibu.model.Product;
@@ -34,12 +35,14 @@ public class ProductsListFragment extends ListFragment {
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
     private ProductListAdapter adapter;
+    private static ArrayList<Product> products = new ArrayList<>();
     private static final String ARG_PARAM = "param";
-    public static ProductsListFragment newInstance(ArrayList<Product> products){
+    public static ProductsListFragment newInstance(){
+
         ProductsListFragment fragment = new ProductsListFragment();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM, products);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
         return fragment;
     }
 
@@ -47,12 +50,20 @@ public class ProductsListFragment extends ListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
-        if (getArguments() != null) {
-            mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            mProductsBackup = new ArrayList<>(mProducts);
-            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
-            setListAdapter(adapter);
-        }
+        CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback(){
+            @Override
+            public void onCallback(ArrayList<Product> retrievedProducts) {
+                if (retrievedProducts != null) {
+                    mProducts = retrievedProducts;
+                } else {
+                    mProducts = new ArrayList<>();
+                }
+                mProductsBackup = new ArrayList<>(mProducts);
+                adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+                setListAdapter(adapter);
+            }
+        });
+
     }
     @Nullable
     @Override

@@ -28,7 +28,7 @@ public class ProductsPageFragment extends Fragment {
         View root = binding.getRoot();
         prepareProductList(products);
 
-        FragmentTransition.to(ProductsListFragment.newInstance(products), getActivity(),
+        FragmentTransition.to(ProductsListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_products_list, "productPage");
 
         return root;

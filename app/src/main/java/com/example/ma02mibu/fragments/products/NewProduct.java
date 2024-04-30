@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,14 +22,20 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.ServicesPageFragmentBinding;
 import com.example.ma02mibu.fragments.HomeFragment;
 import com.example.ma02mibu.fragments.services.ServicesListFragment;
+import com.example.ma02mibu.model.Product;
+
+import java.util.ArrayList;
 
 public class NewProduct extends Fragment {
     NewProductBinding binding;
     boolean newSubCatShow;
+    private ArrayList<String> categories;
+    private ArrayList<String> subCategories;
     private LinearLayout imageContainer;
     private static final int PICK_IMAGES_REQUEST = 1;
     public static NewProduct newInstance() {
@@ -45,6 +52,10 @@ public class NewProduct extends Fragment {
         removeButton.setOnClickListener(v -> imageContainer.removeAllViews());
         ImageButton newSubCat = binding.newSubCategory;
         newSubCat.setOnClickListener(v -> toggleNewSubCategory());
+        Button submitBtn = binding.submitButton;
+        binding.ProductCategory.setAdapter(setCategoriesSpinnerAdapter());
+        binding.ProductSubCategory.setAdapter(setSubCategoriesSpinnerAdapter());
+        submitBtn.setOnClickListener(v -> addProduct());
         return root;
     }
     private void toggleNewSubCategory(){
@@ -105,6 +116,46 @@ public class NewProduct extends Fragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(imageView);
         imageContainer.addView(layout);
+    }
+    private void addProduct(){
+        String category = binding.ProductCategory.getSelectedItem().toString();
+        String subcategory = binding.ProductSubCategory.getSelectedItem().toString();
+        String name = binding.ProductName.getText().toString();
+        String description = binding.editTextProductDescription.getText().toString();
+        String price = binding.ProductPrice.getText().toString();
+        boolean visible = binding.checkBoxODAvailable.isChecked();
+        boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
+        int priceInt = Integer.parseInt(price);
+        ArrayList<String> eventTypes = new ArrayList<>();
+        eventTypes.add("tip1");
+        eventTypes.add("tip2");
+        Product product = new Product(0L, name, description, category, subcategory, priceInt,
+                new ArrayList<Integer>(), eventTypes, 0);
+        product.setVisible(visible);
+        product.setAvailableToBuy(isAvailableToBuy);
+        CloudStoreUtil.insertProduct(product);
+        FragmentTransition.to(ProductsListFragment.newInstance(), getActivity(),
+                false, R.id.scroll_products_list, "falsh");
+    }
+
+    private ArrayAdapter<String> setCategoriesSpinnerAdapter(){
+        categories = new ArrayList<>();
+        categories.add("Category 1");
+        categories.add("Category 2");
+        categories.add("Category 3");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
+    }
+
+    private ArrayAdapter<String> setSubCategoriesSpinnerAdapter(){
+        subCategories = new ArrayList<>();
+        subCategories.add("Sub-Category 1");
+        subCategories.add("Sub-Category 2");
+        subCategories.add("Sub-Category 3");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     @Override

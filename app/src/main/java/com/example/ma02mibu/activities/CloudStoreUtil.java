@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,9 +92,21 @@ public class CloudStoreUtil {
                 });
     }
 
-    public static void select(){
+    public static void insertProduct(Product product){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users")
+        db.collection("products")
+                .add(product);
+    }
+
+    public interface ProductCallback {
+        void onCallback(ArrayList<Product> products);
+    }
+
+
+    public static void selectProducts(final ProductCallback callback){
+        ArrayList<Product> products = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("products")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -100,13 +114,14 @@ public class CloudStoreUtil {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                                products.add(document.toObject(Product.class));
                             }
+                            callback.onCallback(products);
                         } else {
                             Log.w("REZ_DB", "Error getting documents.", task.getException());
+                            callback.onCallback(null);
                         }
                     }
                 });
-
     }
-
 }

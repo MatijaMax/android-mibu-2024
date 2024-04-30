@@ -86,8 +86,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         handleRightButtonClick(rightButton, imageView, product);
         handleLeftButtonClick(leftButton, imageView, product);
         if(product != null){
-            int image = product.getImage().get(product.getCurrentImageIndex());
-            imageView.setImageResource(image);
+            if(!product.getImage().isEmpty()) {
+                int image = product.getImage().get(product.getCurrentImageIndex());
+                imageView.setImageResource(image);
+            }
             productName.setText(product.getName());
             productDescription.setText(product.getDescription());
             category.setText(product.getCategory());
