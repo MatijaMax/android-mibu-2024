@@ -18,6 +18,7 @@ import androidx.fragment.app.ListFragment;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentServicesListBinding;
@@ -38,23 +39,27 @@ public class ServicesListFragment extends ListFragment {
     private ArrayList<Service> mServicesBackup;
     private ServiceListAdapter adapter;
     private static final String ARG_PARAM = "param";
-    public static ServicesListFragment newInstance(ArrayList<Service> services){
+    public static ServicesListFragment newInstance(){
         ServicesListFragment fragment = new ServicesListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, services);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mServices = getArguments().getParcelableArrayList(ARG_PARAM);
-            mServicesBackup = new ArrayList<>(mServices);
-            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
-            setListAdapter(adapter);
-        }
+        CloudStoreUtil.selectServices(new CloudStoreUtil.ServiceCallback(){
+            @Override
+            public void onCallbackService(ArrayList<Service> retrievedServices) {
+                if (retrievedServices != null) {
+                    mServices = retrievedServices;
+                } else {
+                    mServices = new ArrayList<>();
+                }
+                mServicesBackup = new ArrayList<>(mServices);
+                adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+                setListAdapter(adapter);
+            }
+        });
     }
     @Nullable
     @Override

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.packages.ChooseProductsListFragment;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
 import com.example.ma02mibu.model.Product;
@@ -40,6 +41,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private ChooseProductsListFragment currFragment;
     private boolean isFromPackage;
     Context context;
+
     public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment){
         super(context, R.layout.product_card, products);
         this.context = context;
@@ -48,6 +50,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         currFragActivity = fragmentActivity;
         currFragment = myFragment;
     }
+
     @Override
     public int getCount() {
         return aProducts.size();
@@ -158,7 +161,9 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                             builder.setIcon(R.drawable.warning_icon);
                             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
                             builder.setPositiveButton("Yes", (dialog, id) -> {
-                                //obrisi proizvod
+                                CloudStoreUtil.deleteProduct(product.getFirestoreId());
+                                aProducts.remove(product);
+                                notifyDataSetChanged();
                             });
                             AlertDialog alert = builder.create();
                             alert.show();

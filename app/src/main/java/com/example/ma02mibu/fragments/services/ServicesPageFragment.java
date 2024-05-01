@@ -23,7 +23,7 @@ public class ServicesPageFragment extends Fragment {
         binding = ServicesPageFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         prepareServicesList(services);
-        FragmentTransition.to(ServicesListFragment.newInstance(services), getActivity(),
+        FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_services_list, "servicesPage");
 
         return root;

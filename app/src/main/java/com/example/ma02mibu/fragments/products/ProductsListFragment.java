@@ -38,11 +38,7 @@ public class ProductsListFragment extends ListFragment {
     private static ArrayList<Product> products = new ArrayList<>();
     private static final String ARG_PARAM = "param";
     public static ProductsListFragment newInstance(){
-
         ProductsListFragment fragment = new ProductsListFragment();
-        /*Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, products);
-        fragment.setArguments(args);*/
         return fragment;
     }
 

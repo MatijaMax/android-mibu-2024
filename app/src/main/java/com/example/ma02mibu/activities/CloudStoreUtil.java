@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,72 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CloudStoreUtil {
-    static String usersId_Milica;
-    static String usersId_Ivana;
-
     public static void initDB(){
-        // kreiraj novi objekat klase User
-        User user1 = new User("Milica", "Milic");
-        Map<String, Object> user2 = new HashMap<>();
-        user2.put("firstName", "Ivana");
-        user2.put("lastName", "Ivic");
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //        dodaje se novi user1 u kolekciju "users"
-        db.collection("users")
-                .add(user1)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        usersId_Milica = documentReference.getId();
-                        Log.d("REZ_DB", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("REZ_DB", "Error adding document", e);
-                    }
-                });
-        //        dodaje se novi user2 u kolekciju "users"
-        db.collection("users")
-                .add(user2)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        usersId_Ivana = documentReference.getId();
-
-                        Log.d("REZ_DB", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("REZ_DB", "Error adding document", e);
-                    }
-                });
-    }
-
-    public static void insert(){
-        // kreiraj novi objekat klase User
-        User user1 = new User("Mitar", "Kovacevic");
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        dodaje se novi user u kolekciju "users"
-        db.collection("users")
-                .add(user1)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("REZ_DB", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("REZ_DB", "Error adding document", e);
-                    }
-                });
     }
 
     public static void insertProduct(Product product){
@@ -98,10 +35,15 @@ public class CloudStoreUtil {
                 .add(product);
     }
 
+    public static void insertService(Service service){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .add(service);
+    }
+
     public interface ProductCallback {
         void onCallback(ArrayList<Product> products);
     }
-
 
     public static void selectProducts(final ProductCallback callback){
         ArrayList<Product> products = new ArrayList<>();
@@ -114,7 +56,9 @@ public class CloudStoreUtil {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("REZ_DB", document.getId() + " => " + document.getData());
-                                products.add(document.toObject(Product.class));
+                                Product product = document.toObject(Product.class);
+                                product.setFirestoreId(document.getId());
+                                products.add(product);
                             }
                             callback.onCallback(products);
                         } else {
@@ -123,5 +67,75 @@ public class CloudStoreUtil {
                         }
                     }
                 });
+    }
+    public static void deleteProduct(String firestoreId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("products")
+                .document(firestoreId)
+                .delete();
+    }
+
+    public static void updateProduct(Product product){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("products").document(product.getFirestoreId());
+        docRef.update("name", product.getName(),
+                        "description", product.getDescription(),
+                        "discount", product.getDiscount(),
+                        "price", product.getPrice(),
+                        "visible", product.isVisible(),
+                        "availableToBuy", product.isAvailableToBuy());
+    }
+
+    public interface ServiceCallback {
+        void onCallbackService(ArrayList<Service> services);
+    }
+
+    public static void selectServices(final ServiceCallback callback){
+        ArrayList<Service> services = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                                Service service = document.toObject(Service.class);
+                                service.setFirestoreId(document.getId());
+                                services.add(service);
+                            }
+                            callback.onCallbackService(services);
+                        } else {
+                            Log.w("REZ_DB", "Error getting documents.", task.getException());
+                            callback.onCallbackService(null);
+                        }
+                    }
+                });
+    }
+
+    public static void deleteService(String firestoreId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .document(firestoreId)
+                .delete();
+    }
+
+    public static void updateService(Service service){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("services").document(service.getFirestoreId());
+        docRef.update("name", service.getName(),
+                "description", service.getDescription(),
+                "priceByHour", service.getPriceByHour(),
+                "maxHourDuration", service.getMaxHourDuration(),
+                "maxMinutesDuration", service.getMaxMinutesDuration(),
+                "minHourDuration", service.getMinHourDuration(),
+                "minMinutesDuration", service.getMinMinutesDuration(),
+                "specificity", service.getSpecificity(),
+                "reservationDeadline", service.getReservationDeadline(),
+                "cancellationDeadline", service.getCancellationDeadline(),
+                "confirmAutomatically", service.isConfirmAutomatically(),
+                "visible", service.isVisible(),
+                "availableToBuy", service.isAvailableToBuy());
     }
 }

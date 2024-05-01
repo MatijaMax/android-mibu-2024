@@ -14,9 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.ma02mibu.FragmentTransition;
+import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.EditProductBinding;
 import com.example.ma02mibu.databinding.EditServiceBinding;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 
@@ -73,6 +77,8 @@ public class EditServiceFragment extends Fragment {
         }
         Button switchPageButton = binding.switchPageButton;
         switchPageButton.setOnClickListener(v -> switchFormPages());
+        Button submitBtn = binding.submitButtonService;
+        submitBtn.setOnClickListener(v -> editProduct());
         return root;
     }
 
@@ -84,6 +90,44 @@ public class EditServiceFragment extends Fragment {
         }
     }
 
+
+
+    private void editProduct(){
+        String name = binding.ServiceNameEdit.getText().toString();
+        String description = binding.ServiceDescriptionEdit.getText().toString();
+        String price = binding.ServicePriceEdit.getText().toString();
+        String reservationDeadline = binding.ReservationDeadlineEdit.getText().toString();
+        String cancellationDeadline = binding.CancellationDeadlineEdit.getText().toString();
+        String maxHour = binding.ServiceMaxDurationHours.getText().toString();
+        String minHour = binding.ServiceMinDurationHours.getText().toString();
+        String maxMin = binding.ServiceMaxDurationMinutes.getText().toString();
+        String minMin = binding.ServiceMinDurationMinutes.getText().toString();
+        String specificity = binding.ServiceSpecificityEdit.getText().toString();
+        boolean visible = binding.checkBoxODAvailable.isChecked();
+        boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
+        boolean confirmAuto = binding.radioAutomatically.isChecked();
+        int priceInt = Integer.parseInt(price);
+        int maxHourInt = Integer.parseInt(maxHour);
+        int minHourInt = Integer.parseInt(minHour);
+        int maxMinInt = Integer.parseInt(maxMin);
+        int minMinInt = Integer.parseInt(minMin);
+        mService.setName(name);
+        mService.setDescription(description);
+        mService.setPriceByHour(priceInt);
+        mService.setMaxHourDuration(maxHourInt);
+        mService.setMinHourDuration(minHourInt);
+        mService.setMinMinutesDuration(minMinInt);
+        mService.setMaxMinutesDuration(maxMinInt);
+        mService.setSpecificity(specificity);
+        mService.setCancellationDeadline(cancellationDeadline);
+        mService.setReservationDeadline(reservationDeadline);
+        mService.setVisible(visible);
+        mService.setAvailableToBuy(isAvailableToBuy);
+        mService.setConfirmAutomatically(confirmAuto);
+        CloudStoreUtil.updateService(mService);
+        FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
+                false, R.id.scroll_services_list, "falsh");
+    }
 
     private void switchFormPages(){
         Button tv = binding.switchPageButton;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class Product implements Parcelable {
     private Long id;
+    private String firestoreId;
     private String name;
     private String description;
     private String category;
@@ -179,6 +180,13 @@ public class Product implements Parcelable {
         return false;
     }
 
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
 
     @Override
     public int describeContents() {

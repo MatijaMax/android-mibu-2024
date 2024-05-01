@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
 import com.example.ma02mibu.fragments.services.ChooseServicesListFragment;
 import com.example.ma02mibu.fragments.services.EditServiceFragment;
@@ -85,14 +86,15 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         ImageButton rightButton = convertView.findViewById(R.id.right_button_service);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_service);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
-        handleRightButtonClick(rightButton, imageView, service);
-        handleLeftButtonClick(leftButton, imageView, service);
-
+        if(!service.getImages().isEmpty()) {
+            handleRightButtonClick(rightButton, imageView, service);
+            handleLeftButtonClick(leftButton, imageView, service);
+        }
         handleCardClick(layout, service);
         if(service != null){
-            int image = service.getImages().get(service.getCurrentImageIndex());
+            /*int image = service.getImages().get(service.getCurrentImageIndex());
+            imageView.setImageResource(image);*/
             String heading = service.getName() + ", " + service.getLocation();
-            imageView.setImageResource(image);
             productName.setText(heading);
             productDescription.setText(service.getDescription());
             category.setText(service.getCategory());
@@ -165,7 +167,9 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                             builder.setIcon(R.drawable.warning_icon);
                             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
                             builder.setPositiveButton("Yes", (dialog, id) -> {
-                                //obrisi uslugu
+                                CloudStoreUtil.deleteService(service.getFirestoreId());
+                                aServices.remove(service);
+                                notifyDataSetChanged();
                             });
                             AlertDialog alert = builder.create();
                             alert.show();

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Service implements Parcelable {
 
     private Long id;
+    private String firestoreId;
     private String name;
     private String description;
     private String category;
@@ -283,7 +284,7 @@ public class Service implements Parcelable {
     }
 
     public void setCurrentImageIndex(int direction) {
-        if(direction == 1){
+        /*if(direction == 1){
             currentImageIndex++;
             if(currentImageIndex >= images.size())
                 currentImageIndex = 0;
@@ -291,8 +292,17 @@ public class Service implements Parcelable {
             currentImageIndex--;
             if(currentImageIndex <= -1)
                 currentImageIndex = images.size() - 1;
-        }
+        }*/
     }
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
     @Override
     public int describeContents() {
         return 0;

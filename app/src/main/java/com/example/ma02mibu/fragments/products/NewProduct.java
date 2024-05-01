@@ -30,6 +30,7 @@ import com.example.ma02mibu.fragments.services.ServicesListFragment;
 import com.example.ma02mibu.model.Product;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class NewProduct extends Fragment {
     NewProductBinding binding;
@@ -129,7 +130,8 @@ public class NewProduct extends Fragment {
         ArrayList<String> eventTypes = new ArrayList<>();
         eventTypes.add("tip1");
         eventTypes.add("tip2");
-        Product product = new Product(0L, name, description, category, subcategory, priceInt,
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
+        Product product = new Product(id, name, description, category, subcategory, priceInt,
                 new ArrayList<Integer>(), eventTypes, 0);
         product.setVisible(visible);
         product.setAvailableToBuy(isAvailableToBuy);

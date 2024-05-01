@@ -21,10 +21,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.ma02mibu.FragmentTransition;
+import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.NewServiceBinding;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.Service;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 
 public class NewService extends Fragment {
@@ -32,6 +39,8 @@ public class NewService extends Fragment {
     int currentPage;
     private static final int PICK_IMAGES_REQUEST = 1;
     private LinearLayout imageContainer;
+    private ArrayList<String> categories;
+    private ArrayList<String> subCategories;
     LinearLayout part1;
     LinearLayout part2;
     LinearLayout part3;
@@ -56,10 +65,14 @@ public class NewService extends Fragment {
         ArrayAdapter<String> employeesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, employees);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(employeesAdapter);
+        binding.ServiceCategory.setAdapter(setCategoriesSpinnerAdapter());
+        binding.ServiceSubCategory.setAdapter(setSubCategoriesSpinnerAdapter());
         Button switchPageButton = binding.switchPageButton;
         Button galleryButton = binding.addImageButtonService;
         galleryButton.setOnClickListener(v -> openGallery());
         switchPageButton.setOnClickListener(v -> switchFormPages());
+        Button submitBtn = binding.submitButtonService;
+        submitBtn.setOnClickListener(v -> addService());
         return root;
     }
 
@@ -115,6 +128,40 @@ public class NewService extends Fragment {
         imageContainer.addView(layout);
     }
 
+    private void addService(){
+        String category = binding.ServiceCategory.getSelectedItem().toString();
+        String subcategory = binding.ServiceSubCategory.getSelectedItem().toString();
+        String name = binding.ServiceName.getText().toString();
+        String description = binding.editTextServiceDescription.getText().toString();
+        String specificity = binding.ServiceSpecificity.getText().toString();
+        String reservationDeadline = binding.editTextReservationDeadline.getText().toString();
+        String cancelationDeadline = binding.editTextCancellationDeadline.getText().toString();
+        String price = binding.ServicePrice.getText().toString();
+        String minHour = binding.ServiceMinDurationHours.getText().toString();
+        String maxHour = binding.ServiceMaxDurationHours.getText().toString();
+        String minMin = binding.ServiceMinDurationMinutes.getText().toString();
+        String maxMin = binding.ServiceMaxDurationMinutes.getText().toString();
+        boolean visible = binding.checkBoxODAvailable.isChecked();
+        boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
+        boolean confirmAutomatically = binding.radioAutomatically.isChecked();
+        int priceInt = Integer.parseInt(price);
+        int minHourInt = Integer.parseInt(minHour);
+        int maxHourInt = Integer.parseInt(maxHour);
+        int minMinInt = Integer.parseInt(minMin);
+        int maxMinInt = Integer.parseInt(maxMin);
+        ArrayList<String> eventTypes = new ArrayList<>();
+        eventTypes.add("tip1");
+        eventTypes.add("tip2");
+        Service service = new Service(0L, name, description, category, subcategory, specificity, priceInt, minHourInt, minMinInt,
+                maxHourInt, maxMinInt, "SR", reservationDeadline, cancelationDeadline, new ArrayList<Integer>(), eventTypes,
+                new ArrayList<String>(), confirmAutomatically);
+        service.setVisible(visible);
+        service.setAvailableToBuy(isAvailableToBuy);
+        CloudStoreUtil.insertService(service);
+        FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
+                false, R.id.scroll_services_list, "falsh");
+    }
+
     private void switchFormPages(){
         Button tv = binding.switchPageButton;
         if(currentPage == 0) {
@@ -144,6 +191,26 @@ public class NewService extends Fragment {
         list.add("pera");
         list.add("jova");
         return list;
+    }
+
+    private ArrayAdapter<String> setCategoriesSpinnerAdapter(){
+        categories = new ArrayList<>();
+        categories.add("Category 1");
+        categories.add("Category 2");
+        categories.add("Category 3");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
+    }
+
+    private ArrayAdapter<String> setSubCategoriesSpinnerAdapter(){
+        subCategories = new ArrayList<>();
+        subCategories.add("Sub-Category 1");
+        subCategories.add("Sub-Category 2");
+        subCategories.add("Sub-Category 3");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     @Override
