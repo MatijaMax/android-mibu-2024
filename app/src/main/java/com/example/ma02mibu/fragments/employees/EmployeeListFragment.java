@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,14 @@ import android.widget.Button;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.EmployeeListAdapter;
+import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.databinding.FragmentEmployeeCardBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.Product;
 
 import java.util.ArrayList;
 
@@ -51,18 +55,30 @@ public class EmployeeListFragment extends ListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mEmployees = getArguments().getParcelableArrayList(ARG_EMPLOYEES);
-            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
-            setListAdapter(adapter);
-        }
+//        if (getArguments() != null) {
+//            mEmployees = getArguments().getParcelableArrayList(ARG_EMPLOYEES);
+//            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+//            setListAdapter(adapter);
+//        }
+        CloudStoreUtil.selectEmployees("CJ9YHqdDndsTSZMqBWVz", new CloudStoreUtil.EmployeeCallback(){
+            @Override
+            public void onCallback(ArrayList<Employee> retrievedProducts) {
+                if (retrievedProducts != null) {
+                    mEmployees = retrievedProducts;
+                } else {
+                    mEmployees = new ArrayList<>();
+                }
+                adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+                setListAdapter(adapter);
+            }
+        });
     }
 
-    public static EmployeeListFragment newInstance(ArrayList<Employee> employees){
+    public static EmployeeListFragment newInstance(){
         EmployeeListFragment fragment = new EmployeeListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_EMPLOYEES, employees);
-        fragment.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putParcelableArrayList(ARG_EMPLOYEES, employees);
+//        fragment.setArguments(args);
         return fragment;
     }
 }

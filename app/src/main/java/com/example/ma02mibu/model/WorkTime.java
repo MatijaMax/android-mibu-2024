@@ -6,10 +6,13 @@ import android.os.Parcelable;
 import java.time.LocalTime;
 
 public class WorkTime implements Parcelable {
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
 
-    public WorkTime(LocalTime startTime, LocalTime endTime) {
+    public WorkTime() {
+    }
+
+    public WorkTime(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -17,8 +20,8 @@ public class WorkTime implements Parcelable {
     // Parcelable methods
     protected WorkTime(Parcel in) {
         // Read data from the parcel and initialize your fields
-        startTime = LocalTime.parse(in.readString());
-        endTime = LocalTime.parse(in.readString());
+        startTime = in.readString();
+        endTime = in.readString();
     }
 
     @Override
@@ -45,19 +48,19 @@ public class WorkTime implements Parcelable {
         return 0;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public void setEndTime(LocalTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public LocalTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public LocalTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 

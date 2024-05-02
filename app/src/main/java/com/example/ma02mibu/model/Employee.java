@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ public class Employee implements Parcelable {
     private String phoneNumber;
     private int image;
     private ArrayList<WorkSchedule> workSchedules;
+
+    public Employee() {
+        workSchedules = new ArrayList<>();
+    }
 
     public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image) {
         this.id = id;
@@ -154,6 +159,4 @@ public class Employee implements Parcelable {
     public void setImage(int image) {
         this.image = image;
     }
-
-
 }

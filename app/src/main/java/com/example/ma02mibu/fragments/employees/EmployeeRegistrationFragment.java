@@ -10,19 +10,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
-import com.example.ma02mibu.fragments.products.NewProduct;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Company;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.WorkSchedule;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EmployeeRegistrationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
 public class EmployeeRegistrationFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -30,19 +35,13 @@ public class EmployeeRegistrationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private String ownerRefId;
+    private String companyRefId;
+
     public EmployeeRegistrationFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EmployeeRegistrationFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static EmployeeRegistrationFragment newInstance(String param1, String param2) {
         EmployeeRegistrationFragment fragment = new EmployeeRegistrationFragment();
         Bundle args = new Bundle();
@@ -75,13 +74,34 @@ public class EmployeeRegistrationFragment extends Fragment {
                 chooseImage();
             }
         });
+        Button btnRegister = binding.btnRegister;
+        btnRegister.setOnClickListener(v -> addEmployee());
         return view;
     }
-    private void chooseImage(){
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
 
-        startActivity(i);
+    private void addEmployee() {
+        Employee e = new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar);
+        WorkSchedule companyWorkSchedule = new WorkSchedule();
+        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
+        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
+        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
+        e.setSchedule(companyWorkSchedule);
+        CloudStoreUtil.insertEmployee(e, "CJ9YHqdDndsTSZMqBWVz");
+    }
+
+    private void chooseImage(){
+        ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
+        CloudStoreUtil.insertCompany(new Company("22", "KK"), ownerRefId);
+//        Intent i = new Intent();
+//        i.setType("image/*");
+//        i.setAction(Intent.ACTION_GET_CONTENT);
+//
+//        startActivity(i);
     }
 }

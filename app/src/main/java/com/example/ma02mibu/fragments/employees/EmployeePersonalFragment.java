@@ -43,8 +43,8 @@ public class EmployeePersonalFragment extends Fragment {
         companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
         companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
         companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14));
-        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22));
+        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
+        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
         employee1.setSchedule(companyWorkSchedule);
         WorkSchedule companyWorkSchedule2 = new WorkSchedule();
         companyWorkSchedule2.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
@@ -54,8 +54,8 @@ public class EmployeePersonalFragment extends Fragment {
         companyWorkSchedule2.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
         companyWorkSchedule2.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
         companyWorkSchedule2.setWorkTime(DayOfWeek.SUNDAY, LocalTime.NOON, LocalTime.of(15,30));
-        companyWorkSchedule2.setStartDay(LocalDate.of(2024, 3, 14));
-        companyWorkSchedule2.setEndDay(LocalDate.of(2024, 7, 22));
+        companyWorkSchedule2.setStartDay(LocalDate.of(2024, 3, 14).toString());
+        companyWorkSchedule2.setEndDay(LocalDate.of(2024, 7, 22).toString());
         employee1.setSchedule(companyWorkSchedule2);
         WorkSchedule companyWorkSchedule3 = new WorkSchedule();
         companyWorkSchedule3.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
@@ -65,8 +65,8 @@ public class EmployeePersonalFragment extends Fragment {
         companyWorkSchedule3.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
         companyWorkSchedule3.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
         companyWorkSchedule3.setWorkTime(DayOfWeek.SUNDAY, LocalTime.NOON, LocalTime.of(15,30));
-        companyWorkSchedule3.setStartDay(LocalDate.of(2024, 3, 14));
-        companyWorkSchedule3.setEndDay(LocalDate.of(2024, 7, 22));
+        companyWorkSchedule3.setStartDay(LocalDate.of(2024, 3, 14).toString());
+        companyWorkSchedule3.setEndDay(LocalDate.of(2024, 7, 22).toString());
         employee1.setSchedule(companyWorkSchedule3);
 
         FragmentTransition.to(EmployeePersonalDetailsFragment.newInstance(employee1, ""), getActivity(),
