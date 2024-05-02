@@ -25,7 +25,7 @@ public class PackagePageFragment extends Fragment {
         binding = PackagesPageFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         preparePackagesList(packages);
-        FragmentTransition.to(PackageListFragment.newInstance(packages), getActivity(),
+        FragmentTransition.to(PackageListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_packages_list, "packagesPage");
         return root;
     }

@@ -1,5 +1,6 @@
 package com.example.ma02mibu.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.packages.EditPackageFragment;
 import com.example.ma02mibu.fragments.packages.PackageDetailsFragment;
 import com.example.ma02mibu.fragments.services.ServiceDetailsFragment;
@@ -71,14 +73,14 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
         ImageButton rightButton = convertView.findViewById(R.id.right_button_package);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_package);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_package);
-        handleRightButtonClick(rightButton, imageView, aPackage);
-        handleLeftButtonClick(leftButton, imageView, aPackage);
+        //handleRightButtonClick(rightButton, imageView, aPackage);
+        //handleLeftButtonClick(leftButton, imageView, aPackage);
         ConstraintLayout layout = convertView.findViewById(R.id.package_card_item);
         handleCardClick(layout, aPackage);
         handleProductMenuButtonClick(menuButton, aPackage);
         if(aPackage != null){
-            int image = aPackage.getImages().get(aPackage.getCurrentImageIndex());
-            imageView.setImageResource(image);
+            /*int image = aPackage.getImages().get(aPackage.getCurrentImageIndex());
+            imageView.setImageResource(image);*/
             packageName.setText(aPackage.getName());
             packageDescription.setText(aPackage.getDescription());
             category.setText(aPackage.getCategory());
@@ -125,6 +127,20 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
                         if(item.getItemId() == R.id.edit){
                             FragmentTransition.to(EditPackageFragment.newInstance(aPackage), currFragActivity,
                                     true, R.id.scroll_packages_list, "editPackagePage");
+                        }
+                        else if(item.getItemId() == R.id.delete){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete package");
+                            builder.setMessage("Are you sure?");
+                            builder.setIcon(R.drawable.warning_icon);
+                            builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+                            builder.setPositiveButton("Yes", (dialog, id) -> {
+                                CloudStoreUtil.deletePackage(aPackage.getFirestoreId());
+                                aPackages.remove(aPackage);
+                                notifyDataSetChanged();
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
                         return true;
                     }

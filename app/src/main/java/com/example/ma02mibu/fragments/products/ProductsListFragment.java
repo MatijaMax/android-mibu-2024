@@ -59,7 +59,6 @@ public class ProductsListFragment extends ListFragment {
                 setListAdapter(adapter);
             }
         });
-
     }
     @Nullable
     @Override

@@ -15,9 +15,12 @@ import androidx.fragment.app.ListFragment;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.PackageListAdapter;
+import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.databinding.FragmentPackagesListBinding;
 import com.example.ma02mibu.model.Package;
+import com.example.ma02mibu.model.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -31,22 +34,26 @@ public class PackageListFragment extends ListFragment {
     private ArrayList<Package> mPackages;
     private PackageListAdapter adapter;
     private static final String ARG_PARAM = "param";
-    public static PackageListFragment newInstance(ArrayList<Package> packages){
+    public static PackageListFragment newInstance(){
         PackageListFragment fragment = new PackageListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, packages);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPackages = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new PackageListAdapter(getActivity(), mPackages, getActivity());
-            setListAdapter(adapter);
-        }
+        CloudStoreUtil.selectPackages(new CloudStoreUtil.PackageCallback(){
+            @Override
+            public void onCallbackPackage(ArrayList<Package> retrievedPackages) {
+                if (retrievedPackages != null) {
+                    mPackages = retrievedPackages;
+                } else {
+                    mPackages = new ArrayList<>();
+                }
+                adapter = new PackageListAdapter(getActivity(), mPackages, getActivity());
+                setListAdapter(adapter);
+            }
+        });
     }
     @Nullable
     @Override

@@ -11,9 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.ChooseProductsListBinding;
@@ -22,6 +24,7 @@ import com.example.ma02mibu.fragments.packages.ChooseProductsListFragment;
 import com.example.ma02mibu.fragments.packages.NewPackage;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.viewmodels.PackageViewModel;
 
 import java.util.ArrayList;
 
@@ -31,12 +34,10 @@ public class ChooseServicesListFragment extends ListFragment {
     private ArrayList<Service> servicesChosen;
     private ServiceListAdapter adapter;
     private int servicesChosenNum;
+    private PackageViewModel viewModel;
     private static final String ARG_PARAM = "param";
-    public static ChooseServicesListFragment newInstance(ArrayList<Service> services){
+    public static ChooseServicesListFragment newInstance(){
         ChooseServicesListFragment fragment = new ChooseServicesListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, services);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -45,11 +46,19 @@ public class ChooseServicesListFragment extends ListFragment {
         servicesChosenNum = 0;
         servicesChosen = new ArrayList<>();
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mServices = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, this);
-            setListAdapter(adapter);
-        }
+        ChooseServicesListFragment fragment = this;
+        CloudStoreUtil.selectServices(new CloudStoreUtil.ServiceCallback(){
+            @Override
+            public void onCallbackService(ArrayList<Service> retrievedServices) {
+                if (retrievedServices != null) {
+                    mServices = retrievedServices;
+                } else {
+                    mServices = new ArrayList<>();
+                }
+                adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, fragment);
+                setListAdapter(adapter);
+            }
+        });
     }
     @Nullable
     @Override
@@ -58,13 +67,15 @@ public class ChooseServicesListFragment extends ListFragment {
         binding = ChooseServicesListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Button button = binding.submitServicesButton;
-    /*    button.setOnClickListener(new View.OnClickListener() {
+        viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
+        viewModel.setServices(servicesChosen);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(NewPackage.newInstanceFromProducts(productsChosen), getActivity(),
+                FragmentTransition.to(NewPackage.newInstance(), getActivity(),
                         true, R.id.scroll_packages_list, "newPackagePage");
             }
-        });*/
+        });
         return root;
     }
     @Override

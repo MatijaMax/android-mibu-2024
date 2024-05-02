@@ -15,12 +15,15 @@ public class Package implements Parcelable {
     private String description;
     private String category;
     private int discount;
+    private boolean availableToBuy;
+    private boolean visible;
     private ArrayList<Integer> images;
     private ArrayList<Service> services;
     private ArrayList<Product> products;
     private int currentImageIndex;
     private String price;
-    private Set<String> eventTypes;
+    private ArrayList<String> eventTypes;
+    private String firestoreId;
     public Package(){
 
     }
@@ -35,16 +38,18 @@ public class Package implements Parcelable {
         this.services = services;
         this.products = products;
         images = new ArrayList<>();
-        eventTypes = new HashSet<>();
+        eventTypes = new ArrayList<>();
+        Set<String> eventTypesSet = new HashSet<>();
         price = "18000";
         for (Service s: services) {
             images.addAll(s.getImages());
-            eventTypes.addAll(s.getEventTypes());
+            eventTypesSet.addAll(s.getEventTypes());
         }
         for (Product p: products) {
             images.addAll(p.getImage());
-            eventTypes.addAll(p.getEventTypes());
+            eventTypesSet.addAll(p.getEventTypes());
         }
+        this.eventTypes.addAll(eventTypesSet);
     }
 
     protected Package(Parcel in) {
@@ -70,11 +75,11 @@ public class Package implements Parcelable {
         this.price = price;
     }
 
-    public Set<String> getEventTypes() {
+    public ArrayList<String> getEventTypes() {
         return eventTypes;
     }
 
-    public void setEventTypes(Set<String> eventTypes) {
+    public void setEventTypes(ArrayList<String> eventTypes) {
         this.eventTypes = eventTypes;
     }
 
@@ -125,6 +130,31 @@ public class Package implements Parcelable {
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
+
+    public boolean isAvailableToBuy() {
+        return availableToBuy;
+    }
+
+    public void setAvailableToBuy(boolean availableToBuy) {
+        this.availableToBuy = availableToBuy;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
     public void setCurrentImageIndex(int direction) {
         if(direction == 1){
             currentImageIndex++;

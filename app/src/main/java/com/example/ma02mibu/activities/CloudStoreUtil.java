@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.User;
@@ -39,6 +40,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")
                 .add(service);
+    }
+
+    public static void insertPackage(Package newPackage){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("packages")
+                .add(newPackage);
     }
 
     public interface ProductCallback {
@@ -112,6 +119,41 @@ public class CloudStoreUtil {
                         }
                     }
                 });
+    }
+
+    public interface PackageCallback {
+        void onCallbackPackage(ArrayList<Package> packages);
+    }
+
+    public static void selectPackages(final PackageCallback callback){
+        ArrayList<Package> packages = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("packages")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                                Package aPackage = document.toObject(Package.class);
+                                aPackage.setFirestoreId(document.getId());
+                                packages.add(aPackage);
+                            }
+                            callback.onCallbackPackage(packages);
+                        } else {
+                            Log.w("REZ_DB", "Error getting documents.", task.getException());
+                            callback.onCallbackPackage(null);
+                        }
+                    }
+                });
+    }
+
+    public static void deletePackage(String firestoreId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("packages")
+                .document(firestoreId)
+                .delete();
     }
 
     public static void deleteService(String firestoreId){

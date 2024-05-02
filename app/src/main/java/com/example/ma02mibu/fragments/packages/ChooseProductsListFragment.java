@@ -13,15 +13,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.databinding.ChooseProductsListBinding;
 import com.example.ma02mibu.databinding.FragmentProductsListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -31,13 +35,11 @@ public class ChooseProductsListFragment extends ListFragment {
     private ArrayList<Product> mProducts;
     private ArrayList<Product> productsChosen;
     private ProductListAdapter adapter;
+    private PackageViewModel viewModel;
     private int productsChosenNum;
     private static final String ARG_PARAM = "param";
-    public static ChooseProductsListFragment newInstance(ArrayList<Product> products){
+    public static ChooseProductsListFragment newInstance(){
         ChooseProductsListFragment fragment = new ChooseProductsListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, products);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -47,11 +49,19 @@ public class ChooseProductsListFragment extends ListFragment {
         productsChosen = new ArrayList<>();
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
-        if (getArguments() != null) {
-            mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, this);
-            setListAdapter(adapter);
-        }
+        ChooseProductsListFragment fragment = this;
+        CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback(){
+            @Override
+            public void onCallback(ArrayList<Product> retrievedProducts) {
+                if (retrievedProducts != null) {
+                    mProducts = retrievedProducts;
+                } else {
+                    mProducts = new ArrayList<>();
+                }
+                adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, fragment);
+                setListAdapter(adapter);
+            }
+        });
     }
     @Nullable
     @Override
@@ -59,11 +69,13 @@ public class ChooseProductsListFragment extends ListFragment {
         Log.i("ShopApp", "onCreateView Products List Fragment");
         binding = ChooseProductsListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
+        viewModel.setProducts(productsChosen);
         Button button = binding.submitProductsButton;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(NewPackage.newInstanceFromProducts(productsChosen), getActivity(),
+                FragmentTransition.to(NewPackage.newInstance(), getActivity(),
                         true, R.id.scroll_packages_list, "newPackagePage");
             }
         });
