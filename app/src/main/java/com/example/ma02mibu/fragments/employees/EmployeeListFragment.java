@@ -47,12 +47,25 @@ public class EmployeeListFragment extends ListFragment {
                     true, R.id.scroll_employees_list, "newEmployeePage");
         });
 
+        Button searchBtn = binding.btnFilters;
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterEmployees();
+            }
+        });
+
+        loadEmployees();
+
+        return root;
+    }
+
+    private void loadEmployees() {
         CloudStoreUtil.selectEmployees("LpDHEOT9JWhVNrHWP20K", new CloudStoreUtil.EmployeeCallback(){
             @Override
-            public void onCallback(ArrayList<Employee> retrievedProducts) {
-                if (retrievedProducts != null) {
-                    mEmployees = retrievedProducts;
-                    Log.i("CCCCCCCCCCCC","OKKKKKKKKKKKKKKKKKKKKK");
+            public void onCallback(ArrayList<Employee> retrieved) {
+                if (retrieved != null) {
+                    mEmployees = retrieved;
                     Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployees.toArray().length);
                 } else {
                     mEmployees = new ArrayList<>();
@@ -62,8 +75,6 @@ public class EmployeeListFragment extends ListFragment {
                 setListAdapter(adapter);
             }
         });
-
-        return root;
     }
 
     @Override
@@ -78,7 +89,25 @@ public class EmployeeListFragment extends ListFragment {
 
     }
 
-    private static void load(){}
+    private void filterEmployees(){
+        String fName = binding.searchFirstName.getQuery().toString();
+        String lName = binding.searchLastName.getQuery().toString();
+        String email = binding.searchLastName.getQuery().toString();
+        if(fName.isEmpty() && lName.isEmpty() && email.isEmpty()){
+            loadEmployees();
+            return;
+        }
+        if(!fName.isEmpty())
+            mEmployees.removeIf(employee -> !employee.getFirstName().toLowerCase().contains(fName.toLowerCase()));
+        if(!lName.isEmpty())
+            mEmployees.removeIf(employee -> !employee.getLastName().toLowerCase().contains(lName.toLowerCase()));
+        if(!email.isEmpty())
+            mEmployees.removeIf(employee -> !employee.getEmail().toLowerCase().contains(email.toLowerCase()));
+        adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+        setListAdapter(adapter);
+    }
+
+    private EmployeeListFragment(){}
 
     @Override
     public void onDestroyView() {
@@ -86,6 +115,7 @@ public class EmployeeListFragment extends ListFragment {
         binding = null;
         //mEmployees.clear();
     }
+
 
     public static EmployeeListFragment newInstance(){
         EmployeeListFragment fragment = new EmployeeListFragment();
