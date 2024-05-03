@@ -21,8 +21,23 @@ public class Employee implements Parcelable {
     private int image;
     private ArrayList<WorkSchedule> workSchedules;
 
+    private int isActive;
+
     public Employee() {
         workSchedules = new ArrayList<>();
+    }
+
+    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, ArrayList<WorkSchedule> workSchedules, int isActive) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
+        this.workSchedules = workSchedules;
+        this.isActive = isActive;
     }
 
     public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image) {
@@ -35,6 +50,19 @@ public class Employee implements Parcelable {
         this.phoneNumber = phoneNumber;
         this.image = image;
         this.workSchedules = new ArrayList<>();
+    }
+
+    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, int isActive) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
+        this.workSchedules = new ArrayList<>();
+        this.isActive = isActive;
     }
 
     protected Employee(Parcel in) {
@@ -158,5 +186,13 @@ public class Employee implements Parcelable {
 
     public void setImage(int image) {
         this.image = image;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 }

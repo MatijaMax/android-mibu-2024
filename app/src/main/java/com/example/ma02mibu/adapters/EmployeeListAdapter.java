@@ -1,6 +1,7 @@
 package com.example.ma02mibu.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,11 +66,13 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         handleDetailsButtonClick(detailsButton, imageView, employee);
         Button workCalendarButton = convertView.findViewById(R.id.button_employee_calendar);
         handleWorkCalendarButtonClick(workCalendarButton, imageView, employee);
+        Button enableButton = convertView.findViewById(R.id.button_employee_enable);
         if(employee != null){
             imageView.setImageResource(employee.getImage());
             employeeFirstName.setText(employee.getFirstName());
             employeeLastName.setText(employee.getLastName());
             employeeEmail.setText(employee.getEmail());
+            enableButton.setText(employee.getIsActive()==0 ? "disable" :"enable");
         }
         return convertView;
     }
