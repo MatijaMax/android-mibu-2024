@@ -156,6 +156,18 @@ public class CloudStoreUtil {
                 .delete();
     }
 
+
+    public static void updatePackage(Package aPackage){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("packages").document(aPackage.getFirestoreId());
+        docRef.update("name", aPackage.getName(),
+                "description", aPackage.getDescription(),
+                "visible", aPackage.isVisible(),
+                "availableToBuy", aPackage.isAvailableToBuy(),
+                "products", aPackage.getProducts(),
+                "services", aPackage.getServices());
+    }
+
     public static void deleteService(String firestoreId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")

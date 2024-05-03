@@ -113,6 +113,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         if(isFromPackage){
             menuButton.setVisibility(View.GONE);
             checkBox.setVisibility(View.VISIBLE);
+            checkIfProductChecked(checkBox, product);
             handleProductCheck(checkBox, product);
         }else {
             handleProductMenuButtonClick(menuButton, product);
@@ -180,11 +181,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    currFragment.productChosen(product.getId());
+                    currFragment.productChosen(product.getFirestoreId());
                 } else {
-                    currFragment.productUnChosen(product.getId());
+                    currFragment.productUnChosen(product.getFirestoreId());
                 }
             }
         });
+    }
+    private void checkIfProductChecked(CheckBox cb, Product product){
+        for(Product p: currFragment.productsChosen){
+            if(product.getFirestoreId().equals(p.getFirestoreId())){
+                cb.setChecked(true);
+            }
+        }
     }
 }

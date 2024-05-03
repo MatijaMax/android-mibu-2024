@@ -111,6 +111,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
             android:text="0 Chosen"
+            android:id="@+id/servicesNum"
             android:layout_gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>

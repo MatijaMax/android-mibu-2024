@@ -25,6 +25,7 @@ import com.example.ma02mibu.databinding.FragmentProductsListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.viewmodels.PackageEditViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -33,22 +34,37 @@ import java.util.ArrayList;
 public class ChooseProductsListFragment extends ListFragment {
     private ChooseProductsListBinding binding;
     private ArrayList<Product> mProducts;
-    private ArrayList<Product> productsChosen;
+    public ArrayList<Product> productsChosen = new ArrayList<>();
     private ProductListAdapter adapter;
     private PackageViewModel viewModel;
+    private PackageEditViewModel editViewModel;
     private int productsChosenNum;
+    private boolean isFromEdit;
     private static final String ARG_PARAM = "param";
     public static ChooseProductsListFragment newInstance(){
         ChooseProductsListFragment fragment = new ChooseProductsListFragment();
         return fragment;
     }
 
+    public static ChooseProductsListFragment newInstance(ArrayList<Product> products){
+        ChooseProductsListFragment fragment = new ChooseProductsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, products);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         productsChosenNum = 0;
-        productsChosen = new ArrayList<>();
+        isFromEdit = false;
         super.onCreate(savedInstanceState);
-        Log.i("ShopApp", "onCreate Products List Fragment");
+        if (getArguments() != null) {
+            productsChosen = getArguments().getParcelableArrayList(ARG_PARAM);
+            productsChosenNum = productsChosen.size();
+            isFromEdit = true;
+        }
         ChooseProductsListFragment fragment = this;
         CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback(){
             @Override
@@ -69,14 +85,22 @@ public class ChooseProductsListFragment extends ListFragment {
         Log.i("ShopApp", "onCreateView Products List Fragment");
         binding = ChooseProductsListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
-        viewModel.setProducts(productsChosen);
+
         Button button = binding.submitProductsButton;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(NewPackage.newInstance(), getActivity(),
-                        true, R.id.scroll_packages_list, "newPackagePage");
+                if(!isFromEdit) {
+                    viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
+                    viewModel.setProducts(productsChosen);
+                    FragmentTransition.to(NewPackage.newInstance(), getActivity(),
+                            true, R.id.scroll_packages_list, "newPackagePage");
+                }else{
+                    viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
+                    viewModel.setProducts(productsChosen);
+                    FragmentTransition.to(EditPackageFragment.newInstance(), getActivity(),
+                            false, R.id.scroll_packages_list, "falsh");
+                }
             }
         });
         return root;
@@ -86,19 +110,19 @@ public class ChooseProductsListFragment extends ListFragment {
         super.onDestroyView();
         binding = null;
     }
-    public void productChosen(Long id){
+    public void productChosen(String id){
         productsChosenNum++;
         TextView textView = binding.productsChosenNum;
         String s = productsChosenNum+ " products chosen";
         textView.setText(s);
-        Product product = mProducts.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+        Product product = mProducts.stream().filter(p -> p.getFirestoreId().equals(id)).findFirst().orElse(null);
         productsChosen.add(product);
     }
-    public void productUnChosen(Long id){
+    public void productUnChosen(String id){
         productsChosenNum--;
         TextView textView = binding.productsChosenNum;
         String s = productsChosenNum+ " products chosen";
         textView.setText(s);
-        productsChosen.removeIf(p -> p.getId() == id);
+        productsChosen.removeIf(p -> p.getFirestoreId().equals(id));
     }
 }

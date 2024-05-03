@@ -110,6 +110,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         if(isFromPackage){
             menuButton.setVisibility(View.GONE);
             checkBox.setVisibility(View.VISIBLE);
+            checkIfServiceChecked(checkBox, service);
             handleServiceCheck(checkBox, service);
         }else {
             handleServiceMenuButtonClick(menuButton, service);
@@ -192,5 +193,13 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                 }
             }
         });
+    }
+
+    private void checkIfServiceChecked(CheckBox cb, Service service){
+        for(Service s: currFragment.servicesChosen){
+            if(service.getFirestoreId().equals(s.getFirestoreId())){
+                cb.setChecked(true);
+            }
+        }
     }
 }
