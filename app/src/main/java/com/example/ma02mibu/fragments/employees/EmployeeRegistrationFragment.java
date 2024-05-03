@@ -1,5 +1,7 @@
 package com.example.ma02mibu.fragments.employees;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -75,12 +77,38 @@ public class EmployeeRegistrationFragment extends Fragment {
             }
         });
         Button btnRegister = binding.btnRegister;
-        btnRegister.setOnClickListener(v -> addEmployee());
+        btnRegister.setOnClickListener(v -> {
+            try {
+                addEmployee();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return view;
     }
 
-    private void addEmployee() {
-        Employee e = new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar);
+    private void addEmployee() throws InterruptedException {
+        String fName = binding.etFirstName.getText().toString();
+        String lName = binding.etLastName.getText().toString();
+        String email = binding.etEmail.getText().toString();
+        String pass1 = binding.etPassword.getText().toString();
+        String pass2 = binding.etPasswordAgain.getText().toString();
+        if(!pass1.equals(pass2)){
+            // Passwords don't match, show an alert dialog:
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Passwords Don't Match");
+            alertDialog.setMessage("Please make sure the passwords match.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // No action needed here since the button does nothing.
+                }
+            });
+            alertDialog.show();
+            return;
+        }
+        String address = binding.etAddress.getText().toString();
+        String phoneNr = binding.etPhoneNumber.getText().toString();
+        Employee e = new Employee(1L, fName, lName, email, pass1, address, phoneNr, R.drawable.employee_avatar);
         WorkSchedule companyWorkSchedule = new WorkSchedule();
         companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
         companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
@@ -92,12 +120,25 @@ public class EmployeeRegistrationFragment extends Fragment {
         companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
         companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
         e.setSchedule(companyWorkSchedule);
-        CloudStoreUtil.insertEmployee(e, "CJ9YHqdDndsTSZMqBWVz");
+        CloudStoreUtil.insertEmployee(e, "LpDHEOT9JWhVNrHWP20K");
+        Thread.sleep(500);
+        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
+                true, R.id.scroll_employees_list, "EmployeeRegistration");
     }
 
     private void chooseImage(){
         ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
-        CloudStoreUtil.insertCompany(new Company("22", "KK"), ownerRefId);
+        WorkSchedule companyWorkSchedule = new WorkSchedule();
+        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
+        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
+        companyWorkSchedule.setStartDay(null);
+        companyWorkSchedule.setEndDay(null);
+        CloudStoreUtil.insertCompany(new Company("22", "KK", companyWorkSchedule), ownerRefId);
 //        Intent i = new Intent();
 //        i.setType("image/*");
 //        i.setAction(Intent.ACTION_GET_CONTENT);

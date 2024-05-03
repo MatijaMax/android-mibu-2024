@@ -131,6 +131,7 @@ public class CloudStoreUtil {
                     Company company = owner.getMyCompany();
                     if (company != null) {
                         // Now you have the company data
+                        employee.setSchedule(company.getWorkSchedule());
                         company.getEmployees().add(employee);
                         ownerRef.update("myCompany", company);
                     } else {
@@ -169,7 +170,7 @@ public class CloudStoreUtil {
                     if (company != null) {
                         // Now you have the company data
                         employees.addAll(company.getEmployees());
-                        callback.onCallback(employees);
+                        callback.onCallback(company.getEmployees());
                     } else {
                         // Company data is missing
                         callback.onCallback(null);

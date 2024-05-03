@@ -34,8 +34,6 @@ public class EmployeeListFragment extends ListFragment {
     private EmployeeListAdapter adapter;
     private static final String ARG_EMPLOYEES = "employees";
 
-    public EmployeeListFragment() {
-    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +47,22 @@ public class EmployeeListFragment extends ListFragment {
                     true, R.id.scroll_employees_list, "newEmployeePage");
         });
 
+        CloudStoreUtil.selectEmployees("LpDHEOT9JWhVNrHWP20K", new CloudStoreUtil.EmployeeCallback(){
+            @Override
+            public void onCallback(ArrayList<Employee> retrievedProducts) {
+                if (retrievedProducts != null) {
+                    mEmployees = retrievedProducts;
+                    Log.i("CCCCCCCCCCCC","OKKKKKKKKKKKKKKKKKKKKK");
+                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployees.toArray().length);
+                } else {
+                    mEmployees = new ArrayList<>();
+                }
+
+                adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+                setListAdapter(adapter);
+            }
+        });
+
         return root;
     }
 
@@ -60,18 +74,17 @@ public class EmployeeListFragment extends ListFragment {
 //            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
 //            setListAdapter(adapter);
 //        }
-        CloudStoreUtil.selectEmployees("CJ9YHqdDndsTSZMqBWVz", new CloudStoreUtil.EmployeeCallback(){
-            @Override
-            public void onCallback(ArrayList<Employee> retrievedProducts) {
-                if (retrievedProducts != null) {
-                    mEmployees = retrievedProducts;
-                } else {
-                    mEmployees = new ArrayList<>();
-                }
-                adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
-                setListAdapter(adapter);
-            }
-        });
+
+
+    }
+
+    private static void load(){}
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        //mEmployees.clear();
     }
 
     public static EmployeeListFragment newInstance(){

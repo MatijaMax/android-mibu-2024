@@ -8,24 +8,43 @@ public class Company {
     private String name;
     private ArrayList<Employee> employees;
 
+    private WorkSchedule workSchedule;
+
     public Company(String name, ArrayList<Employee> employees) {
         this.name = name;
         this.employees = employees;
     }
 
-    public Company(String id, String name, ArrayList<Employee> employees) {
+    public Company(String id, String name, ArrayList<Employee> employees, WorkSchedule workSchedule) {
         this.id = id;
         this.name = name;
         this.employees = employees;
+        this.workSchedule = workSchedule;
+    }
+
+    public Company(String id, String name, WorkSchedule workSchedule) {
+        this.id = id;
+        this.name = name;
+        this.employees = new ArrayList<>();
+        this.workSchedule = workSchedule;
     }
 
     public Company() {
+        this.employees = new ArrayList<>();
     }
 
     public Company(String id, String name) {
         this.id = id;
         this.name = name;
         this.employees = new ArrayList<>();
+    }
+
+    public WorkSchedule getWorkSchedule() {
+        return workSchedule;
+    }
+
+    public void setWorkSchedule(WorkSchedule workSchedule) {
+        this.workSchedule = workSchedule;
     }
 
     public String getId() {

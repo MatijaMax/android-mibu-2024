@@ -81,8 +81,8 @@ public class Employee implements Parcelable {
         return 0;
     }
 
-    public WorkSchedule getActiveWorkSchedule() {
-        return workSchedules.get(0);
+    public WorkSchedule findActiveWorkSchedule() {
+        return workSchedules.get(1);
     }
 
     public ArrayList<WorkSchedule> getWorkSchedules() {

@@ -86,7 +86,11 @@ public class WorkSchedule implements Parcelable {
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
+        if(startDay != null && endDay != null) {
+            output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
+        }else{
+            output.append("Companies working hours").append("\n");
+        }
         for (DayOfWeek d : DayOfWeek.values()) {
             output.append(d.toString()).append(" => ");
             if(schedule.get(d.toString()) == null){
