@@ -1,10 +1,13 @@
 package com.example.ma02mibu.fragments.employees;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +15,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.databinding.FragmentEmployeeDetailsBinding;
+import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
+import com.example.ma02mibu.databinding.FragmentEmployeeWorkTimeEntryBinding;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.WorkSchedule;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.Calendar;
 
 /**
@@ -29,8 +41,8 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Employee mEmployee;
+    private String ownerRefId;
 
     public EmployeeWorkTimeEntryFragment() {
         // Required empty public constructor
@@ -44,11 +56,12 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment EmployeeWorkTimeEntryFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EmployeeWorkTimeEntryFragment newInstance(String param1, String param2) {
+
+    private FragmentEmployeeWorkTimeEntryBinding binding;
+    public static EmployeeWorkTimeEntryFragment newInstance(Employee param1, String param2) {
         EmployeeWorkTimeEntryFragment fragment = new EmployeeWorkTimeEntryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -58,8 +71,8 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mEmployee = getArguments().getParcelable(ARG_PARAM1);
+            ownerRefId = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -67,7 +80,8 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_employee_work_time_entry, container, false);
+        binding = FragmentEmployeeWorkTimeEntryBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
         eventSelectedDayStart = view.findViewById(R.id.eventSelectedStart);
         Button btnPickStartDate = view.findViewById(R.id.btnNewEventStartDate);
         btnPickStartDate.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +98,155 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                 showDatePickerDialog1();
             }
         });
+
+        Button btnRegister = binding.btnRegister;
+        btnRegister.setOnClickListener(v -> {
+            try {
+                addWorkingHours();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         return view;
+    }
+
+    private void addWorkingHours() throws InterruptedException{
+        String mondayHours = binding.etMondayHours.getText().toString();
+        String tuesdayHours = binding.etTuesdayHours.getText().toString();
+        String wedHours = binding.etWednesdayHours.getText().toString();
+        String thurHours = binding.etThursdayHours.getText().toString();
+        String friHours = binding.etFridayHours.getText().toString();
+        String satHours = binding.SaturdayHours.getText().toString();
+        String sunHours = binding.etSundayHours.getText().toString();
+        if(mondayHours.isEmpty() && tuesdayHours.isEmpty() && wedHours.isEmpty() && thurHours.isEmpty() && friHours.isEmpty()
+                && satHours.isEmpty() && sunHours.isEmpty()){
+            alertShow("All");
+            return;
+        }
+        WorkSchedule customWorkSchedule = new WorkSchedule();
+        if(!mondayHours.isEmpty()){
+            String[] dayHM = extraxtHM(mondayHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Monday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.MONDAY, null, null);
+        }
+        if(!tuesdayHours.isEmpty()){
+            String[] dayHM = extraxtHM(tuesdayHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Tuesday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, null, null);
+        }
+        if(!wedHours.isEmpty()){
+            String[] dayHM = extraxtHM(wedHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Wednesday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, null, null);
+        }
+        if(!thurHours.isEmpty()){
+            String[] dayHM = extraxtHM(thurHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Thursday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, null, null);
+        }
+        if(!friHours.isEmpty()){
+            String[] dayHM = extraxtHM(friHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Friday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, null, null);
+        }
+        if(!satHours.isEmpty()){
+            String[] dayHM = extraxtHM(satHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Saturday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, null, null);
+        }
+        if(!sunHours.isEmpty()){
+            String[] dayHM = extraxtHM(sunHours);
+            if(dayHM.length == 4){
+                customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+            }else{
+                alertShow("Sunday");
+                return;
+            }
+        }else{
+            customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
+        }
+        customWorkSchedule.setStartDay(eventSelectedDayStart.getText().toString());
+        customWorkSchedule.setEndDay(eventSelectedDayEnd.getText().toString());
+        mEmployee.setSchedule(customWorkSchedule);
+        CloudStoreUtil.updateEmployeeWorkingHours(mEmployee, ownerRefId);
+        Thread.sleep(600);
+        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
+                true, R.id.scroll_employees_list, "EmployeeWTE");
+    }
+
+    private void alertShow(String day) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Wrong input");
+        alertDialog.setMessage(day + " working hours are in wrong format! \nPlease use hh:MM-hh:MM or leave empty");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // No action needed here since the button does nothing.
+            }
+        });
+        alertDialog.show();
+    }
+
+    private String[] extraxtHM(String hoursEntry){
+        String start, end, startH, startM, endH, endM;
+        String[] times = hoursEntry.split("-");
+        if(times.length == 2){
+            start = times[0];
+            end = times[1];
+        }else{
+            return new String[]{};
+        }
+        String[] startHM = start.split(":");
+        if(startHM.length == 2){
+            startH = startHM[0];
+            startM = startHM[1];
+        }else{
+            return new String[]{};
+        }
+        String[] endHM = end.split(":");
+        if(endHM.length == 2){
+            endH = endHM[0];
+            endM = endHM[1];
+        }else{
+            return new String[]{};
+        }
+        return new String[]{startH, startM, endH, endM};
     }
 
     private TextView eventSelectedDayStart;
@@ -104,9 +266,9 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-
+                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
                         // Display the selected week
-                        eventSelectedDayEnd.setText(dayOfMonth + "-" + monthN + "-" + year + " ");
+                        eventSelectedDayEnd.setText(toSet);
                     }
                 },
                 year,
@@ -131,8 +293,18 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
+                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
                         // Display the selected week
-                        eventSelectedDayStart.setText(dayOfMonth + "-" + monthN + "-" + year + " ");
+//                        if(dayOfMonth < 10 && monthN < 10){
+//                            toSet = "0"+dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
+//                        }else if(dayOfMonth < 10){
+//                            toSet = "0"+dayOfMonth + "-" + monthN + "-" + year + " ";
+//                        }else if(monthN < 10){
+//                            toSet = dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
+//                        }else{
+//                            toSet = dayOfMonth + "-" + monthN + "-" + year + " ";
+//                        }
+                        eventSelectedDayStart.setText(toSet);
                     }
                 },
                 year,

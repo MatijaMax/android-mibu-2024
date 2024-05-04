@@ -1,13 +1,11 @@
 package com.example.ma02mibu.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,20 +16,19 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.fragments.employees.EmployeeDetailsFragment;
-import com.example.ma02mibu.fragments.employees.EmployeeListFragment;
-import com.example.ma02mibu.fragments.employees.EmployeeRegistrationFragment;
 import com.example.ma02mibu.fragments.employees.EmployeeWorkCalendarFragment;
 import com.example.ma02mibu.model.Employee;
-import com.example.ma02mibu.model.Product;
 
 import java.util.ArrayList;
 
 public class EmployeeListAdapter extends ArrayAdapter<Employee>{
     private final ArrayList<Employee> aEmployees;
+    private final String ownerRefId;
     private FragmentActivity currFragActivity;
-    public EmployeeListAdapter(Context context, ArrayList<Employee> employees, FragmentActivity fragmentActivity){
+    public EmployeeListAdapter(Context context, ArrayList<Employee> employees, String ownerRefId, FragmentActivity fragmentActivity){
         super(context, R.layout.fragment_employee_card, employees);
         aEmployees = employees;
+        this.ownerRefId = ownerRefId;
         currFragActivity = fragmentActivity;
     }
     @Override
@@ -81,7 +78,7 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
         detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(EmployeeDetailsFragment.newInstance(employee, ""), currFragActivity,
+                FragmentTransition.to(EmployeeDetailsFragment.newInstance(employee, ownerRefId), currFragActivity,
                         true, R.id.scroll_employees_list, "EmployeeDetailsPage");
             }
         });

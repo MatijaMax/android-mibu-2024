@@ -38,21 +38,28 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class EmployeeRegistrationFragment extends Fragment {
-
-    private String ownerRefId = "LpDHEOT9JWhVNrHWP20K";
+    private static final String ARG_PARAM1 = "param1";
+    private String ownerRefId;
     private Company currentCompany;
 
     public EmployeeRegistrationFragment() {
         // Required empty public constructor
     }
 
-    public static EmployeeRegistrationFragment newInstance() {
-        return new EmployeeRegistrationFragment();
+    public static EmployeeRegistrationFragment newInstance(String param1) {
+        EmployeeRegistrationFragment fragment = new EmployeeRegistrationFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            ownerRefId = getArguments().getString(ARG_PARAM1);
+        }
     }
 
     private FragmentEmployeeRegistrationBinding binding;
@@ -156,7 +163,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                 if(dayHM.length == 4){
                     customWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
                 }else{
-                    alertShow("Tuesday");
+                    alertShow("Wednesday");
                     return;
                 }
             }else{
@@ -167,7 +174,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                 if(dayHM.length == 4){
                     customWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
                 }else{
-                    alertShow("Tuesday");
+                    alertShow("Thursday");
                     return;
                 }
             }else{
@@ -178,7 +185,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                 if(dayHM.length == 4){
                     customWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
                 }else{
-                    alertShow("Tuesday");
+                    alertShow("Friday");
                     return;
                 }
             }else{
@@ -189,7 +196,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                 if(dayHM.length == 4){
                     customWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
                 }else{
-                    alertShow("Tuesday");
+                    alertShow("Saturday");
                     return;
                 }
             }else{
@@ -200,7 +207,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                 if(dayHM.length == 4){
                     customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
                 }else{
-                    alertShow("Tuesday");
+                    alertShow("Sunday");
                     return;
                 }
             }else{

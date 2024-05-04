@@ -16,14 +16,8 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.EmployeeListAdapter;
-import com.example.ma02mibu.adapters.ProductListAdapter;
-import com.example.ma02mibu.databinding.FragmentEmployeeCardBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
-import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.model.Employee;
-import com.example.ma02mibu.model.Product;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -46,11 +40,10 @@ public class EmployeeListFragment extends ListFragment {
         binding = FragmentEmployeeListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        loadEmployees();
 
         Button newEmployeeButton = binding.btnAddNewEmployee;
         newEmployeeButton.setOnClickListener(v -> {
-            FragmentTransition.to(EmployeeRegistrationFragment.newInstance(), getActivity(),
+            FragmentTransition.to(EmployeeRegistrationFragment.newInstance(ownerRefId), getActivity(),
                     true, R.id.scroll_employees_list, "newEmployeePage");
         });
 
@@ -62,6 +55,7 @@ public class EmployeeListFragment extends ListFragment {
                 filterEmployees();
             }
         });
+        loadEmployees();
 
         return root;
     }
@@ -79,10 +73,13 @@ public class EmployeeListFragment extends ListFragment {
                     mEmployeesBackup = new ArrayList<>();
                 }
 
-                adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+                adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
                 setListAdapter(adapter);
             }
         });
+//        mEmployees = new ArrayList<>();
+//        mEmployeesBackup = new ArrayList<>();
+//        CloudStoreUtil.selectEmployeesNew(ownerRefId, mEmployeesBackup);
     }
 
 
@@ -105,7 +102,7 @@ public class EmployeeListFragment extends ListFragment {
         mEmployees=new ArrayList<>(mEmployeesBackup);
         Log.i("RRRRRRRRR",""+mEmployeesBackup.toArray().length);
         if(fName.isEmpty() && lName.isEmpty() && email.isEmpty()){
-            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+            adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
             setListAdapter(adapter);
             return;
         }
@@ -115,7 +112,7 @@ public class EmployeeListFragment extends ListFragment {
             mEmployees.removeIf(employee -> !employee.getLastName().toLowerCase().contains(lName.toLowerCase()));
         if(!email.isEmpty())
             mEmployees.removeIf(employee -> !employee.getEmail().toLowerCase().contains(email.toLowerCase()));
-        adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+        adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
         setListAdapter(adapter);
     }
 
