@@ -131,7 +131,6 @@ public class CloudStoreUtil {
                     Company company = owner.getMyCompany();
                     if (company != null) {
                         // Now you have the company data
-                        employee.setSchedule(company.getWorkSchedule());
                         company.getEmployees().add(employee);
                         ownerRef.update("myCompany", company);
                     } else {
@@ -152,12 +151,10 @@ public class CloudStoreUtil {
                 .add(product);
     }
 
-    public interface EmployeeCallback {
-        void onCallback(ArrayList<Employee> employees);
+    public interface CompanyCallback {
+        void onCallback(Company company);
     }
-
-    public static void selectEmployees(String ownerId, final EmployeeCallback callback){
-        ArrayList<Employee> employees = new ArrayList<>();
+    public static void selectCompany(String ownerId, final CompanyCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference ownerRef = db.collection("owners").document(ownerId);
 
@@ -169,7 +166,36 @@ public class CloudStoreUtil {
                     Company company = owner.getMyCompany();
                     if (company != null) {
                         // Now you have the company data
-                        employees.addAll(company.getEmployees());
+                        callback.onCallback(company);
+                    } else {
+                        // Company data is missing
+                        callback.onCallback(null);
+                    }
+                } else {
+                    // Owner data is missing
+                }
+            } else {
+                // Document doesn't exist
+            }
+        });
+    }
+
+    public interface EmployeeCallback {
+        void onCallback(ArrayList<Employee> employees);
+    }
+
+    public static void selectEmployees(String ownerId, final EmployeeCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ownerRef = db.collection("owners").document(ownerId);
+
+        ownerRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // Document exists, retrieve the company data
+                Owner owner = documentSnapshot.toObject(Owner.class);
+                if (owner != null) {
+                    Company company = owner.getMyCompany();
+                    if (company != null) {
+                        // Now you have the company data
                         callback.onCallback(company.getEmployees());
                     } else {
                         // Company data is missing

@@ -23,6 +23,8 @@ import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Product;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 
 /**
@@ -31,21 +33,27 @@ import java.util.ArrayList;
 public class EmployeeListFragment extends ListFragment {
     private FragmentEmployeeListBinding binding;
     private ArrayList<Employee> mEmployees;
+    private ArrayList<Employee> mEmployeesBackup;
     private EmployeeListAdapter adapter;
-    private static final String ARG_EMPLOYEES = "employees";
+
+    private String ownerRefId = "LpDHEOT9JWhVNrHWP20K";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         binding = FragmentEmployeeListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        loadEmployees();
+
         Button newEmployeeButton = binding.btnAddNewEmployee;
         newEmployeeButton.setOnClickListener(v -> {
-            FragmentTransition.to(EmployeeRegistrationFragment.newInstance("",""), getActivity(),
+            FragmentTransition.to(EmployeeRegistrationFragment.newInstance(), getActivity(),
                     true, R.id.scroll_employees_list, "newEmployeePage");
         });
+
 
         Button searchBtn = binding.btnFilters;
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,20 +63,20 @@ public class EmployeeListFragment extends ListFragment {
             }
         });
 
-        loadEmployees();
-
         return root;
     }
 
     private void loadEmployees() {
-        CloudStoreUtil.selectEmployees("LpDHEOT9JWhVNrHWP20K", new CloudStoreUtil.EmployeeCallback(){
+        CloudStoreUtil.selectEmployees(ownerRefId, new CloudStoreUtil.EmployeeCallback(){
             @Override
             public void onCallback(ArrayList<Employee> retrieved) {
                 if (retrieved != null) {
-                    mEmployees = retrieved;
-                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployees.toArray().length);
+                    mEmployees = new ArrayList<>(retrieved);
+                    mEmployeesBackup = new ArrayList<>(retrieved);
+                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployeesBackup.toArray().length);
                 } else {
                     mEmployees = new ArrayList<>();
+                    mEmployeesBackup = new ArrayList<>();
                 }
 
                 adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
@@ -76,6 +84,7 @@ public class EmployeeListFragment extends ListFragment {
             }
         });
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,8 +102,11 @@ public class EmployeeListFragment extends ListFragment {
         String fName = binding.searchFirstName.getQuery().toString();
         String lName = binding.searchLastName.getQuery().toString();
         String email = binding.searchLastName.getQuery().toString();
+        mEmployees=new ArrayList<>(mEmployeesBackup);
+        Log.i("RRRRRRRRR",""+mEmployeesBackup.toArray().length);
         if(fName.isEmpty() && lName.isEmpty() && email.isEmpty()){
-            loadEmployees();
+            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
+            setListAdapter(adapter);
             return;
         }
         if(!fName.isEmpty())

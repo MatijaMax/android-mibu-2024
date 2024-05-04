@@ -89,7 +89,7 @@ public class WorkSchedule implements Parcelable {
         if(startDay != null && endDay != null) {
             output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
         }else{
-            output.append("Companies working hours").append("\n");
+            output.append("Regular working hours").append("\n");
         }
         for (DayOfWeek d : DayOfWeek.values()) {
             output.append(d.toString()).append(" => ");
