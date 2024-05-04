@@ -83,6 +83,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
         TextView oldPrice = convertView.findViewById(R.id.old_price);
+        TextView availabilityText = convertView.findViewById(R.id.availability);
         ImageButton rightButton = convertView.findViewById(R.id.right_button);
         ImageButton leftButton = convertView.findViewById(R.id.left_button);
         ImageButton menuButton = convertView.findViewById(R.id.more_button);
@@ -98,6 +99,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             category.setText(product.getCategory());
             subCategory.setText(product.getSubCategory());
             price.setText(product.getNewPrice());
+            String a = "";
+            if(product.isVisible())
+                a+="Visible";
+            if(product.isAvailableToBuy())
+                a+=", available to buy";
+            availabilityText.setText(a);
             if(product.getDiscount() != 0) {
                 oldPrice.setVisibility(View.VISIBLE);
                 oldPrice.setText(String.valueOf(product.getPrice()));

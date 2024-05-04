@@ -83,6 +83,9 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         TextView category = convertView.findViewById(R.id.service_category);
         TextView subCategory = convertView.findViewById(R.id.service_subcategory);
         TextView duration = convertView.findViewById(R.id.service_duration);
+        TextView availabilityText = convertView.findViewById(R.id.serviceAvailability);
+        TextView servicePrice = convertView.findViewById(R.id.service_price);
+        TextView serviceDiscount = convertView.findViewById(R.id.service_discount);
         ImageButton rightButton = convertView.findViewById(R.id.right_button_service);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_service);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
@@ -101,6 +104,18 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
             subCategory.setText(service.getSubCategory());
             String durationText = "Duration: "+service.getDuration();
             duration.setText(durationText);
+            String a = "";
+            if(service.isVisible())
+                a+="Visible";
+            if(service.isAvailableToBuy())
+                a+=", available to buy";
+            availabilityText.setText(a);
+            servicePrice.setText(service.getTotalPrice());
+            String d = "";
+            if(service.getDiscount() != 0){
+                d = service.getDiscount() + "% off";
+            }
+            serviceDiscount.setText(d);
         }
         LinearLayoutManager layoutManager= new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = convertView.findViewById(R.id.event_type_tags_service);

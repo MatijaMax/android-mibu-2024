@@ -23,6 +23,8 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.databinding.FragmentProductsListBinding;
+import com.example.ma02mibu.fragments.packages.PackageDetailsFragment;
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -35,6 +37,7 @@ public class ProductsListFragment extends ListFragment {
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
     private ProductListAdapter adapter;
+    private boolean showHeading = true;
     private static ArrayList<Product> products = new ArrayList<>();
     private static final String ARG_PARAM = "param";
     public static ProductsListFragment newInstance(){
@@ -42,23 +45,40 @@ public class ProductsListFragment extends ListFragment {
         return fragment;
     }
 
+    public static ProductsListFragment newInstance(ArrayList<Product> products) {
+        ProductsListFragment fragment = new ProductsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, products);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
-        CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback(){
-            @Override
-            public void onCallback(ArrayList<Product> retrievedProducts) {
-                if (retrievedProducts != null) {
-                    mProducts = retrievedProducts;
-                } else {
-                    mProducts = new ArrayList<>();
+        if (getArguments() != null) {
+            mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+            setListAdapter(adapter);
+            showHeading = false;
+        }
+        else {
+            CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback() {
+                @Override
+                public void onCallback(ArrayList<Product> retrievedProducts) {
+                    if (retrievedProducts != null) {
+                        mProducts = retrievedProducts;
+                    } else {
+                        mProducts = new ArrayList<>();
+                    }
+                    mProductsBackup = new ArrayList<>(mProducts);
+                    adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+                    setListAdapter(adapter);
                 }
-                mProductsBackup = new ArrayList<>(mProducts);
-                adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
-                setListAdapter(adapter);
-            }
-        });
+            });
+        }
     }
     @Nullable
     @Override
@@ -66,6 +86,9 @@ public class ProductsListFragment extends ListFragment {
         Log.i("ShopApp", "onCreateView Products List Fragment");
         binding = FragmentProductsListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        if(!showHeading){
+            binding.linear1.setVisibility(View.GONE);
+        }
         Button searchButton = binding.searchButton;
         searchButton.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.FullScreenBottomSheetDialog);
@@ -137,10 +160,10 @@ public class ProductsListFragment extends ListFragment {
             mProducts.removeIf(p -> !p.getName().toLowerCase().contains(name.toLowerCase()));
         if (!description.isEmpty())
             mProducts.removeIf(p -> !p.getDescription().toLowerCase().contains(description.toLowerCase()));
-        if(minPrice != 0 || maxPrice != 0) {
+        if(minPrice != 0)
             mProducts.removeIf(p -> minPrice > p.getNewPriceValue());
+        if(maxPrice != 0)
             mProducts.removeIf(p -> maxPrice < p.getNewPriceValue());
-        }
         if(!eventType.isEmpty())
             mProducts.removeIf(p -> !p.containsEventType(eventType));
         adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);

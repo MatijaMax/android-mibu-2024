@@ -155,6 +155,17 @@
             android:text="0 din"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginTop="15dp"
+        android:textAlignment="center"
+        android:textColor="#FF130C"
+        android:visibility="gone"
+        android:id="@+id/validation"
+        android:text="Fill all the fields, please" />
+
     <Button
         android:id="@+id/submitButton"
         android:layout_width="match_parent"

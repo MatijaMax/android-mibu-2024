@@ -70,6 +70,8 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
         TextView packageDescription = convertView.findViewById(R.id.package_description);
         TextView category = convertView.findViewById(R.id.package_category);
         TextView price = convertView.findViewById(R.id.package_price);
+        TextView discount = convertView.findViewById(R.id.package_discount);
+        TextView availabilityText = convertView.findViewById(R.id.availability_package);
         ImageButton rightButton = convertView.findViewById(R.id.right_button_package);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_package);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_package);
@@ -85,6 +87,16 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
             packageDescription.setText(aPackage.getDescription());
             category.setText(aPackage.getCategory());
             price.setText(aPackage.getPrice());
+            String s="";
+            if(aPackage.getDiscount() != 0)
+                s = aPackage.getDiscount() + "% off";
+            discount.setText(s);
+            String a = "";
+            if(aPackage.isVisible())
+                a+="Visible";
+            if(aPackage.isAvailableToBuy())
+                a+=", available to buy";
+            availabilityText.setText(a);
         }
         LinearLayoutManager layoutManager= new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = convertView.findViewById(R.id.event_type_tags);

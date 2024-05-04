@@ -119,11 +119,16 @@ public class NewProduct extends Fragment {
         imageContainer.addView(layout);
     }
     private void addProduct(){
+        binding.validation.setVisibility(View.GONE);
         String category = binding.ProductCategory.getSelectedItem().toString();
         String subcategory = binding.ProductSubCategory.getSelectedItem().toString();
         String name = binding.ProductName.getText().toString();
         String description = binding.editTextProductDescription.getText().toString();
         String price = binding.ProductPrice.getText().toString();
+        if(name.equals("") || description.equals("") || price.equals("")){
+            binding.validation.setVisibility(View.VISIBLE);
+            return;
+        }
         boolean visible = binding.checkBoxODAvailable.isChecked();
         boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
         int priceInt = Integer.parseInt(price);

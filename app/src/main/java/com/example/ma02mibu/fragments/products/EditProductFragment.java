@@ -82,7 +82,6 @@ public class EditProductFragment extends Fragment {
                 false, R.id.scroll_products_list, "falsh");
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

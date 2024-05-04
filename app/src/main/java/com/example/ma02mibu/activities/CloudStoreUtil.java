@@ -164,6 +164,7 @@ public class CloudStoreUtil {
                 "description", aPackage.getDescription(),
                 "visible", aPackage.isVisible(),
                 "availableToBuy", aPackage.isAvailableToBuy(),
+                "discount", aPackage.getDiscount(),
                 "products", aPackage.getProducts(),
                 "services", aPackage.getServices());
     }
@@ -189,6 +190,7 @@ public class CloudStoreUtil {
                 "reservationDeadline", service.getReservationDeadline(),
                 "cancellationDeadline", service.getCancellationDeadline(),
                 "confirmAutomatically", service.isConfirmAutomatically(),
+                "discount", service.getDiscount(),
                 "visible", service.isVisible(),
                 "availableToBuy", service.isAvailableToBuy());
     }

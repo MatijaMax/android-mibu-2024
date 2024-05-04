@@ -76,8 +76,8 @@ public class ServiceDetailsFragment extends Fragment {
         String discount = mService.getDiscount() + "%";
         serviceDiscount.setText(discount);
         serviceTotalPrice.setText(mService.getTotalPrice());
-        serviceReservationDeadline.setText(mService.getReservationDeadline());
-        serviceCancellation.setText(mService.getCancellationDeadline());
+        serviceReservationDeadline.setText(mService.getReservationDeadlineText());
+        serviceCancellation.setText(mService.getCancellationDeadlineText());
         LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = binding.eventTypeTagsServiceDetail;
         mRecyclerView.setLayoutManager(layoutManager);

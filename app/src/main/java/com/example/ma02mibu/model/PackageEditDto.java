@@ -7,18 +7,19 @@ public class PackageEditDto {
     private boolean visible;
     private String firestoreId;
     private String category;
-
+    private String discount;
     public PackageEditDto(){
         name="";
         description="";
     }
-    public PackageEditDto(String name, String description, boolean availableToBuy, boolean visible, String firestoreId, String category) {
+    public PackageEditDto(String name, String description, boolean availableToBuy, boolean visible, String firestoreId, String category, String discount) {
         this.name = name;
         this.description = description;
         this.availableToBuy = availableToBuy;
         this.visible = visible;
         this.firestoreId = firestoreId;
         this.category = category;
+        this.discount = discount;
     }
 
     public String getName() {
@@ -67,5 +68,13 @@ public class PackageEditDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 }

@@ -23,8 +23,8 @@ public class Service implements Parcelable {
     private int minMinutesDuration;
     private int maxMinutesDuration;
     private String location;
-    private String reservationDeadline;
-    private String cancellationDeadline;
+    private Deadline reservationDeadline;
+    private Deadline cancellationDeadline;
     private boolean visible;
     private boolean availableToBuy;
     private boolean confirmAutomatically;
@@ -37,8 +37,8 @@ public class Service implements Parcelable {
         this.discount = 0;
     }
 
-    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, String reservationDeadline,
-                   String cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons, boolean confirmAutomatically) {
+    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, Deadline reservationDeadline,
+                   Deadline cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons, boolean confirmAutomatically) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -130,6 +130,15 @@ public class Service implements Parcelable {
             minPrice = minPrice*(100-discount)/100;
             return minPrice+" din";
         }
+    }
+
+    public int getMinPrice(){
+        int minPrice = minHourDuration*priceByHour;
+        return minPrice;
+    }
+    public int getMaxPrice(){
+        int maxPrice = maxHourDuration*priceByHour;
+        return maxPrice;
     }
     public void setDiscount(int discount) {
         this.discount = discount;
@@ -223,19 +232,27 @@ public class Service implements Parcelable {
         this.location = location;
     }
 
-    public String getReservationDeadline() {
+    public Deadline getReservationDeadline() {
         return reservationDeadline;
     }
 
-    public void setReservationDeadline(String reservationDeadline) {
+    public String getReservationDeadlineText() {
+        return reservationDeadline.getNumber() + reservationDeadline.getDateFormat() + " before start";
+    }
+
+    public String getCancellationDeadlineText() {
+        return cancellationDeadline.getNumber() + cancellationDeadline.getDateFormat() + " before start";
+    }
+
+    public void setReservationDeadline(Deadline reservationDeadline) {
         this.reservationDeadline = reservationDeadline;
     }
 
-    public String getCancellationDeadline() {
+    public Deadline getCancellationDeadline() {
         return cancellationDeadline;
     }
 
-    public void setCancellationDeadline(String cancellationDeadline) {
+    public void setCancellationDeadline(Deadline cancellationDeadline) {
         this.cancellationDeadline = cancellationDeadline;
     }
 

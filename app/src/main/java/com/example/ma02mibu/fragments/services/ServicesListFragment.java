@@ -23,6 +23,7 @@ import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentServicesListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
+import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -38,28 +39,45 @@ public class ServicesListFragment extends ListFragment {
     private ArrayList<Service> mServices;
     private ArrayList<Service> mServicesBackup;
     private ServiceListAdapter adapter;
+    boolean showHeading = true;
     private static final String ARG_PARAM = "param";
     public static ServicesListFragment newInstance(){
         ServicesListFragment fragment = new ServicesListFragment();
         return fragment;
     }
 
+    public static ServicesListFragment newInstance(ArrayList<Service> services) {
+        ServicesListFragment fragment = new ServicesListFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, services);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CloudStoreUtil.selectServices(new CloudStoreUtil.ServiceCallback(){
-            @Override
-            public void onCallbackService(ArrayList<Service> retrievedServices) {
-                if (retrievedServices != null) {
-                    mServices = retrievedServices;
-                } else {
-                    mServices = new ArrayList<>();
+        if (getArguments() != null) {
+            mServices = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+            setListAdapter(adapter);
+            showHeading = false;
+        }
+        else {
+            CloudStoreUtil.selectServices(new CloudStoreUtil.ServiceCallback() {
+                @Override
+                public void onCallbackService(ArrayList<Service> retrievedServices) {
+                    if (retrievedServices != null) {
+                        mServices = retrievedServices;
+                    } else {
+                        mServices = new ArrayList<>();
+                    }
+                    mServicesBackup = new ArrayList<>(mServices);
+                    adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+                    setListAdapter(adapter);
                 }
-                mServicesBackup = new ArrayList<>(mServices);
-                adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
-                setListAdapter(adapter);
-            }
-        });
+            });
+        }
     }
     @Nullable
     @Override
@@ -67,7 +85,9 @@ public class ServicesListFragment extends ListFragment {
         Log.i("ShopApp", "onCreateView Products List Fragment");
         binding = FragmentServicesListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        if(!showHeading){
+            binding.linear1Services.setVisibility(View.GONE);
+        }
         Button searchButton = binding.searchButtonServices;
         searchButton.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.FullScreenBottomSheetDialog);
@@ -144,10 +164,10 @@ public class ServicesListFragment extends ListFragment {
             mServices.removeIf(s -> !s.getName().toLowerCase().contains(name.toLowerCase()));
         if (!employeeName.isEmpty())
             mServices.removeIf(s -> !s.containsPerson(employeeName));
-        if(minPrice != 0 || maxPrice != 0) {
+        if(minPrice != 0)
             mServices.removeIf(s -> minPrice > s.getPriceByHour());
+        if(maxPrice != 0)
             mServices.removeIf(s -> maxPrice < s.getPriceByHour());
-        }
         if(!eventType.isEmpty())
             mServices.removeIf(s -> !s.containsEventType(eventType));
         if(availableToBuy)

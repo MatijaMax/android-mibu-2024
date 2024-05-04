@@ -21,11 +21,11 @@ public class Package implements Parcelable {
     private ArrayList<Service> services;
     private ArrayList<Product> products;
     private int currentImageIndex;
-    private String price;
     private ArrayList<String> eventTypes;
     private String firestoreId;
     public Package(){
-
+        products = new ArrayList<>();
+        services = new ArrayList<>();
     }
 
     public Package(Long id, String name, String description, String category, int discount, ArrayList<Service> services, ArrayList<Product> products) {
@@ -40,7 +40,6 @@ public class Package implements Parcelable {
         images = new ArrayList<>();
         eventTypes = new ArrayList<>();
         Set<String> eventTypesSet = new HashSet<>();
-        price = "18000";
         for (Service s: services) {
             images.addAll(s.getImages());
             eventTypesSet.addAll(s.getEventTypes());
@@ -68,13 +67,18 @@ public class Package implements Parcelable {
     }
 
     public String getPrice() {
-        return price;
+        int minPrice = 0;
+        for(Product p: products)
+            minPrice += p.getPrice();
+        int maxPrice = minPrice;
+        for(Service s: services) {
+            minPrice += s.getMinPrice();
+            maxPrice += s.getMaxPrice();
+        }
+        minPrice = minPrice * (100 - discount) / 100;
+        maxPrice = maxPrice * (100 - discount) / 100;
+        return minPrice+ " - " +maxPrice+ " din";
     }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public ArrayList<String> getEventTypes() {
         return eventTypes;
     }
@@ -166,6 +170,53 @@ public class Package implements Parcelable {
                 currentImageIndex = images.size() - 1;
         }
     }
+
+    public String getReservationDeadline(){
+        String s="";
+        Deadline deadline;
+        if(!services.isEmpty()){
+            deadline = services.get(0).getReservationDeadline();
+            for (Service service: services){
+                if(deadline.getDateFormat().equals("month")){
+                    if(service.getReservationDeadline().getDateFormat().equals("days"))
+                        deadline = service.getReservationDeadline();
+                    else {
+                        if (deadline.getNumber() > service.getReservationDeadline().getNumber())
+                            deadline = service.getReservationDeadline();
+                    }
+                }else{
+                    if(service.getReservationDeadline().getDateFormat().equals("days") && deadline.getNumber() > service.getReservationDeadline().getNumber())
+                        deadline = service.getReservationDeadline();
+                }
+            }
+            s = deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }
+        return s;
+    }
+
+    public String getCancellationDeadline(){
+        String s="";
+        Deadline deadline;
+        if(!services.isEmpty()){
+            deadline = services.get(0).getCancellationDeadline();
+            for (Service service: services){
+                if(deadline.getDateFormat().equals("month")){
+                    if(service.getCancellationDeadline().getDateFormat().equals("days"))
+                        deadline = service.getCancellationDeadline();
+                    else {
+                        if (deadline.getNumber() > service.getCancellationDeadline().getNumber())
+                            deadline = service.getCancellationDeadline();
+                    }
+                }else{
+                    if(service.getCancellationDeadline().getDateFormat().equals("days") && deadline.getNumber() > service.getCancellationDeadline().getNumber())
+                        deadline = service.getCancellationDeadline();
+                }
+            }
+            s = deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }
+        return s;
+    }
+
     public ArrayList<Integer> getImages() {
         return images;
     }

@@ -27,6 +27,7 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.NewServiceBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Deadline;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 
@@ -41,6 +42,7 @@ public class NewService extends Fragment {
     private LinearLayout imageContainer;
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
+    private ArrayList<String> deadlineFormats;
     LinearLayout part1;
     LinearLayout part2;
     LinearLayout part3;
@@ -67,6 +69,8 @@ public class NewService extends Fragment {
         listView.setAdapter(employeesAdapter);
         binding.ServiceCategory.setAdapter(setCategoriesSpinnerAdapter());
         binding.ServiceSubCategory.setAdapter(setSubCategoriesSpinnerAdapter());
+        binding.resDeadlineFormat.setAdapter(setDateFormatAdapter());
+        binding.cancDeadlineFormat.setAdapter(setDateFormatAdapter());
         Button switchPageButton = binding.switchPageButton;
         Button galleryButton = binding.addImageButtonService;
         galleryButton.setOnClickListener(v -> openGallery());
@@ -129,18 +133,26 @@ public class NewService extends Fragment {
     }
 
     private void addService(){
+        binding.validation.setVisibility(View.GONE);
         String category = binding.ServiceCategory.getSelectedItem().toString();
         String subcategory = binding.ServiceSubCategory.getSelectedItem().toString();
         String name = binding.ServiceName.getText().toString();
         String description = binding.editTextServiceDescription.getText().toString();
         String specificity = binding.ServiceSpecificity.getText().toString();
-        String reservationDeadline = binding.editTextReservationDeadline.getText().toString();
-        String cancelationDeadline = binding.editTextCancellationDeadline.getText().toString();
+        String reservationDeadlineNum = binding.editTextReservationDeadline.getText().toString();
+        String cancelationDeadlineNum = binding.editTextCancellationDeadline.getText().toString();
+        String reservationDeadlineFormat = binding.resDeadlineFormat.getSelectedItem().toString();
+        String cancelationDeadlineFormat = binding.cancDeadlineFormat.getSelectedItem().toString();
         String price = binding.ServicePrice.getText().toString();
         String minHour = binding.ServiceMinDurationHours.getText().toString();
         String maxHour = binding.ServiceMaxDurationHours.getText().toString();
         String minMin = binding.ServiceMinDurationMinutes.getText().toString();
         String maxMin = binding.ServiceMaxDurationMinutes.getText().toString();
+        if(name.equals("") || description.equals("") || price.equals("") || reservationDeadlineNum.equals("")
+        || cancelationDeadlineNum.equals("") || minHour.equals("") || maxHour.equals("") || minMin.equals("") || maxMin.equals("")){
+            binding.validation.setVisibility(View.VISIBLE);
+            return;
+        }
         boolean visible = binding.checkBoxODAvailable.isChecked();
         boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
         boolean confirmAutomatically = binding.radioAutomatically.isChecked();
@@ -152,8 +164,10 @@ public class NewService extends Fragment {
         ArrayList<String> eventTypes = new ArrayList<>();
         eventTypes.add("tip1");
         eventTypes.add("tip2");
+        Deadline resDeadline = new Deadline(reservationDeadlineFormat, Integer.parseInt(reservationDeadlineNum));
+        Deadline cancDeadline = new Deadline(cancelationDeadlineFormat, Integer.parseInt(cancelationDeadlineNum));
         Service service = new Service(0L, name, description, category, subcategory, specificity, priceInt, minHourInt, minMinInt,
-                maxHourInt, maxMinInt, "SR", reservationDeadline, cancelationDeadline, new ArrayList<Integer>(), eventTypes,
+                maxHourInt, maxMinInt, "SR", resDeadline, cancDeadline, new ArrayList<Integer>(), eventTypes,
                 new ArrayList<String>(), confirmAutomatically);
         service.setVisible(visible);
         service.setAvailableToBuy(isAvailableToBuy);
@@ -209,6 +223,15 @@ public class NewService extends Fragment {
         subCategories.add("Sub-Category 2");
         subCategories.add("Sub-Category 3");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
+    }
+
+    private ArrayAdapter<String> setDateFormatAdapter(){
+        deadlineFormats = new ArrayList<>();
+        deadlineFormats.add("days");
+        deadlineFormats.add("months");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, deadlineFormats);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapter;
     }

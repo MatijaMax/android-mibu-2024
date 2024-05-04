@@ -90,12 +90,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Duration"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Discount"
                 android:textSize="18sp"/>
             <TextView
@@ -120,13 +114,19 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/total_price_service_detail"
+                android:id="@+id/discount_package_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Phone Number"
                 android:textSize="18sp"/>
             <TextView
-                android:id="@+id/reservation_service_detail"
+                android:id="@+id/total_price_package_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/reservationDl_package_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Phone Number"
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"/>
             <TextView
-                android:id="@+id/cancellation_service_detail"
+                android:id="@+id/cancellationDl_package_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Phone Number"
@@ -178,6 +178,7 @@
             android:text="Show services"
             android:layout_marginTop="16dp"/>
         <TextView
+            android:id="@+id/servicesNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

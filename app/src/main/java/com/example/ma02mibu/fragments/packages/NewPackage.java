@@ -121,7 +121,18 @@ public class NewPackage extends Fragment {
     }
 
     private void savePackageDB(){
+        binding.validation.setVisibility(View.GONE);
         savePackageData();
+        if(packageCreateDto.getName().equals("") || packageCreateDto.getDescription().equals("")){
+            binding.validation.setText("Fill all the fields, please");
+            binding.validation.setVisibility(View.VISIBLE);
+            return;
+        }
+        if(mChosenServices.isEmpty() && mChosenProducts.isEmpty()){
+            binding.validation.setText("Choose at least one product or service, please");
+            binding.validation.setVisibility(View.VISIBLE);
+            return;
+        }
         String category = binding.PackageCategory.getSelectedItem().toString();
         Package newPackage = new Package(0L, packageCreateDto.getName(), packageCreateDto.getDescription(), category,
                 0, mChosenServices, mChosenProducts);
