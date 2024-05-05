@@ -12,12 +12,14 @@
         android:padding="10dp">
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:hint="@string/email"
             android:inputType="textEmailAddress"/>
         <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
@@ -30,6 +32,14 @@
             android:text="@string/login"
             android:id="@+id/btnLogin"
             android:layout_margin="10dp"/>
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:visibility="invisible"
+            android:indeterminate="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            style="?android:attr/progressBarStyleHorizontal"/>
     </LinearLayout>
 
 </FrameLayout>
