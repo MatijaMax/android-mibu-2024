@@ -2,6 +2,7 @@ package com.example.ma02mibu.fragments.authentication;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,8 +19,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.activities.MainActivity;
 import com.example.ma02mibu.databinding.FragmentSignUpODBinding;
+import com.example.ma02mibu.model.EventOrganizer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -91,11 +94,9 @@ public class SignUpODFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Button btnSignUp = view.findViewById(R.id.btnSignUpOD);
         btnSignUp.setOnClickListener(v -> {
-
             if(!fieldsAreValid()){
                 return;
             }
-
             createAccount();
 
 //            auth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(createUserCommand -> {
@@ -185,6 +186,12 @@ public class SignUpODFragment extends Fragment {
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = auth.getCurrentUser();
                         sendEmailVerification(user);
+                        createEventOrganizer(new EventOrganizer(email.getText().toString(),
+                                                                name.getText().toString(),
+                                                                surname.getText().toString(),
+                                                                phone.getText().toString(),
+                                                                address.getText().toString(),
+                                                                user.getUid()));
                         singOut();
                     } else {
                         // If sign in fails, display a message to the user.
@@ -193,6 +200,10 @@ public class SignUpODFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createEventOrganizer(EventOrganizer newEventOrganizer) {
+        CloudStoreUtil.insertEventOrganizer(newEventOrganizer);
     }
 
     private void singOut(){

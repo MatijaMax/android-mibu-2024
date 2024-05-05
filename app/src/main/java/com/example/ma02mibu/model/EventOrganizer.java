@@ -6,17 +6,17 @@ public class EventOrganizer {
     private String surname;
     private String phoneNumber;
     private String addressOfResidence;
-    private Boolean mailActivated;
+    private String userUID;
 
     public EventOrganizer(){}
 
-    public EventOrganizer(String email, String name, String surname, String phoneNumber, String addressOfResidence, Boolean mailActivated) {
+    public EventOrganizer(String email, String name, String surname, String phoneNumber, String addressOfResidence, String userUID) {
         this.email = email;
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
         this.addressOfResidence = addressOfResidence;
-        this.mailActivated = mailActivated;
+        this.userUID = userUID;
     }
 
     public String getEmail() {
@@ -59,11 +59,11 @@ public class EventOrganizer {
         this.addressOfResidence = addressOfResidence;
     }
 
-    public Boolean getMailActivated() {
-        return mailActivated;
+    public String getUserUID() {
+        return userUID;
     }
 
-    public void setMailActivated(Boolean mailActivated) {
-        this.mailActivated = mailActivated;
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 }
