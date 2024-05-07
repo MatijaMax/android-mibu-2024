@@ -1,5 +1,7 @@
 package com.example.ma02mibu.fragments.employees;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
@@ -31,6 +34,8 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.WorkSchedule;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -41,6 +46,7 @@ public class EmployeeRegistrationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private String ownerRefId;
     private Company currentCompany;
+    private FirebaseAuth auth;
 
     public EmployeeRegistrationFragment() {
         // Required empty public constructor
@@ -69,6 +75,7 @@ public class EmployeeRegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEmployeeRegistrationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        auth = FirebaseAuth.getInstance();
         Button btnSelectImage = binding.btnUploadImage;
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,8 +128,7 @@ public class EmployeeRegistrationFragment extends Fragment {
             alertDialog.show();
             return;
         }
-        Employee e = new Employee(1L, fName, lName, email, pass1, address, phoneNr, R.drawable.employee_avatar, 0);
-
+        Employee e = new Employee(1L, fName, lName, email, pass1, address, phoneNr, R.drawable.employee_avatar, ownerRefId,  0);
 
         String mondayHours = binding.etMondayHours.getText().toString();
         String tuesdayHours = binding.etTuesdayHours.getText().toString();
@@ -254,10 +260,47 @@ public class EmployeeRegistrationFragment extends Fragment {
 //*****************************************************
 
         //cuvam u bazu zaposlenog i prebacujem na listu svih
-        CloudStoreUtil.insertEmployee(e, ownerRefId);
-        Thread.sleep(600);
+        createAccount(e);
+        //Thread.sleep(600);
         FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_employees_list, "EmployeeRegistration");
+    }
+
+    private void createAccount(Employee employee) {
+        Log.d(TAG, "createAccount:" + employee.getEmail());
+
+        auth.createUserWithEmailAndPassword(employee.getEmail(), employee.getPassword())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = task.getResult().getUser();
+                        sendEmailVerification(user);
+                        employee.setUserUID(user.getUid());
+                        CloudStoreUtil.insertEmployeeNew(employee);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(getContext(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void sendEmailVerification(FirebaseUser user) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(),
+                                "Verification email sent to " + user.getEmail(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG, "sendEmailVerification", task.getException());
+                        Toast.makeText(getContext(),
+                                "Failed to send verification email.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void alertShow(String day) {
@@ -298,14 +341,30 @@ public class EmployeeRegistrationFragment extends Fragment {
         return new String[]{startH, startM, endH, endM};
     }
     private void loadCompany() {
-        CloudStoreUtil.selectCompany(ownerRefId, new CloudStoreUtil.CompanyCallback(){
+                    Log.i("OWNERRR", ownerRefId);
+//        CloudStoreUtil.selectCompany(ownerRefId, new CloudStoreUtil.CompanyCallback(){
+//            @Override
+//            public void onCallback(Company retrieved) {
+//                if (retrieved != null) {
+//                    currentCompany = retrieved;
+//                    Log.i("WQQQQQQQ", currentCompany.toString());
+//                } else {
+//                    currentCompany = null;
+//                }
+//            }
+//        });
+        CloudStoreUtil.getCompany(ownerRefId, new CloudStoreUtil.MyCompanyCallback() {
             @Override
-            public void onCallback(Company retrieved) {
-                if (retrieved != null) {
-                    currentCompany = retrieved;
-                } else {
-                    currentCompany = null;
-                }
+            public void onSuccess(Company myItem) {
+                // Handle the retrieved item (e.g., display it in UI)
+                System.out.println("Retrieved item: " + myItem);
+                currentCompany = myItem;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching document: " + e.getMessage());
             }
         });
     }

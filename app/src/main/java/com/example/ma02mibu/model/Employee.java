@@ -19,6 +19,9 @@ public class Employee implements Parcelable {
     private String address;
     private String phoneNumber;
     private int image;
+
+    private String ownerRefId;
+    private String userUID;
     private ArrayList<WorkSchedule> workSchedules;
 
     private int isActive;
@@ -27,7 +30,7 @@ public class Employee implements Parcelable {
         workSchedules = new ArrayList<>();
     }
 
-    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, ArrayList<WorkSchedule> workSchedules, int isActive) {
+    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, String ownerRefId, int isActive) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,11 +39,12 @@ public class Employee implements Parcelable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.image = image;
-        this.workSchedules = workSchedules;
+        this.ownerRefId = ownerRefId;
         this.isActive = isActive;
+        workSchedules = new ArrayList<>();
     }
 
-    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image) {
+    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, String ownerRefId, String userUID, ArrayList<WorkSchedule> workSchedules, int isActive) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,19 +53,9 @@ public class Employee implements Parcelable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.image = image;
-        this.workSchedules = new ArrayList<>();
-    }
-
-    public Employee(Long id, String firstName, String lastName, String email, String password, String address, String phoneNumber, int image, int isActive) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.image = image;
-        this.workSchedules = new ArrayList<>();
+        this.ownerRefId = ownerRefId;
+        this.userUID = userUID;
+        this.workSchedules = workSchedules;
         this.isActive = isActive;
     }
 
@@ -78,6 +72,8 @@ public class Employee implements Parcelable {
         address = in.readString();
         phoneNumber = in.readString();
         image = in.readInt();
+        ownerRefId = in.readString();
+        userUID = in.readString();
         workSchedules = in.createTypedArrayList(WorkSchedule.CREATOR);
     }
 
@@ -89,7 +85,10 @@ public class Employee implements Parcelable {
         parcel.writeString(lastName);
         parcel.writeString(email);
         parcel.writeString(address);
+        parcel.writeString(phoneNumber);
         parcel.writeInt(image);
+        parcel.writeString(ownerRefId);
+        parcel.writeString(userUID);
         parcel.writeTypedList(workSchedules);
     }
 
@@ -107,6 +106,22 @@ public class Employee implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getOwnerRefId() {
+        return ownerRefId;
+    }
+
+    public void setOwnerRefId(String ownerRefId) {
+        this.ownerRefId = ownerRefId;
+    }
+
+    public String getUserUID() {
+        return userUID;
+    }
+
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 
     public WorkSchedule findActiveWorkSchedule() {

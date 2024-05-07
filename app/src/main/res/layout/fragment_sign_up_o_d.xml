@@ -17,18 +17,21 @@
             android:text="@string/personalInfoInput"
             android:textSize="30sp"/>
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:hint="@string/email"
             android:inputType="textEmailAddress"/>
         <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:hint="@string/password"
             android:inputType="textPassword"/>
         <EditText
+            android:id="@+id/repeated_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
@@ -40,24 +43,27 @@
             android:layout_weight="0.1"
             android:orientation="horizontal">
             <EditText
+                android:id="@+id/name"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:hint="@string/name"
                 android:inputType="textPersonName"/>
             <EditText
+                android:id="@+id/surname"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-
                 android:hint="@string/surname"
                 android:inputType="textPersonName"/>
         </LinearLayout>
         <EditText
+            android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:hint="@string/phoneNumber"
             android:inputType="phone"/>
         <EditText
+            android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.1"

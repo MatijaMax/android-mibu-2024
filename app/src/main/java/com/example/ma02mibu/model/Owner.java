@@ -1,44 +1,126 @@
 package com.example.ma02mibu.model;
 
-public class Owner {
-    private String id;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    private  String firstName;
+import androidx.annotation.NonNull;
+
+public class Owner implements Parcelable {
+    private String email;
+    private String name;
+    private String surname;
+    private String phoneNumber;
+    private String addressOfResidence;
+    private String userUID;
     private Company myCompany;
 
     public Owner() {
     }
 
-    public Owner(String firstName, Company myCompany) {
-        this.firstName = firstName;
-        this.myCompany = myCompany;
-    }
-
-    public Owner(String id, String firstName, Company myCompany) {
-        this.id = id;
-        this.firstName = firstName;
-        this.myCompany = myCompany;
-    }
-
-    public Owner(String id, String firstName) {
-        this.id = id;
-        this.firstName = firstName;
+    public Owner(String email, String name, String surname, String phoneNumber, String addressOfResidence, String userUID) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.addressOfResidence = addressOfResidence;
+        this.userUID = userUID;
         this.myCompany = null;
     }
 
-    public String getId() {
-        return id;
+    public Owner(String email, String name, String surname, String phoneNumber, String addressOfResidence, String userUID, Company myCompany) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.addressOfResidence = addressOfResidence;
+        this.userUID = userUID;
+        this.myCompany = myCompany;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getFirstName() {
-        return firstName;
+    protected Owner(Parcel in) {
+        email = in.readString();
+        name = in.readString();
+        surname = in.readString();
+        phoneNumber = in.readString();
+        addressOfResidence = in.readString();
+        userUID = in.readString();
+        myCompany = in.readParcelable(Company.class.getClassLoader());
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public static final Creator<Owner> CREATOR = new Creator<Owner>() {
+        @Override
+        public Owner createFromParcel(Parcel in) {
+            return new Owner(in);
+        }
+
+        @Override
+        public Owner[] newArray(int size) {
+            return new Owner[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(name);
+        dest.writeString(surname);
+        dest.writeString(phoneNumber);
+        dest.writeString(addressOfResidence);
+        dest.writeString(userUID);
+        dest.writeParcelable(myCompany, flags);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddressOfResidence() {
+        return addressOfResidence;
+    }
+
+    public void setAddressOfResidence(String addressOfResidence) {
+        this.addressOfResidence = addressOfResidence;
+    }
+
+    public String getUserUID() {
+        return userUID;
+    }
+
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 
     public Company getMyCompany() {

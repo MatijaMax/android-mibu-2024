@@ -1,42 +1,68 @@
 package com.example.ma02mibu.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
-public class Company {
-
+public class Company implements Parcelable {
     private String id;
+    private String email;
     private String name;
+    private String address;
+    private String phoneNumber;
+    private String description;
     private ArrayList<Employee> employees;
-
     private WorkSchedule workSchedule;
 
-    public Company(String name, ArrayList<Employee> employees) {
+    public Company() { }
+
+    public Company(String email, String name, String address, String phoneNumber, String description) {
+        this.email = email;
         this.name = name;
-        this.employees = employees;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
     }
 
-    public Company(String id, String name, ArrayList<Employee> employees, WorkSchedule workSchedule) {
-        this.id = id;
-        this.name = name;
-        this.employees = employees;
-        this.workSchedule = workSchedule;
+    protected Company(Parcel in) {
+        id = in.readString();
+        email = in.readString();
+        name = in.readString();
+        address = in.readString();
+        phoneNumber = in.readString();
+        description = in.readString();
+        workSchedule = in.readParcelable(WorkSchedule.class.getClassLoader());
     }
 
-    public Company(String id, String name, WorkSchedule workSchedule) {
-        this.id = id;
-        this.name = name;
-        this.employees = new ArrayList<>();
-        this.workSchedule = workSchedule;
+    public static final Creator<Company> CREATOR = new Creator<Company>() {
+        @Override
+        public Company createFromParcel(Parcel in) {
+            return new Company(in);
+        }
+
+        @Override
+        public Company[] newArray(int size) {
+            return new Company[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public Company() {
-        this.employees = new ArrayList<>();
-    }
-
-    public Company(String id, String name) {
-        this.id = id;
-        this.name = name;
-        this.employees = new ArrayList<>();
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(email);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(phoneNumber);
+        dest.writeString(description);
+        dest.writeParcelable(workSchedule, flags);
     }
 
     public WorkSchedule getWorkSchedule() {

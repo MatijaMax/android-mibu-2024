@@ -18,6 +18,8 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
 import com.example.ma02mibu.model.Employee;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -25,17 +27,23 @@ import java.util.ArrayList;
  * A fragment representing a list of Items.
  */
 public class EmployeeListFragment extends ListFragment {
+    private FirebaseAuth auth;
     private FragmentEmployeeListBinding binding;
     private ArrayList<Employee> mEmployees;
     private ArrayList<Employee> mEmployeesBackup;
     private EmployeeListAdapter adapter;
 
-    private String ownerRefId = "LpDHEOT9JWhVNrHWP20K";
+    private String ownerRefId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            ownerRefId = user.getUid();
+        }
 
         binding = FragmentEmployeeListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -55,26 +63,43 @@ public class EmployeeListFragment extends ListFragment {
                 filterEmployees();
             }
         });
+        Log.i("MMMMMMMMMMMMMM", ownerRefId);
         loadEmployees();
 
         return root;
     }
 
     private void loadEmployees() {
-        CloudStoreUtil.selectEmployees(ownerRefId, new CloudStoreUtil.EmployeeCallback(){
+//        CloudStoreUtil.selectEmployees(ownerRefId, new CloudStoreUtil.EmployeeCallback(){
+//            @Override
+//            public void onCallback(ArrayList<Employee> retrieved) {
+//                if (retrieved != null) {
+//                    mEmployees = new ArrayList<>(retrieved);
+//                    mEmployeesBackup = new ArrayList<>(retrieved);
+//                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployeesBackup.toArray().length);
+//                } else {
+//                    mEmployees = new ArrayList<>();
+//                    mEmployeesBackup = new ArrayList<>();
+//                }
+//
+//                adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
+//                setListAdapter(adapter);
+//            }
+//        });
+        CloudStoreUtil.getEmployeesList(ownerRefId, new CloudStoreUtil.EmployeesListCallback() {
             @Override
-            public void onCallback(ArrayList<Employee> retrieved) {
-                if (retrieved != null) {
-                    mEmployees = new ArrayList<>(retrieved);
-                    mEmployeesBackup = new ArrayList<>(retrieved);
-                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployeesBackup.toArray().length);
-                } else {
-                    mEmployees = new ArrayList<>();
-                    mEmployeesBackup = new ArrayList<>();
-                }
-
+            public void onSuccess(ArrayList<Employee> itemList) {
+                // Handle the retrieved list of items (e.g., display them in UI)
+                mEmployees = new ArrayList<>(itemList);
+                mEmployeesBackup = new ArrayList<>(itemList);
                 adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
                 setListAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching documents: " + e.getMessage());
             }
         });
 //        mEmployees = new ArrayList<>();
