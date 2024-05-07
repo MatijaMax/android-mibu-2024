@@ -35,7 +35,7 @@ public class EmployeeDetailsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private Employee mEmployee;
-    private String mParam2;
+    private String ownerRefId;
     private FragmentEmployeeDetailsBinding binding;
 
     public EmployeeDetailsFragment() {
@@ -55,7 +55,7 @@ public class EmployeeDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mEmployee = getArguments().getParcelable(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            ownerRefId = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -95,7 +95,7 @@ public class EmployeeDetailsFragment extends Fragment {
         listView.setAdapter(adapter);
         Button newEmployeeButton = binding.btnAddNewWorkTime;
         newEmployeeButton.setOnClickListener(v -> {
-            FragmentTransition.to(EmployeeWorkTimeEntryFragment.newInstance("",""), getActivity(),
+            FragmentTransition.to(EmployeeWorkTimeEntryFragment.newInstance(mEmployee,ownerRefId), getActivity(),
                     true, R.id.scroll_employees_list, "newWorkTimePage");
         });
         return view;

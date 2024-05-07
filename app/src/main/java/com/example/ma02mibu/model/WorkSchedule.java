@@ -3,6 +3,7 @@ package com.example.ma02mibu.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,9 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class WorkSchedule implements Parcelable {
-    private Map<DayOfWeek, WorkTime> schedule;
-    private LocalDate startDay;
-    private LocalDate endDay;
+    private Map<String, WorkTime> schedule;
+    private String startDay;
+    private String endDay;
 
 
     public WorkSchedule() {
@@ -23,14 +24,14 @@ public class WorkSchedule implements Parcelable {
     // Parcelable methods
     protected WorkSchedule(Parcel in) {
         // Read data from the parcel and initialize your fields
-        startDay = (LocalDate) in.readSerializable();
-        endDay = (LocalDate) in.readSerializable();
+        startDay = (String) in.readSerializable();
+        endDay = (String) in.readSerializable();
         schedule = new HashMap<>();
         int size = in.readInt();
         for (int i = 0; i < size; i++) {
             DayOfWeek dayOfWeek = DayOfWeek.valueOf(in.readString());
             WorkTime workTime = in.readParcelable(WorkTime.class.getClassLoader());
-            schedule.put(dayOfWeek, workTime);
+            schedule.put(dayOfWeek.toString(), workTime);
         }
     }
 
@@ -40,8 +41,8 @@ public class WorkSchedule implements Parcelable {
         dest.writeSerializable(startDay);
         dest.writeSerializable(endDay);
         dest.writeInt(schedule.size());
-        for (Map.Entry<DayOfWeek, WorkTime> entry : schedule.entrySet()) {
-            dest.writeString(entry.getKey().name());
+        for (Map.Entry<String, WorkTime> entry : schedule.entrySet()) {
+            dest.writeString(entry.getKey());
             dest.writeParcelable(entry.getValue(), flags);
         }
 
@@ -63,61 +64,65 @@ public class WorkSchedule implements Parcelable {
             return new WorkSchedule[size];
         }
     };
-    public Map<DayOfWeek, WorkTime> getSchedule() {
+    public Map<String, WorkTime> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(Map<DayOfWeek, WorkTime> schedule) {
+    public void setSchedule(Map<String, WorkTime> schedule) {
         this.schedule = schedule;
     }
 
     public void setWorkTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
         if(startTime == null || endTime == null){
-            schedule.put(dayOfWeek, null);
+            schedule.put(dayOfWeek.toString(), null);
         }
         else {
-            schedule.put(dayOfWeek, new WorkTime(startTime, endTime));
+            schedule.put(dayOfWeek.toString(), new WorkTime(startTime.toString(), endTime.toString()));
         }
     }
-    public WorkTime getWorkTime(DayOfWeek dayOfWeek) {
+    public WorkTime getWorkTime(String dayOfWeek) {
         return schedule.get(dayOfWeek);
     }
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
+        if(startDay != null && endDay != null) {
+            output.append(startDay.toString()).append(" - ").append(endDay.toString()).append("\n");
+        }else{
+            output.append("Regular working hours").append("\n");
+        }
         for (DayOfWeek d : DayOfWeek.values()) {
             output.append(d.toString()).append(" => ");
-            if(schedule.get(d) == null){
+            if(schedule.get(d.toString()) == null){
                 output.append("not working").append("\n");
             }
             else {
-                output.append(schedule.get(d).toString()).append("\n");
+                output.append(schedule.get(d.toString()).toString()).append("\n");
             }
         }
         return output.toString();
     }
 
     public String ScheduleForDay(DayOfWeek d){
-        if(schedule.get(d) == null){
+        if(schedule.get(d.toString()) == null){
             return "not working";
         }
-        return schedule.get(d).toString();
+        return schedule.get(d.toString()).toString();
     }
 
-    public LocalDate getStartDay() {
+    public String getStartDay() {
         return startDay;
     }
 
-    public void setStartDay(LocalDate startDay) {
+    public void setStartDay(String startDay) {
         this.startDay = startDay;
     }
 
-    public LocalDate getEndDay() {
+    public String getEndDay() {
         return endDay;
     }
 
-    public void setEndDay(LocalDate endDay) {
+    public void setEndDay(String endDay) {
         this.endDay = endDay;
     }
 }

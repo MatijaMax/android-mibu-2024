@@ -1,5 +1,7 @@
 package com.example.ma02mibu.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        createNotificationChannel("Main notif channel", "Channel for music nottifications",
+                "Kanal1", NotificationManager.IMPORTANCE_DEFAULT);
     }
 
 
@@ -161,6 +166,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onBackPressed();
+    }
+
+    private void createNotificationChannel(CharSequence name, String description, String channel_id, int importance) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        NotificationChannel channel = new NotificationChannel(channel_id, name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     @Override
