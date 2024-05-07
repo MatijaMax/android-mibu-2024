@@ -156,38 +156,38 @@ public class CloudStoreUtil {
                 });
     }
 
-
-    public static void updateEmployeeWorkingHours(Employee employee, String ownerId){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference ownerRef = db.collection("owners").document(ownerId);
-
-        ownerRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Document exists, retrieve the company data
-                Owner owner = documentSnapshot.toObject(Owner.class);
-                if (owner != null) {
-                    Company company = owner.getMyCompany();
-                    if (company != null) {
-                        Log.i("RADDDDDDD", company.getEmployees().toString());
-                        Log.i("AAAAAAAA", employee.getWorkSchedules().toString());
-                        Employee employee1 = company.getEmployees().stream()
-                                .filter(e -> e.getEmail().equals(employee.getEmail()))
-                                .findFirst()
-                                .orElse(null);
-                        employee1.setWorkSchedules(employee.getWorkSchedules());
-                        ownerRef.update("myCompany", company);
-                    } else {
-                        // Company data is missing
-                    }
-                } else {
-                    // Owner data is missing
-                }
-            } else {
-                // Document doesn't exist
-            }
-        });
-    }
+//
+//    public static void updateEmployeeWorkingHours(Employee employee, String ownerId){
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        DocumentReference ownerRef = db.collection("owners").document(ownerId);
+//
+//        ownerRef.get().addOnSuccessListener(documentSnapshot -> {
+//            if (documentSnapshot.exists()) {
+//                // Document exists, retrieve the company data
+//                Owner owner = documentSnapshot.toObject(Owner.class);
+//                if (owner != null) {
+//                    Company company = owner.getMyCompany();
+//                    if (company != null) {
+//                        Log.i("RADDDDDDD", company.getEmployees().toString());
+//                        Log.i("AAAAAAAA", employee.getWorkSchedules().toString());
+//                        Employee employee1 = company.getEmployees().stream()
+//                                .filter(e -> e.getEmail().equals(employee.getEmail()))
+//                                .findFirst()
+//                                .orElse(null);
+//                        employee1.setWorkSchedules(employee.getWorkSchedules());
+//                        ownerRef.update("myCompany", company);
+//                    } else {
+//                        // Company data is missing
+//                    }
+//                } else {
+//                    // Owner data is missing
+//                }
+//            } else {
+//                // Document doesn't exist
+//            }
+//        });
+//    }
 
     public static void insertProduct(Product product){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -238,6 +238,31 @@ public class CloudStoreUtil {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         Owner myItem = documentSnapshot.toObject(Owner.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface EmployeeCallback {
+        void onSuccess(Employee myItem);
+        void onFailure(Exception e);
+    }
+
+    public static void getEmployee(String employeeId, EmployeeCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("userUID", employeeId)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        Employee myItem = documentSnapshot.toObject(Employee.class);
                         callback.onSuccess(myItem);
                     } else {
                         callback.onFailure(new Exception("No documents found with the specified tag"));
