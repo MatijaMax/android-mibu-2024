@@ -266,20 +266,20 @@ public class SignUpPUP3Fragment extends Fragment {
     }
 
     private void prepareCategory(){
-        categories.add(new Category(1L, "Ime1", "Opis"));
-        categories.add(new Category(2L, "Ime2", "Opis"));
-        categories.add(new Category(3L, "Ime3", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(5L, "Ime5", "Opis recimo da je ovaj malko duzi od ostalih da vidim kako ce da se wtapuje na ostale ulaze"));
+        categories.add(new Category("Ime1", "Opis"));
+        categories.add(new Category("Ime2", "Opis"));
+        categories.add(new Category("Ime3", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime5", "Opis recimo da je ovaj malko duzi od ostalih da vidim kako ce da se wtapuje na ostale ulaze"));
 
 
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
     }
 
     private void prepareEventTypes(){
