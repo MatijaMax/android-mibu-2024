@@ -67,6 +67,7 @@ public class PackageDetailsFragment extends Fragment {
         TextView discount = binding.discountPackageDetail;
         TextView productsNum = binding.productsNum;
         TextView servicesNum = binding.servicesNum;
+        TextView reservationConfirm = binding.confirmReservation;
         ImageButton rightButton = binding.rightButtonServiceDetail;
         ImageButton leftButton = binding.leftButtonServiceDetail;
         ImageView imageView = binding.serviceImageDetail;
@@ -78,6 +79,7 @@ public class PackageDetailsFragment extends Fragment {
         cancellationPackage.setText(mPackage.getCancellationDeadline());
         productsNum.setText(String.valueOf(mPackage.getProducts().size()));
         servicesNum.setText(String.valueOf(mPackage.getServices().size()));
+        reservationConfirm.setText(mPackage.getReservationConfirm());
         String disc = mPackage.getDiscount() + "%";
         discount.setText(disc);
         packageTotalPrice.setText(mPackage.getPrice());

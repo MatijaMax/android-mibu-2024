@@ -123,6 +123,20 @@ public class Package implements Parcelable {
         return services;
     }
 
+    public String getReservationConfirm() {
+        if(services.isEmpty())
+            return "/";
+        String res = "Manually";
+        for(Service s: services){
+            if(s.isConfirmAutomatically()){
+                res = "Automatically";
+                break;
+            }
+        }
+        return res;
+    }
+
+
     public void setServices(ArrayList<Service> services) {
         this.services = services;
     }
@@ -189,9 +203,10 @@ public class Package implements Parcelable {
                         deadline = service.getReservationDeadline();
                 }
             }
-            s = deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+            return deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }else{
+            return "/";
         }
-        return s;
     }
 
     public String getCancellationDeadline(){
@@ -212,9 +227,11 @@ public class Package implements Parcelable {
                         deadline = service.getCancellationDeadline();
                 }
             }
-            s = deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+            return deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }else{
+            return "/";
         }
-        return s;
+
     }
 
     public ArrayList<Integer> getImages() {
