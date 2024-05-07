@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.adapters.EventExpandableListAdapter;
+import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
+import com.example.ma02mibu.databinding.FragmentEmployeeWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
 
@@ -26,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -44,7 +50,11 @@ public class EmployeeWorkCalendarFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private Employee mEmployee;
+    private ArrayList<EventModel> eventModels;
     private String mParam2;
+
+    private int currentYear, currentMonth, currentDayOfMonth;
+    private FragmentEmployeeWorkCalendarBinding binding;
 
     public EmployeeWorkCalendarFragment() {
         // Required empty public constructor
@@ -72,26 +82,9 @@ public class EmployeeWorkCalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_employee_work_calendar, container, false);
-//        ExpandableListView expandableListView = view.findViewById((R.id.expandableListView));
-//        HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
-//
-//        List<EventModel> eventsList1 = new ArrayList<EventModel>();
-//        eventsList1.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-//        eventsList1.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
-//
-//        List<EventModel> eventsList2 = new ArrayList<EventModel>();
-//        eventsList2.add(new EventModel("dogadjaj3", LocalDate.of(2024, 4, 16), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-//        eventsList1.add(new EventModel("dogadjaj9", LocalDate.of(2024, 4, 16), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
-//        eventsList2.add(new EventModel("dogadjaj7", LocalDate.of(2024, 4, 16), LocalTime.of(15,30), LocalTime.of(16,0),"booked"));
-//
-//        expandableListDetail.put("DAN1", eventsList1);
-//        expandableListDetail.put("DAN2", eventsList2);
-//        List<String> expandableListTitle;
-//        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-//        EventExpandableListAdapter adapter = new EventExpandableListAdapter( getActivity(), expandableListTitle, expandableListDetail);
-//        expandableListView.setAdapter(adapter);
+        binding = FragmentEmployeeWorkCalendarBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
         tvSelectedWeek = view.findViewById(R.id.tvSelectedWeek);
         Button btnPickWeek = view.findViewById(R.id.btnPickWeek);
         btnPickWeek.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +101,41 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 showDatePickerDialog2();
             }
         });
+        Button btnNewEvent = view.findViewById(R.id.btnNewEvent);
+        btnNewEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewEvent();
+            }
+        });
+        loadEventModels();
         return view;
+    }
+
+    private void loadEventModels() {
+        CloudStoreUtil.getEventModels(mEmployee.getUserUID(), new CloudStoreUtil.EventModelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<EventModel> itemList) {
+                eventModels = new ArrayList<>(itemList);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                eventModels = new ArrayList<>();
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+        });
+    }
+
+    private void addNewEvent(){
+        String name = binding.eName.getText().toString();
+        String fTime = binding.eTimeFrom.getText().toString();
+        String tTime = binding.eTimeTo.getText().toString();
+        String date = binding.eventSelectedDate.getText().toString();
+        EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getUserUID());
+        CloudStoreUtil.insertEventModel(eventModel);
+        eventModels.add(eventModel);
+        changeViews();
     }
     private void showDatePickerDialog(View parentV) {
         Calendar calendar = Calendar.getInstance();
@@ -124,6 +151,9 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         // Convert selected date to week number
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
+                        currentDayOfMonth = dayOfMonth;
+                        currentMonth = month;
+                        currentYear = year;
                         DateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                         int weekNumber = selectedCalendar.get(Calendar.WEEK_OF_YEAR);
                         tvSelectedWeek.setText(" number : " + weekNumber + " ");
@@ -136,54 +166,69 @@ public class EmployeeWorkCalendarFragment extends Fragment {
 
                         //monday
                         List<EventModel> eventsList1 = new ArrayList<EventModel>();
-                        eventsList1.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"taken"));
-                        eventsList1.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
-
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList1.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
-
                         //tuesday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList2 = new ArrayList<EventModel>();
-                        eventsList2.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"taken"));
-                        eventsList2.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
-
+//                        eventsList2.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"taken"));
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList2.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
 
                         //wed
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList3 = new ArrayList<EventModel>();
-                        eventsList3.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList3.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
-
+//                        eventsList3.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList3.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
-
                         //thur
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList4 = new ArrayList<EventModel>();
-                        eventsList4.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList4.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
-
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList4.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
-
                         //friday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList5 = new ArrayList<EventModel>();
-                        eventsList5.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList5.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
-
+//                        eventsList5.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList5.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
-
                         //sat
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList6 = new ArrayList<EventModel>();
-                        eventsList6.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList6.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
-
                         //sun
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList7 = new ArrayList<EventModel>();
-
+                        for(EventModel em : eventModels){
+                            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                                eventsList7.add(em);
+                            }
+                        }
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
 
                         List<String> expandableListTitle;
@@ -200,6 +245,93 @@ public class EmployeeWorkCalendarFragment extends Fragment {
 
         datePickerDialog.show();
     }
+    private void changeViews(){
+        // Convert selected date to week number
+        Calendar selectedCalendar = Calendar.getInstance();
+        selectedCalendar.set(currentYear, currentMonth, currentDayOfMonth);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        int weekNumber = selectedCalendar.get(Calendar.WEEK_OF_YEAR);
+        tvSelectedWeek.setText(" number : " + weekNumber + " ");
+
+        selectedCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+        selectedCalendar.set(Calendar.DAY_OF_WEEK, selectedCalendar.getFirstDayOfWeek());
+
+        ExpandableListView expandableListView = binding.expandableListView;
+        HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
+
+        //monday
+        List<EventModel> eventsList1 = new ArrayList<EventModel>();
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList1.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
+        //tuesday
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList2 = new ArrayList<EventModel>();
+//                        eventsList2.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"taken"));
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList2.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
+
+        //wed
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList3 = new ArrayList<EventModel>();
+//                        eventsList3.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList3.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
+        //thur
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList4 = new ArrayList<EventModel>();
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList4.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
+        //friday
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList5 = new ArrayList<EventModel>();
+//                        eventsList5.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList5.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
+        //sat
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList6 = new ArrayList<EventModel>();
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList6.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
+        //sun
+        selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        List<EventModel> eventsList7 = new ArrayList<EventModel>();
+        for(EventModel em : eventModels){
+            if(df.format(selectedCalendar.getTime()).equals(em.getDate())){
+                eventsList7.add(em);
+            }
+        }
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
+
+        List<String> expandableListTitle;
+        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
+        Collections.sort(expandableListTitle);
+        EventExpandableListAdapter adapter = new EventExpandableListAdapter( getActivity(), expandableListTitle, expandableListDetail);
+        expandableListView.setAdapter(adapter);
+    }
     private void showDatePickerDialog2() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -215,8 +347,19 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-                        // Display the selected week
-                        eventSelectedDay.setText(dayOfMonth + "-" + monthN + "-" + year + " ");
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDay.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDay.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDay.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDay.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
                     }
                 },
                 year,

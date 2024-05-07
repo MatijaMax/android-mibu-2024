@@ -5,19 +5,38 @@ import java.time.LocalTime;
 
 public class EventModel {
     private String name;
-    private LocalDate date;
-    private LocalTime fromTime;
-    private LocalTime toTime;
+    private String date;
+    private String fromTime;
+    private String toTime;
     private String status;
+
+    private String userUID;
 
     public EventModel(){}
 
-    public EventModel(String name, LocalDate date, LocalTime fromTime, LocalTime toTime, String status) {
+    public EventModel(String name, String date, String fromTime, String toTime, String status) {
         this.name = name;
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.status = status;
+    }
+
+    public EventModel(String name, String date, String fromTime, String toTime, String status, String userUID) {
+        this.name = name;
+        this.date = date;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.status = status;
+        this.userUID = userUID;
+    }
+
+    public String getUserUID() {
+        return userUID;
+    }
+
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 
     public String getName() {
@@ -28,27 +47,27 @@ public class EventModel {
         this.name = name;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public LocalTime getFromTime() {
+    public String getFromTime() {
         return fromTime;
     }
 
-    public void setFromTime(LocalTime fromTime) {
+    public void setFromTime(String fromTime) {
         this.fromTime = fromTime;
     }
 
-    public LocalTime getToTime() {
+    public String getToTime() {
         return toTime;
     }
 
-    public void setToTime(LocalTime toTime) {
+    public void setToTime(String toTime) {
         this.toTime = toTime;
     }
 

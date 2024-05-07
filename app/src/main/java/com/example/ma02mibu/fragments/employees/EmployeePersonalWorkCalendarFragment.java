@@ -122,47 +122,45 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
 
                         //monday
                         List<EventModel> eventsList1 = new ArrayList<EventModel>();
-                        eventsList1.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"taken"));
-                        eventsList1.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
+                        eventsList1.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"taken"));
+                        eventsList1.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(12,30).toString(), LocalTime.of(14,20).toString(),"taken"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
 
                         //tuesday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList2 = new ArrayList<EventModel>();
-                        eventsList2.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"taken"));
-                        eventsList2.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"booked"));
+                        eventsList2.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"taken"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
 
                         //wed
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList3 = new ArrayList<EventModel>();
-                        eventsList3.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList3.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
+                        eventsList3.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+                        eventsList3.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(12,30).toString(), LocalTime.of(14,20).toString(),"taken"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
 
                         //thur
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList4 = new ArrayList<EventModel>();
-                        eventsList4.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList4.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
+                        eventsList4.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
+                        eventsList4.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(12,30).toString(), LocalTime.of(14,20).toString(),"taken"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
 
                         //friday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList5 = new ArrayList<EventModel>();
-                        eventsList5.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
-                        eventsList5.add(new EventModel("dogadjaj5", LocalDate.of(2024, 4, 18), LocalTime.of(12,30), LocalTime.of(14,20),"taken"));
+                        eventsList5.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
 
                         //sat
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList6 = new ArrayList<EventModel>();
-                        eventsList6.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18), LocalTime.of(10,30), LocalTime.of(11,0),"booked"));
+                        eventsList6.add(new EventModel("dogadjaj1", LocalDate.of(2024, 4, 18).toString(), LocalTime.of(10,30).toString(), LocalTime.of(11,0).toString(),"booked"));
 
                         expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
 

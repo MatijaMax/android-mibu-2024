@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EventModel;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
@@ -118,7 +119,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("employees").add(employee);
+    }
 
+    public static void insertEventModel(EventModel eventModel){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("eventModels").add(eventModel);
     }
 
     public interface UpdateItemCallback {
@@ -209,6 +215,32 @@ public class CloudStoreUtil {
                     ArrayList<Employee> itemList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         Employee myItem = documentSnapshot.toObject(Employee.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface EventModelsCallback {
+        void onSuccess(ArrayList<EventModel> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getEventModels(String employeeId, EventModelsCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("eventModels")
+                .whereEqualTo("userUID", employeeId)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<EventModel> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        EventModel myItem = documentSnapshot.toObject(EventModel.class);
                         itemList.add(myItem);
                     }
                     if (!itemList.isEmpty()) {
