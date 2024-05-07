@@ -121,6 +121,42 @@ public class CloudStoreUtil {
 
     }
 
+    public interface UpdateItemCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+
+    public static void updateEmployeesWS(Employee employee, UpdateItemCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", employee.getEmail())
+                .limit(1) // Limit to one result
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        // Create a map with the updated fields
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("workSchedules", employee.getWorkSchedules());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+
     public static void updateEmployeeWorkingHours(Employee employee, String ownerId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
