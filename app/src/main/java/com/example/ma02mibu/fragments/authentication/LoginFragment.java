@@ -62,11 +62,11 @@ public class LoginFragment extends Fragment {
         password = binding.password;
 
         auth = FirebaseAuth.getInstance();
-
-        if(auth.getCurrentUser() != null){
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-        }
+//
+//        if(auth.getCurrentUser() != null){
+//            Intent intent = new Intent(getActivity(), MainActivity.class);
+//            startActivity(intent);
+//        }
 
         return binding.getRoot();
     }

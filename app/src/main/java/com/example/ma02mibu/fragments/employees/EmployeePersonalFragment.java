@@ -33,7 +33,7 @@ public class EmployeePersonalFragment extends Fragment {
         binding =  FragmentEmployeePersonalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Employee employee1 =
-                new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar);
+                new Employee(1L, "Ana", "Stevic", "ana@gmail.com", "123", "Veselina Maslese 12, Novi Sad", "063124", R.drawable.employee_avatar, "", 0);
 
         WorkSchedule companyWorkSchedule = new WorkSchedule();
         companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));

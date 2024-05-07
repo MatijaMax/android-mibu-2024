@@ -41,7 +41,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CloudStoreUtil.insert();
+                //CloudStoreUtil.insert();
                 FragmentTransition.to(LoginFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer, "");
             }
         });

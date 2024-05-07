@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,26 +134,39 @@ public class SignUpPUP3Fragment extends Fragment {
 
         if(mondayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.MONDAY, LocalTime.of(mondayFromTime.getHour(), mondayFromTime.getMinute()), LocalTime.of(mondayToTime.getHour(), mondayToTime.getMinute()));
+        }else {
+            ret.setWorkTime(DayOfWeek.MONDAY, null, null);
         }
         if(tuesdayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(tuesdayFromTime.getHour(), tuesdayFromTime.getMinute()), LocalTime.of(tuesdayToTime.getHour(), tuesdayToTime.getMinute()));
+        }else{
+            ret.setWorkTime(DayOfWeek.TUESDAY, null, null);
         }
         if(wednesdayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(wednesdayFromTime.getHour(), wednesdayFromTime.getMinute()), LocalTime.of(wednesdayToTime.getHour(), wednesdayToTime.getMinute()));
+        }else {
+            ret.setWorkTime(DayOfWeek.WEDNESDAY, null, null);
         }
         if(thursdayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(thursdayFromTime.getHour(), thursdayFromTime.getMinute()), LocalTime.of(thursdayToTime.getHour(), thursdayToTime.getMinute()));
+        }else {
+            ret.setWorkTime(DayOfWeek.THURSDAY, null, null);
         }
         if(fridayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(fridayFromTime.getHour(), fridayFromTime.getMinute()), LocalTime.of(fridayToTime.getHour(), fridayToTime.getMinute()));
+        }else{
+            ret.setWorkTime(DayOfWeek.FRIDAY, null, null);
         }
         if(saturdayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.SATURDAY, LocalTime.of(saturdayFromTime.getHour(), saturdayFromTime.getMinute()), LocalTime.of(saturdayToTime.getHour(), saturdayToTime.getMinute()));
+        }else {
+            ret.setWorkTime(DayOfWeek.SATURDAY, null, null);
         }
         if(sundayCheckBox.isChecked()){
             ret.setWorkTime(DayOfWeek.SUNDAY, LocalTime.of(sundayFromTime.getHour(), sundayFromTime.getMinute()), LocalTime.of(sundayToTime.getHour(), sundayToTime.getMinute()));
+        }else {
+            ret.setWorkTime(DayOfWeek.SUNDAY, null, null);
         }
-
         return ret;
     }
 
