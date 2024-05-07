@@ -113,53 +113,12 @@ public class CloudStoreUtil {
         return ownerRefId;
     }
 
-    public static void insertCompany(Company company, String ownerId){
+
+    public static void insertEmployeeNew(Employee employee){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        DocumentReference ownerRef = db.collection("owners").document(ownerId);
-        ownerRef.update("myCompany", company);
-    }
+        db.collection("employees").add(employee);
 
-    public static void insertEmployee(Employee employee, String ownerId){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference ownerRef = db.collection("owners").document(ownerId);
-
-        ownerRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Document exists, retrieve the company data
-                Owner owner = documentSnapshot.toObject(Owner.class);
-                if (owner != null) {
-                    Company company = owner.getMyCompany();
-                    if (company != null) {
-                        // Now you have the company data
-                        company.getEmployees().add(employee);
-                        ownerRef.update("myCompany", company);
-                    } else {
-                        // Company data is missing
-                    }
-                } else {
-                    // Owner data is missing
-                }
-            } else {
-                // Document doesn't exist
-            }
-        });
-    }
-
-    public static String insertEmployeeNew(Employee employee){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference employeeRef = db.collection("employees").document();
-
-        String employeeRefId = employeeRef.getId();
-        employeeRef.set(employee)
-                .addOnSuccessListener(aVoid -> {
-
-                })
-                .addOnFailureListener(e -> {
-                });
-        return employeeRefId;
     }
 
     public static void updateEmployeeWorkingHours(Employee employee, String ownerId){
@@ -200,35 +159,6 @@ public class CloudStoreUtil {
                 .add(product);
     }
 
-//    public interface CompanyCallback {
-//        void onCallback(Company company);
-//    }
-//    public static void selectCompany(String ownerId, final CompanyCallback callback){
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        DocumentReference ownerRef = db.collection("owners").document(ownerId);
-//
-//        ownerRef.get().addOnSuccessListener(documentSnapshot -> {
-//            if (documentSnapshot.exists()) {
-//                // Document exists, retrieve the company data
-//                Owner owner = documentSnapshot.toObject(Owner.class);
-//                if (owner != null) {
-//                    Company company = owner.getMyCompany();
-//                    if (company != null) {
-//                        // Now you have the company data
-//                        callback.onCallback(company);
-//                    } else {
-//                        // Company data is missing
-//                        callback.onCallback(null);
-//                    }
-//                } else {
-//                    // Owner data is missing
-//                }
-//            } else {
-//                // Document doesn't exist
-//            }
-//        });
-//    }
-
     public interface EmployeesListCallback {
         void onSuccess(ArrayList<Employee> myItems);
         void onFailure(Exception e);
@@ -257,12 +187,12 @@ public class CloudStoreUtil {
     }
 
 
-    public interface MyCompanyCallback {
-        void onSuccess(Company myItem);
+    public interface OwnerCallback {
+        void onSuccess(Owner myItem);
         void onFailure(Exception e);
     }
 
-    public static void getCompany(String ownerId, MyCompanyCallback callback) {
+    public static void getOwner(String ownerId, OwnerCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("owners")
                 .whereEqualTo("userUID", ownerId)
@@ -272,7 +202,7 @@ public class CloudStoreUtil {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         Owner myItem = documentSnapshot.toObject(Owner.class);
-                        callback.onSuccess(myItem.getMyCompany());
+                        callback.onSuccess(myItem);
                     } else {
                         callback.onFailure(new Exception("No documents found with the specified tag"));
                     }
@@ -283,37 +213,6 @@ public class CloudStoreUtil {
     }
 
 
-
-
-    public interface EmployeeCallback {
-        void onCallback(ArrayList<Employee> employees);
-    }
-
-    public static void selectEmployees(String ownerId, final EmployeeCallback callback){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ownerRef = db.collection("owners").document(ownerId);
-
-        ownerRef.get().addOnCompleteListener(documentSnapshot -> {
-            if (documentSnapshot.getResult().exists()) {
-                // Document exists, retrieve the company data
-                Owner owner = documentSnapshot.getResult().toObject(Owner.class);
-                if (owner != null) {
-                    Company company = owner.getMyCompany();
-                    if (company != null) {
-                        // Now you have the company data
-                        callback.onCallback(company.getEmployees());
-                    } else {
-                        // Company data is missing
-                        callback.onCallback(null);
-                    }
-                } else {
-                    // Owner data is missing
-                }
-            } else {
-                // Document doesn't exist
-            }
-        });
-    }
     public interface ProductCallback {
         void onCallback(ArrayList<Product> products);
     }
