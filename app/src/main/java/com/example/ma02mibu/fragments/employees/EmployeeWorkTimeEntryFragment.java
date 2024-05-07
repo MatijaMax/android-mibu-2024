@@ -205,10 +205,21 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         customWorkSchedule.setStartDay(eventSelectedDayStart.getText().toString());
         customWorkSchedule.setEndDay(eventSelectedDayEnd.getText().toString());
         mEmployee.setSchedule(customWorkSchedule);
-        CloudStoreUtil.updateEmployeeWorkingHours(mEmployee, ownerRefId);
-        Thread.sleep(600);
-        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
-                true, R.id.scroll_employees_list, "EmployeeWTE");
+        CloudStoreUtil.updateEmployeesWS(mEmployee, new CloudStoreUtil.UpdateItemCallback() {
+            @Override
+            public void onSuccess() {
+                // Item updated successfully
+                System.out.println("Item updated!");
+                FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),true, R.id.scroll_employees_list, "EmployeeWTE");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error updating item: " + e.getMessage());
+            }
+        });
+//        Thread.sleep(600);
     }
 
     private void alertShow(String day) {
