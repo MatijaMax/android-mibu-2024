@@ -25,6 +25,7 @@ import com.example.ma02mibu.fragments.packages.EditPackageFragment;
 import com.example.ma02mibu.fragments.packages.NewPackage;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.viewmodels.CategorySharedViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +42,8 @@ public class ChooseServicesListFragment extends ListFragment {
     private boolean isFromEdit;
     private FirebaseAuth auth;
     private String userId;
+    private CategorySharedViewModel categoryViewModel;
+    private String category = "";
     private static final String ARG_PARAM = "param";
     public static ChooseServicesListFragment newInstance(){
         ChooseServicesListFragment fragment = new ChooseServicesListFragment();
@@ -62,6 +65,9 @@ public class ChooseServicesListFragment extends ListFragment {
         if(user != null){
             userId = user.getUid();
         }
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategorySharedViewModel.class);
+        if(categoryViewModel.getCategory().getValue() != null)
+            category = categoryViewModel.getCategory().getValue();
         servicesChosenNum = 0;
         isFromEdit = false;
         servicesChosen = new ArrayList<>();
@@ -81,6 +87,7 @@ public class ChooseServicesListFragment extends ListFragment {
                     mServices = new ArrayList<>();
                 }
                 mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
+                mServices.removeIf(p -> !p.getCategory().equals(category));
                 adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }

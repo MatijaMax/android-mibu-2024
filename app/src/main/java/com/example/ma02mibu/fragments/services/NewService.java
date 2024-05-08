@@ -9,12 +9,14 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,14 +27,18 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.EmployeeListAdapter;
+import com.example.ma02mibu.adapters.adminsManagment.CategoryListAdapter;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.NewServiceBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Deadline;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EmployeeInService;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.Subcategory;
+import com.example.ma02mibu.model.SubcategoryProposal;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -46,15 +52,18 @@ public class NewService extends Fragment {
     private static final int PICK_IMAGES_REQUEST = 1;
     private LinearLayout imageContainer;
     private ArrayList<String> categories;
+    private Category currentCategory;
     private ArrayList<String> subCategories;
     private ArrayList<String> deadlineFormats;
     LinearLayout part1;
     LinearLayout part2;
     LinearLayout part3;
     ArrayList<EmployeeInService> employees = new ArrayList<>();
+    ArrayList<Category> categoriesDB = new ArrayList<>();
     NewServiceBinding binding;
     private FirebaseAuth auth;
     private String ownerId;
+    boolean newSubCatShow;
     public static NewService newInstance() {
         return new NewService();
     }
@@ -72,11 +81,10 @@ public class NewService extends Fragment {
         imageContainer = binding.imageContainerService;
         ImageButton removeButton = binding.removeImagesButton;
         removeButton.setOnClickListener(v -> imageContainer.removeAllViews());
-
+        ImageButton newSubCat = binding.newSubCategory;
+        newSubCat.setOnClickListener(v -> toggleNewSubCategory());
+        setCategoriesSpinnerAdapter();
         getEmployees(ownerId);
-
-        binding.ServiceCategory.setAdapter(setCategoriesSpinnerAdapter());
-        binding.ServiceSubCategory.setAdapter(setSubCategoriesSpinnerAdapter());
         binding.resDeadlineFormat.setAdapter(setDateFormatAdapter());
         binding.cancDeadlineFormat.setAdapter(setDateFormatAdapter());
         Button switchPageButton = binding.switchPageButton;
@@ -85,6 +93,7 @@ public class NewService extends Fragment {
         switchPageButton.setOnClickListener(v -> switchFormPages());
         Button submitBtn = binding.submitButtonService;
         submitBtn.setOnClickListener(v -> addService());
+        setCategoryChangeListener();
         return root;
     }
 
@@ -163,6 +172,7 @@ public class NewService extends Fragment {
         String maxHour = binding.ServiceMaxDurationHours.getText().toString();
         String minMin = binding.ServiceMinDurationMinutes.getText().toString();
         String maxMin = binding.ServiceMaxDurationMinutes.getText().toString();
+        String newSubCategory = binding.SubCategoryRecommendation.getText().toString();
         if(name.equals("") || description.equals("") || price.equals("") || reservationDeadlineNum.equals("")
         || cancelationDeadlineNum.equals("") || minHour.equals("") || maxHour.equals("") || minMin.equals("") || maxMin.equals("")){
             binding.validation.setVisibility(View.VISIBLE);
@@ -187,9 +197,27 @@ public class NewService extends Fragment {
         service.setVisible(visible);
         service.setAvailableToBuy(isAvailableToBuy);
         service.setOwnerUuid(ownerId);
-        CloudStoreUtil.insertService(service);
+        boolean saveNewSubCategory = false;
+        SubcategoryProposal subcategoryProposal = new SubcategoryProposal();
+        if(!newSubCategory.isEmpty()){
+            service.setPending(true);
+            service.setSubCategory(newSubCategory);
+            Subcategory proposedSubCategory = new Subcategory(currentCategory.getDocumentRefId(), newSubCategory, "opis", Subcategory.SUBCATEGORYTYPE.USLUGA);
+            subcategoryProposal = new SubcategoryProposal(proposedSubCategory, "");
+            saveNewSubCategory = true;
+        }
+        CloudStoreUtil.insertService(service, saveNewSubCategory, subcategoryProposal);
         FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_services_list, "falsh");
+    }
+
+    private void toggleNewSubCategory(){
+        TextView subCatText = binding.SubCategoryRecommendation;
+        if(newSubCatShow)
+            subCatText.setVisibility(View.VISIBLE);
+        else
+            subCatText.setVisibility(View.GONE);
+        newSubCatShow = !newSubCatShow;
     }
 
     private void switchFormPages(){
@@ -243,26 +271,49 @@ public class NewService extends Fragment {
          });
     }
 
-    private ArrayAdapter<String> setCategoriesSpinnerAdapter(){
-        categories = new ArrayList<>();
-        categories.add("Category 1");
-        categories.add("Category 2");
-        categories.add("Category 3");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
+    private void setCategoriesSpinnerAdapter(){
+        CloudStoreUtil.selectCategories(result -> {
+            categoriesDB = result;
+            categories = new ArrayList<>();
+            for(Category c: categoriesDB)
+                categories.add(c.getName());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            binding.ServiceCategory.setAdapter(adapter);
+            currentCategory = categoriesDB.get(0);
+            CloudStoreUtil.selectSubcategoriesFromCategory(categoriesDB.get(0).getDocumentRefId(), resultSC -> {
+                ArrayList<Subcategory> subcategoriesDB = resultSC;
+                subCategories = new ArrayList<>();
+                for(Subcategory s: subcategoriesDB)
+                    subCategories.add(s.getName());
+                ArrayAdapter<String> adapterSC = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
+                adapterSC.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                binding.ServiceSubCategory.setAdapter(adapterSC);
+            });
+        });
     }
+    private void setCategoryChangeListener(){
+        binding.ServiceCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CloudStoreUtil.selectSubcategoriesFromCategory(categoriesDB.get(position).getDocumentRefId(), resultSC -> {
+                    ArrayList<Subcategory> subcategoriesDB = resultSC;
+                    subCategories = new ArrayList<>();
+                    for(Subcategory s: subcategoriesDB)
+                        subCategories.add(s.getName());
+                    ArrayAdapter<String> adapterSC = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
+                    adapterSC.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    binding.ServiceSubCategory.setAdapter(adapterSC);
+                    currentCategory = categoriesDB.get(position);
+                });
+            }
 
-    private ArrayAdapter<String> setSubCategoriesSpinnerAdapter(){
-        subCategories = new ArrayList<>();
-        subCategories.add("Sub-Category 1");
-        subCategories.add("Sub-Category 2");
-        subCategories.add("Sub-Category 3");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, subCategories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
-
     private ArrayAdapter<String> setDateFormatAdapter(){
         deadlineFormats = new ArrayList<>();
         deadlineFormats.add("days");

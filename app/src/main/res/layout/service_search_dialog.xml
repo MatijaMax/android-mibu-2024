@@ -113,7 +113,7 @@
             android:textSize="20sp"
             >
         </TextView>
-        <Spinner
+        <EditText
             android:id="@+id/service_category_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
             android:textSize="20sp"
             >
         </TextView>
-        <Spinner
+        <EditText
             android:id="@+id/service_subcategory_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

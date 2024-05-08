@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,10 +21,13 @@ import com.example.ma02mibu.adapters.PackageListAdapter;
 import com.example.ma02mibu.databinding.NewPackageBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.fragments.services.ChooseServicesListFragment;
+import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.PackageCreateDto;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.Subcategory;
+import com.example.ma02mibu.viewmodels.CategorySharedViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +43,8 @@ public class NewPackage extends Fragment {
     public ArrayList<Product> mChosenProducts = new ArrayList<>();
     public ArrayList<Service> mChosenServices = new ArrayList<>();
     public PackageCreateDto packageCreateDto = new PackageCreateDto();
+    private CategorySharedViewModel categorySharedViewModel;
+    ArrayList<Category> categoriesDB = new ArrayList<>();
     private PackageViewModel viewModel;
     private FirebaseAuth auth;
     private String ownerId;
@@ -64,7 +70,8 @@ public class NewPackage extends Fragment {
             FragmentTransition.to(ChooseServicesListFragment.newInstance(), getActivity(),
                     true, R.id.scroll_packages_list, "chooseServicesPage");
         });
-        binding.PackageCategory.setAdapter(setCategoriesSpinnerAdapter());
+        setCategoriesSpinnerAdapter();
+        categorySharedViewModel = new ViewModelProvider(requireActivity()).get(CategorySharedViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(PackageViewModel.class);
         if(viewModel.getProducts().getValue() != null)
             mChosenProducts = viewModel.getProducts().getValue();
@@ -77,6 +84,7 @@ public class NewPackage extends Fragment {
         setPackageCollections();
         Button submitBtn = binding.submitButton;
         submitBtn.setOnClickListener(v -> savePackageDB());
+        setCategoryChangeListener();
         return root;
     }
     @Override
@@ -149,13 +157,30 @@ public class NewPackage extends Fragment {
                 false, R.id.scroll_packages_list, "falsh");
     }
 
-    private ArrayAdapter<String> setCategoriesSpinnerAdapter(){
-        categories = new ArrayList<>();
-        categories.add("Category 1");
-        categories.add("Category 2");
-        categories.add("Category 3");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
+    private void setCategoriesSpinnerAdapter(){
+        CloudStoreUtil.selectCategories(result -> {
+            categoriesDB = result;
+            categories = new ArrayList<>();
+            for(Category c: categoriesDB)
+                categories.add(c.getName());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            binding.PackageCategory.setAdapter(adapter);
+            categorySharedViewModel.setCategory(categories.get(0));
+        });
+    }
+
+    private void setCategoryChangeListener(){
+        binding.PackageCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categorySharedViewModel.setCategory(categories.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

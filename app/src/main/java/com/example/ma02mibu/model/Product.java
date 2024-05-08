@@ -22,6 +22,7 @@ public class Product implements Parcelable {
     private ArrayList<Integer> images;
     private ArrayList<String> eventTypes;
     private int currentImageIndex;
+    private boolean pending;
     public Product(Long id, String name, String description, String category, String subCategory, int price, ArrayList<Integer> images, ArrayList<String> eventTypes, int discount) {
         this.id = id;
         this.name = name;
@@ -35,6 +36,7 @@ public class Product implements Parcelable {
         this.discount = discount;
         this.visible = true;
         this.availableToBuy = true;
+        pending = false;
     }
 
     public Product() {
@@ -211,6 +213,15 @@ public class Product implements Parcelable {
         dest.writeList(images);
         dest.writeList(eventTypes);
     }
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
     public static final Creator<Product> CREATOR = new Creator<Product>() {
         @Override
         public Product createFromParcel(Parcel in) {

@@ -25,6 +25,7 @@ import com.example.ma02mibu.databinding.FragmentProductsListBinding;
 import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.viewmodels.CategorySharedViewModel;
 import com.example.ma02mibu.viewmodels.PackageEditViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -44,6 +45,8 @@ public class ChooseProductsListFragment extends ListFragment {
     private boolean isFromEdit;
     private FirebaseAuth auth;
     private String userId;
+    private CategorySharedViewModel categoryViewModel;
+    private String category = "";
     private static final String ARG_PARAM = "param";
     public static ChooseProductsListFragment newInstance(){
         ChooseProductsListFragment fragment = new ChooseProductsListFragment();
@@ -66,6 +69,9 @@ public class ChooseProductsListFragment extends ListFragment {
         if(user != null){
             userId = user.getUid();
         }
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategorySharedViewModel.class);
+        if(categoryViewModel.getCategory().getValue() != null)
+            category = categoryViewModel.getCategory().getValue();
         productsChosenNum = 0;
         isFromEdit = false;
         super.onCreate(savedInstanceState);
@@ -84,6 +90,7 @@ public class ChooseProductsListFragment extends ListFragment {
                     mProducts = new ArrayList<>();
                 }
                 mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
+                mProducts.removeIf(p -> !p.getCategory().equals(category));
                 adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }

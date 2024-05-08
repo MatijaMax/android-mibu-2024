@@ -33,6 +33,7 @@ public class Service implements Parcelable {
     private ArrayList<String> eventTypes;
     private ArrayList<EmployeeInService> persons;
     private int currentImageIndex;
+    private boolean pending;
 
     public Service() {
         this.discount = 0;
@@ -63,6 +64,7 @@ public class Service implements Parcelable {
         this.visible = true;
         this.availableToBuy = true;
         ownerUuid = "";
+        pending = false;
     }
 
     protected Service(Parcel in) {
@@ -216,6 +218,14 @@ public class Service implements Parcelable {
 
     public void setMaxMinutesDuration(int maxMinutesDuration) {
         this.maxMinutesDuration = maxMinutesDuration;
+    }
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
     }
 
     public String getDuration(){

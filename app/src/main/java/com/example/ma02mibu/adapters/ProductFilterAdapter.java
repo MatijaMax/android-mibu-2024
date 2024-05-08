@@ -62,7 +62,7 @@ public class ProductFilterAdapter extends ArrayAdapter<Product> {
             productDescription.setText(product.getDescription());
             category.setText(product.getCategory());
             subCategory.setText(product.getSubCategory());
-            price.setText(product.getPrice());
+            price.setText(String.valueOf(product.getPrice()));
         }
 
         return convertView;

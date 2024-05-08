@@ -13,11 +13,15 @@ import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.SubcategoryProposal;
 import com.example.ma02mibu.model.User;
 import com.example.ma02mibu.model.Subcategory;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,9 +36,6 @@ public class CloudStoreUtil {
     
     private static final String categoryCollection = "category";
     private static final String subcategoryCollection = "subcategory";
-    public static void initDB(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-    }
 
     public static String insertOwner(Owner owner){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -126,16 +127,44 @@ public class CloudStoreUtil {
 //        });
 //    }
 
-    public static void insertProduct(Product product){
+    public static void insertProduct(Product product, boolean saveNewSubCategory, SubcategoryProposal subCategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
-                .add(product);
+                .add(product).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        if(saveNewSubCategory) {
+                            String documentId = documentReference.getId();
+                            subCategory.setItemId(documentId);
+                            insertSubCategoryProposal(subCategory);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
     }
 
-    public static void insertService(Service service){
+    public static void insertService(Service service, boolean saveNewSubCategory, SubcategoryProposal subCategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")
-                .add(service);
+                .add(service).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        if(saveNewSubCategory) {
+                            String documentId = documentReference.getId();
+                            subCategory.setItemId(documentId);
+                            insertSubCategoryProposal(subCategory);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
     }
 
     public static void insertPackage(Package newPackage){
@@ -399,6 +428,13 @@ public class CloudStoreUtil {
         return categoryRefId;
     }
 
+    public static void insertSubCategoryProposal(SubcategoryProposal subcategoryProposal){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("subcategoryProposals")
+                .add(subcategoryProposal);
+    }
+
+
     public static void updateCategory(Category newCategory){
         if(newCategory.getDocumentRefId() == null){
             Log.w("REZ_DB", "Error document reference id not provided.");
@@ -487,6 +523,17 @@ public class CloudStoreUtil {
         });
     }
 
+    public static String insertSubcategoryProposal(Subcategory newSubcategory){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference subcategoryRef = db.collection(subcategoryCollection).document();
+
+        String subcategoryRefId = subcategoryRef.getId();
+        subcategoryRef.set(newSubcategory)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert subcategory: " + subcategoryRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert subcategory failed"));
+        return subcategoryRefId;
+    }
 
     //Subcategories/////////////////////////////////////////////////////////////////////////////////
     public static String insertSubcategory(Subcategory newSubcategory){
