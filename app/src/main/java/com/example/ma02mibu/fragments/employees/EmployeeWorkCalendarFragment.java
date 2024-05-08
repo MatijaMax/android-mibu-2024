@@ -26,6 +26,7 @@ import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.WorkSchedule;
 import com.example.ma02mibu.model.WorkTime;
 
 import java.text.DateFormat;
@@ -145,7 +146,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         LocalDate ld = LocalDate.of(y, m, d);
         DayOfWeek weekday = ld.getDayOfWeek();
 //        Log.i("AAAAAAAA", ""+weekday+" "+d+" "+m+" "+y);
-        WorkTime wt = mEmployee.findActiveWorkSchedule().ScheduleForThisDay(weekday);
+        WorkTime wt = mEmployee.findActiveWorkScheduleAlt(ld).ScheduleForThisDay(weekday);
         if(wt == null){
             Toast.makeText(getContext(), "Not working that day.", Toast.LENGTH_LONG).show();
             return;
@@ -191,7 +192,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         ExpandableListView expandableListView = parentV.findViewById((R.id.expandableListView));
                         HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
 
-                        Log.i("AAAAAAAAAA", ""+selectedCalendar.get(Calendar.DAY_OF_WEEK));
+
                         //monday
                         List<EventModel> eventsList1 = new ArrayList<EventModel>();
                         for(EventModel em : eventModels){
@@ -199,7 +200,12 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList1.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+//                        WorkSchedule ws = mEmployee.findActiveWorkScheduleAlt();
+//                        LocalDate dM2 = LocalDate.parse(ws.getStartDay(), formatter);
+//                        Log.i("AAAAAAAAAA", dM1.toString() + " "+ dM2.toString());
+                        expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
                         //tuesday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList2 = new ArrayList<EventModel>();
@@ -209,7 +215,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList2.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
 
                         //wed
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -220,7 +227,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList3.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
                         //thur
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList4 = new ArrayList<EventModel>();
@@ -229,7 +237,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList4.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
                         //friday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList5 = new ArrayList<EventModel>();
@@ -239,7 +248,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList5.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
                         //sat
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList6 = new ArrayList<EventModel>();
@@ -248,7 +258,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList6.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
                         //sun
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
                         List<EventModel> eventsList7 = new ArrayList<EventModel>();
@@ -257,7 +268,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                                 eventsList7.add(em);
                             }
                         }
-                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
+                        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+                        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
 
                         List<String> expandableListTitle;
                         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
@@ -294,7 +306,9 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList1.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
         //tuesday
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
         List<EventModel> eventsList2 = new ArrayList<EventModel>();
@@ -304,7 +318,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList2.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.TUESDAY), eventsList2);
 
         //wed
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -315,7 +330,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList3.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.WEDNESDAY), eventsList3);
         //thur
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
         List<EventModel> eventsList4 = new ArrayList<EventModel>();
@@ -324,7 +340,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList4.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.THURSDAY), eventsList4);
         //friday
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
         List<EventModel> eventsList5 = new ArrayList<EventModel>();
@@ -334,7 +351,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList5.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.FRIDAY), eventsList5);
         //sat
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
         List<EventModel> eventsList6 = new ArrayList<EventModel>();
@@ -343,7 +361,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList6.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.SATURDAY), eventsList6);
         //sun
         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
         List<EventModel> eventsList7 = new ArrayList<EventModel>();
@@ -352,7 +371,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 eventsList7.add(em);
             }
         }
-        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkSchedule().ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
+        dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
+        expandableListDetail.put(df.format(selectedCalendar.getTime())  + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.SUNDAY), eventsList7);
 
         List<String> expandableListTitle;
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
