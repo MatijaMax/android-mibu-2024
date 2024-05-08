@@ -26,6 +26,8 @@ import com.example.ma02mibu.fragments.packages.NewPackage;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,8 @@ public class ChooseServicesListFragment extends ListFragment {
     private int servicesChosenNum;
     private PackageViewModel viewModel;
     private boolean isFromEdit;
+    private FirebaseAuth auth;
+    private String userId;
     private static final String ARG_PARAM = "param";
     public static ChooseServicesListFragment newInstance(){
         ChooseServicesListFragment fragment = new ChooseServicesListFragment();
@@ -53,6 +57,11 @@ public class ChooseServicesListFragment extends ListFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            userId = user.getUid();
+        }
         servicesChosenNum = 0;
         isFromEdit = false;
         servicesChosen = new ArrayList<>();
@@ -71,7 +80,8 @@ public class ChooseServicesListFragment extends ListFragment {
                 } else {
                     mServices = new ArrayList<>();
                 }
-                adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, fragment);
+                mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
+                adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }
         });

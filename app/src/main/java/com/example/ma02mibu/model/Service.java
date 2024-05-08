@@ -23,6 +23,7 @@ public class Service implements Parcelable {
     private int minMinutesDuration;
     private int maxMinutesDuration;
     private String location;
+    private String ownerUuid;
     private Deadline reservationDeadline;
     private Deadline cancellationDeadline;
     private boolean visible;
@@ -30,7 +31,7 @@ public class Service implements Parcelable {
     private boolean confirmAutomatically;
     private ArrayList<Integer> images;
     private ArrayList<String> eventTypes;
-    private ArrayList<String> persons;
+    private ArrayList<EmployeeInService> persons;
     private int currentImageIndex;
 
     public Service() {
@@ -38,7 +39,7 @@ public class Service implements Parcelable {
     }
 
     public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, Deadline reservationDeadline,
-                   Deadline cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons, boolean confirmAutomatically) {
+                   Deadline cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<EmployeeInService> persons, boolean confirmAutomatically) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -61,6 +62,7 @@ public class Service implements Parcelable {
         this.confirmAutomatically = confirmAutomatically;
         this.visible = true;
         this.availableToBuy = true;
+        ownerUuid = "";
     }
 
     protected Service(Parcel in) {
@@ -256,6 +258,14 @@ public class Service implements Parcelable {
         this.cancellationDeadline = cancellationDeadline;
     }
 
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
+    }
+
     public ArrayList<Integer> getImages() {
         return images;
     }
@@ -272,17 +282,17 @@ public class Service implements Parcelable {
         this.eventTypes = eventTypes;
     }
 
-    public ArrayList<String> getPersons() {
+    public ArrayList<EmployeeInService> getPersons() {
         return persons;
     }
 
-    public void setPersons(ArrayList<String> persons) {
+    public void setPersons(ArrayList<EmployeeInService> persons) {
         this.persons = persons;
     }
 
     public boolean containsPerson(String employee){
-        for(String person: persons){
-            if(person.toLowerCase().contains(employee))
+        for(EmployeeInService person: persons){
+            if(person.getFirstName().toLowerCase().contains(employee))
                 return true;
         }
         return false;

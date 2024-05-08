@@ -352,7 +352,7 @@ public class CloudStoreUtil {
                 .delete();
     }
 
-    public static void updateService(Service service){
+    public static void updateService(Service service) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("services").document(service.getFirestoreId());
         docRef.update("name", service.getName(),
@@ -369,7 +369,7 @@ public class CloudStoreUtil {
                 "discount", service.getDiscount(),
                 "visible", service.isVisible(),
                 "availableToBuy", service.isAvailableToBuy());
-
+    }
     public static String insertEventOrganizer(EventOrganizer newEventOrganizer){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

@@ -90,7 +90,7 @@
             >
         </TextView>
         <EditText
-            android:id="@+id/min_price_service"
+            android:id="@+id/min_price_package"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
             android:inputType="text"/>
@@ -103,7 +103,7 @@
             >
         </TextView>
         <EditText
-            android:id="@+id/max_price_service"
+            android:id="@+id/max_price_package"
             android:layout_height="wrap_content"
             android:layout_width="100dp"
             android:inputType="text"/>
@@ -170,12 +170,28 @@
             android:inputType="text"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="10dp"
+        >
     <Button
-        android:id="@+id/search_button_service"
+        android:id="@+id/search_button_package"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
         android:layout_marginTop="50dp"
         android:text="Search" />
+    <Button
+        android:id="@+id/reset_button_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:layout_marginTop="50dp"
+        android:text="Reset" />
+    </LinearLayout>
+
 
 </LinearLayout>

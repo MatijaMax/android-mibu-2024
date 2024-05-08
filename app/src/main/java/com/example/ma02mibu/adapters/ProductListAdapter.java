@@ -41,14 +41,16 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private ChooseProductsListFragment currFragment;
     private boolean isFromPackage;
     Context context;
+    private boolean isOwner;
 
-    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment){
+    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment, boolean isOwner){
         super(context, R.layout.product_card, products);
         this.context = context;
         this.isFromPackage = isFromPackage;
         aProducts = products;
         currFragActivity = fragmentActivity;
         currFragment = myFragment;
+        this.isOwner = isOwner;
     }
 
     @Override
@@ -87,6 +89,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         ImageButton rightButton = convertView.findViewById(R.id.right_button);
         ImageButton leftButton = convertView.findViewById(R.id.left_button);
         ImageButton menuButton = convertView.findViewById(R.id.more_button);
+        if(!isOwner)
+            menuButton.setVisibility(View.GONE);
         handleRightButtonClick(rightButton, imageView, product);
         handleLeftButtonClick(leftButton, imageView, product);
         if(product != null){

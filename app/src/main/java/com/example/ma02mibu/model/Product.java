@@ -14,6 +14,7 @@ public class Product implements Parcelable {
     private String description;
     private String category;
     private String subCategory;
+    private String ownerUuid;
     private int price;
     private int discount;
     private boolean visible;
@@ -178,6 +179,14 @@ public class Product implements Parcelable {
                 return true;
         }
         return false;
+    }
+
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
     }
 
     public String getFirestoreId() {

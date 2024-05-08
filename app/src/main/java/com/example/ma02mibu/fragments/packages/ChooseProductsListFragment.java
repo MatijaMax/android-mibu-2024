@@ -28,6 +28,8 @@ import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.viewmodels.PackageEditViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,8 @@ public class ChooseProductsListFragment extends ListFragment {
     private PackageEditViewModel editViewModel;
     private int productsChosenNum;
     private boolean isFromEdit;
+    private FirebaseAuth auth;
+    private String userId;
     private static final String ARG_PARAM = "param";
     public static ChooseProductsListFragment newInstance(){
         ChooseProductsListFragment fragment = new ChooseProductsListFragment();
@@ -57,6 +61,11 @@ public class ChooseProductsListFragment extends ListFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            userId = user.getUid();
+        }
         productsChosenNum = 0;
         isFromEdit = false;
         super.onCreate(savedInstanceState);
@@ -74,7 +83,8 @@ public class ChooseProductsListFragment extends ListFragment {
                 } else {
                     mProducts = new ArrayList<>();
                 }
-                adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, fragment);
+                mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
+                adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }
         });

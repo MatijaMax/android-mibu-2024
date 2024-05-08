@@ -28,6 +28,8 @@ import com.example.ma02mibu.databinding.ServicesPageFragmentBinding;
 import com.example.ma02mibu.fragments.HomeFragment;
 import com.example.ma02mibu.fragments.services.ServicesListFragment;
 import com.example.ma02mibu.model.Product;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -38,11 +40,16 @@ public class NewProduct extends Fragment {
     private ArrayList<String> categories;
     private ArrayList<String> subCategories;
     private LinearLayout imageContainer;
+    private FirebaseAuth auth;
+    private String ownerId;
     private static final int PICK_IMAGES_REQUEST = 1;
     public static NewProduct newInstance() {
         return new NewProduct();
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        ownerId = user.getUid();
         newSubCatShow = false;
         binding = NewProductBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -140,6 +147,7 @@ public class NewProduct extends Fragment {
                 new ArrayList<Integer>(), eventTypes, 0);
         product.setVisible(visible);
         product.setAvailableToBuy(isAvailableToBuy);
+        product.setOwnerUuid(ownerId);
         CloudStoreUtil.insertProduct(product);
         FragmentTransition.to(ProductsListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_products_list, "falsh");

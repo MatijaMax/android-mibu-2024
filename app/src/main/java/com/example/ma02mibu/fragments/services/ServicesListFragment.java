@@ -9,7 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +25,17 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentServicesListBinding;
+import com.example.ma02mibu.fragments.employees.EmployeePersonalWorkCalendarFragment;
 import com.example.ma02mibu.fragments.products.NewProduct;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.WorkSchedule;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -41,6 +50,9 @@ public class ServicesListFragment extends ListFragment {
     private ServiceListAdapter adapter;
     boolean showHeading = true;
     private static final String ARG_PARAM = "param";
+    private FirebaseAuth auth;
+    private String userId;
+    private boolean isOwner = false;
     public static ServicesListFragment newInstance(){
         ServicesListFragment fragment = new ServicesListFragment();
         return fragment;
@@ -56,10 +68,16 @@ public class ServicesListFragment extends ListFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            userId = user.getUid();
+        }
+        //getOwner(userId);
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mServices = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
             setListAdapter(adapter);
             showHeading = false;
         }
@@ -73,8 +91,24 @@ public class ServicesListFragment extends ListFragment {
                         mServices = new ArrayList<>();
                     }
                     mServicesBackup = new ArrayList<>(mServices);
-                    adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
-                    setListAdapter(adapter);
+                    CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
+                        @Override
+                        public void onSuccess(Owner myItem) {
+                            isOwner = true;
+                            mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
+                            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
+                            setListAdapter(adapter);
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            isOwner = false;
+                            getEmployeesServices();
+                            adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
+                            setListAdapter(adapter);
+                            binding.newServiceButton.setVisibility(View.GONE);
+                        }
+                    });
+
                 }
             });
         }
@@ -172,12 +206,24 @@ public class ServicesListFragment extends ListFragment {
             mServices.removeIf(s -> !s.containsEventType(eventType));
         if(availableToBuy)
             mServices.removeIf(s -> !s.isAvailableToBuy());
-        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
         setListAdapter(adapter);
     }
     private void resetServices(){
         mServices = new ArrayList<>(mServicesBackup);
-        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null);
+        adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
         setListAdapter(adapter);
+    }
+    private void getEmployeesServices(){
+        CloudStoreUtil.getEmployee(userId, new CloudStoreUtil.EmployeeCallback() {
+            @Override
+            public void onSuccess(Employee myItem) {
+                mServices.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
+            }
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 }

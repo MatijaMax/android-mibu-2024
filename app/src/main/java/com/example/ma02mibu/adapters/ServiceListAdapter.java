@@ -43,13 +43,15 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
     Context context;
     private boolean isFromPackage;
     ChooseServicesListFragment currFragment;
-    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseServicesListFragment fragment){
+    private boolean isOwner = false;
+    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseServicesListFragment fragment, boolean isOwner){
         super(context, R.layout.services_card, services);
         this.context = context;
         aServices = services;
         currFragActivity = fragmentActivity;
         this.isFromPackage = isFromPackage;
         currFragment = fragment;
+        this.isOwner = isOwner;
     }
     @Override
     public int getCount() {
@@ -89,11 +91,14 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         ImageButton rightButton = convertView.findViewById(R.id.right_button_service);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_service);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
+        if(!isOwner)
+            menuButton.setVisibility(View.GONE);
         if(!service.getImages().isEmpty()) {
             handleRightButtonClick(rightButton, imageView, service);
             handleLeftButtonClick(leftButton, imageView, service);
         }
-        handleCardClick(layout, service);
+        if(!isFromPackage)
+            handleCardClick(layout, service);
         if(service != null){
             /*int image = service.getImages().get(service.getCurrentImageIndex());
             imageView.setImageResource(image);*/

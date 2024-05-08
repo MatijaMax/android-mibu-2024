@@ -23,6 +23,7 @@ public class Package implements Parcelable {
     private int currentImageIndex;
     private ArrayList<String> eventTypes;
     private String firestoreId;
+    private String ownerUuid;
     public Package(){
         products = new ArrayList<>();
         services = new ArrayList<>();
@@ -49,6 +50,7 @@ public class Package implements Parcelable {
             eventTypesSet.addAll(p.getEventTypes());
         }
         this.eventTypes.addAll(eventTypesSet);
+        ownerUuid = "";
     }
 
     protected Package(Parcel in) {
@@ -79,6 +81,27 @@ public class Package implements Parcelable {
         maxPrice = maxPrice * (100 - discount) / 100;
         return minPrice+ " - " +maxPrice+ " din";
     }
+
+    public int getMinPrice() {
+        int minPrice = 0;
+        for(Product p: products)
+            minPrice += p.getPrice();
+        for(Service s: services) {
+            minPrice += s.getMinPrice();
+        }
+        return minPrice;
+    }
+
+    public int getMaxPrice() {
+        int maxPrice = 0;
+        for(Product p: products)
+            maxPrice += p.getPrice();
+        for(Service s: services) {
+            maxPrice += s.getMaxPrice();
+        }
+        return maxPrice;
+    }
+
     public ArrayList<String> getEventTypes() {
         return eventTypes;
     }
@@ -117,6 +140,22 @@ public class Package implements Parcelable {
 
     public void setDiscount(int discount) {
         this.discount = discount;
+    }
+
+    public boolean containsProductName(String productName){
+        for (Product p: products){
+            if(p.getName().toLowerCase().contains(productName.toLowerCase()))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean containsServiceName(String serviceName){
+        for (Service s: services){
+            if(s.getName().toLowerCase().contains(serviceName.toLowerCase()))
+                return true;
+        }
+        return false;
     }
 
     public ArrayList<Service> getServices() {
@@ -171,6 +210,14 @@ public class Package implements Parcelable {
 
     public void setFirestoreId(String firestoreId) {
         this.firestoreId = firestoreId;
+    }
+
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
     }
 
     public void setCurrentImageIndex(int direction) {

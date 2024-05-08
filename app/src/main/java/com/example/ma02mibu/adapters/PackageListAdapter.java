@@ -35,11 +35,13 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
     private ArrayList<Package> aPackages;
     private FragmentActivity currFragActivity;
     Context context;
-    public PackageListAdapter(Context context, ArrayList<Package> packages, FragmentActivity fragmentActivity){
+    private boolean isOwner;
+    public PackageListAdapter(Context context, ArrayList<Package> packages, FragmentActivity fragmentActivity, boolean isOwner){
         super(context, R.layout.package_card, packages);
         this.context = context;
         aPackages = packages;
         currFragActivity = fragmentActivity;
+        this.isOwner = isOwner;
     }
     @Override
     public int getCount() {
@@ -75,6 +77,8 @@ public class PackageListAdapter extends ArrayAdapter<Package> {
         ImageButton rightButton = convertView.findViewById(R.id.right_button_package);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_package);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_package);
+        if(!isOwner)
+            menuButton.setVisibility(View.GONE);
         //handleRightButtonClick(rightButton, imageView, aPackage);
         //handleLeftButtonClick(leftButton, imageView, aPackage);
         ConstraintLayout layout = convertView.findViewById(R.id.package_card_item);

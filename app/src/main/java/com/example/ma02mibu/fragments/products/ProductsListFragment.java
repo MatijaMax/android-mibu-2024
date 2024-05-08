@@ -22,11 +22,16 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.ProductListAdapter;
+import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentProductsListBinding;
 import com.example.ma02mibu.fragments.packages.PackageDetailsFragment;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -40,6 +45,9 @@ public class ProductsListFragment extends ListFragment {
     private boolean showHeading = true;
     private static ArrayList<Product> products = new ArrayList<>();
     private static final String ARG_PARAM = "param";
+    private boolean isOwner = false;
+    private String userId;
+    private FirebaseAuth auth;
     public static ProductsListFragment newInstance(){
         ProductsListFragment fragment = new ProductsListFragment();
         return fragment;
@@ -56,11 +64,16 @@ public class ProductsListFragment extends ListFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            userId = user.getUid();
+        }
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
             mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
             setListAdapter(adapter);
             showHeading = false;
         }
@@ -74,8 +87,23 @@ public class ProductsListFragment extends ListFragment {
                         mProducts = new ArrayList<>();
                     }
                     mProductsBackup = new ArrayList<>(mProducts);
-                    adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
-                    setListAdapter(adapter);
+                    CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
+                        @Override
+                        public void onSuccess(Owner myItem) {
+                            isOwner = true;
+                            mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
+                            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
+                            setListAdapter(adapter);
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            isOwner = false;
+                            getEmployeesProducts();
+                            adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
+                            setListAdapter(adapter);
+                            binding.newProductButton.setVisibility(View.GONE);
+                        }
+                    });
                 }
             });
         }
@@ -166,12 +194,24 @@ public class ProductsListFragment extends ListFragment {
             mProducts.removeIf(p -> maxPrice < p.getNewPriceValue());
         if(!eventType.isEmpty())
             mProducts.removeIf(p -> !p.containsEventType(eventType));
-        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
         setListAdapter(adapter);
     }
     private void resetProducts(){
         mProducts = new ArrayList<>(mProductsBackup);
-        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null);
+        adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
         setListAdapter(adapter);
+    }
+    private void getEmployeesProducts(){
+        CloudStoreUtil.getEmployee(userId, new CloudStoreUtil.EmployeeCallback() {
+            @Override
+            public void onSuccess(Employee myItem) {
+                mProducts.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
+            }
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 }

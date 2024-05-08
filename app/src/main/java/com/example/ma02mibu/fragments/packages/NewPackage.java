@@ -25,6 +25,8 @@ import com.example.ma02mibu.model.PackageCreateDto;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -38,11 +40,16 @@ public class NewPackage extends Fragment {
     public ArrayList<Service> mChosenServices = new ArrayList<>();
     public PackageCreateDto packageCreateDto = new PackageCreateDto();
     private PackageViewModel viewModel;
+    private FirebaseAuth auth;
+    private String ownerId;
     public static NewPackage newInstance() {
         return new NewPackage();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        ownerId = user.getUid();
         binding = NewPackageBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Button selectProductsButton = binding.selectProducts;
@@ -136,6 +143,7 @@ public class NewPackage extends Fragment {
         String category = binding.PackageCategory.getSelectedItem().toString();
         Package newPackage = new Package(0L, packageCreateDto.getName(), packageCreateDto.getDescription(), category,
                 0, mChosenServices, mChosenProducts);
+        newPackage.setOwnerUuid(ownerId);
         CloudStoreUtil.insertPackage(newPackage);
         FragmentTransition.to(PackageListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_packages_list, "falsh");

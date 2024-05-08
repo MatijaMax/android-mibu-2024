@@ -24,12 +24,17 @@ import androidx.fragment.app.Fragment;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.NewServiceBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Deadline;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeInService;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -46,13 +51,18 @@ public class NewService extends Fragment {
     LinearLayout part1;
     LinearLayout part2;
     LinearLayout part3;
-    ArrayList<String> employees;
+    ArrayList<EmployeeInService> employees = new ArrayList<>();
     NewServiceBinding binding;
+    private FirebaseAuth auth;
+    private String ownerId;
     public static NewService newInstance() {
         return new NewService();
     }
     //tutorijal za rad sa listview-om i biranje iz listview-a: https://www.youtube.com/watch?v=l3BCsSUZoNE
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        ownerId = user.getUid();
         currentPage = 0;
         binding = NewServiceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -62,11 +72,9 @@ public class NewService extends Fragment {
         imageContainer = binding.imageContainerService;
         ImageButton removeButton = binding.removeImagesButton;
         removeButton.setOnClickListener(v -> imageContainer.removeAllViews());
-        ListView listView = binding.employeesListView;
-        employees = getEmployees();
-        ArrayAdapter<String> employeesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, employees);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        listView.setAdapter(employeesAdapter);
+
+        getEmployees(ownerId);
+
         binding.ServiceCategory.setAdapter(setCategoriesSpinnerAdapter());
         binding.ServiceSubCategory.setAdapter(setSubCategoriesSpinnerAdapter());
         binding.resDeadlineFormat.setAdapter(setDateFormatAdapter());
@@ -133,6 +141,13 @@ public class NewService extends Fragment {
     }
 
     private void addService(){
+        ListView listView = binding.employeesListView;
+        int cnt = listView.getAdapter().getCount();
+        ArrayList<EmployeeInService> checkedEmployees = new ArrayList<>();
+        for(int i=0; i<cnt; i++){
+            if(listView.isItemChecked(i))
+                checkedEmployees.add(employees.get(i));
+        }
         binding.validation.setVisibility(View.GONE);
         String category = binding.ServiceCategory.getSelectedItem().toString();
         String subcategory = binding.ServiceSubCategory.getSelectedItem().toString();
@@ -168,9 +183,10 @@ public class NewService extends Fragment {
         Deadline cancDeadline = new Deadline(cancelationDeadlineFormat, Integer.parseInt(cancelationDeadlineNum));
         Service service = new Service(0L, name, description, category, subcategory, specificity, priceInt, minHourInt, minMinInt,
                 maxHourInt, maxMinInt, "SR", resDeadline, cancDeadline, new ArrayList<Integer>(), eventTypes,
-                new ArrayList<String>(), confirmAutomatically);
+                checkedEmployees, confirmAutomatically);
         service.setVisible(visible);
         service.setAvailableToBuy(isAvailableToBuy);
+        service.setOwnerUuid(ownerId);
         CloudStoreUtil.insertService(service);
         FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_services_list, "falsh");
@@ -199,12 +215,32 @@ public class NewService extends Fragment {
         String text = "Page " + (currentPage+1) + "/3";
         tv.setText(text);
     }
-    private ArrayList<String> getEmployees(){
-        ArrayList<String> list = new ArrayList<>();
-        list.add("rope");
-        list.add("pera");
-        list.add("jova");
-        return list;
+    private void getEmployees(String ownerRefId){
+        CloudStoreUtil.getEmployeesList(ownerRefId, new CloudStoreUtil.EmployeesListCallback() {
+            @Override
+            public void onSuccess(ArrayList<Employee> itemList) {
+                // Handle the retrieved list of items (e.g., display them in UI)
+                ArrayList<Employee> employeesDB = new ArrayList<>(itemList);
+                for(Employee e: employeesDB){
+                    employees.add(new EmployeeInService(e.getEmail(), e.getFirstName(), e.getLastName()));
+                }
+
+                ListView listView = binding.employeesListView;
+                ArrayList<String> employeesInList = new ArrayList<>();
+                for (EmployeeInService e: employees)
+                    employeesInList.add(e.getFirstName() + " " + e.getLastName());
+                ArrayAdapter<String> employeesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, employeesInList);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                listView.setAdapter(employeesAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+         });
     }
 
     private ArrayAdapter<String> setCategoriesSpinnerAdapter(){
