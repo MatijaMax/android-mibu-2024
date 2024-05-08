@@ -232,6 +232,40 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface UpdateIsActiveCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+    public static void updateEmployeesIsActive(Employee employee, UpdateIsActiveCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", employee.getEmail())
+                .limit(1) // Limit to one result
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        // Create a map with the updated fields
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("isActive", employee.getIsActive());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public static void insertProduct(Product product){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
