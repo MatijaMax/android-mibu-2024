@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Employee implements Parcelable {
@@ -125,7 +127,21 @@ public class Employee implements Parcelable {
     }
 
     public WorkSchedule findActiveWorkSchedule() {
-        return workSchedules.get(1);
+        return workSchedules.get(0);
+    }
+
+    public WorkSchedule findActiveWorkScheduleAlt(LocalDate d) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        for(WorkSchedule ws : workSchedules){
+            if(ws.getStartDay() != null && ws.getEndDay() != null){
+                LocalDate ds = LocalDate.parse(ws.getStartDay(), formatter);
+                LocalDate df = LocalDate.parse(ws.getEndDay(), formatter);
+                if(!d.isBefore(ds) && !d.isAfter(df)){
+                    return ws;
+                }
+            }
+        }
+        return workSchedules.get(0);
     }
 
     public ArrayList<WorkSchedule> getWorkSchedules() {
