@@ -95,6 +95,38 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discount"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/ServiceDiscountEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginEnd="15dp"
+                    android:inputType="number"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="%"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <LinearLayout
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:orientation="horizontal">
 
@@ -204,28 +236,42 @@
                 android:layout_marginTop="16dp"
                 android:text="Reservation deadline"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/ReservationDeadlineEdit"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:lines="1" />
-
-
+                android:orientation="horizontal">
+            <EditText
+                android:id="@+id/ReservationDeadlineEdit"
+                android:layout_width="150dp"
+                android:inputType="number"
+                android:layout_height="wrap_content"/>
+            <Spinner
+                android:id="@+id/resDeadlineFormatEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp" />
+            </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Cancellation deadline"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-            <EditText
-                android:id="@+id/CancellationDeadlineEdit"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:lines="1" />
-
+                android:orientation="horizontal">
+            <EditText
+                android:id="@+id/CancellationDeadlineEdit"
+                android:layout_width="150dp"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/resCancellationFormatEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

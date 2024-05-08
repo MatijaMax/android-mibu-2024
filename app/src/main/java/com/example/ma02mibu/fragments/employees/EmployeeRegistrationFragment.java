@@ -1,5 +1,7 @@
 package com.example.ma02mibu.fragments.employees;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
@@ -31,6 +34,8 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.WorkSchedule;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -40,7 +45,9 @@ import java.util.ArrayList;
 public class EmployeeRegistrationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private String ownerRefId;
-    private Company currentCompany;
+    private Owner currentOwner;
+    private FirebaseUser cuurentUser;
+    private FirebaseAuth auth;
 
     public EmployeeRegistrationFragment() {
         // Required empty public constructor
@@ -69,6 +76,8 @@ public class EmployeeRegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEmployeeRegistrationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        auth = FirebaseAuth.getInstance();
+        cuurentUser = auth.getCurrentUser();
         Button btnSelectImage = binding.btnUploadImage;
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,8 +130,7 @@ public class EmployeeRegistrationFragment extends Fragment {
             alertDialog.show();
             return;
         }
-        Employee e = new Employee(1L, fName, lName, email, pass1, address, phoneNr, R.drawable.employee_avatar, 0);
-
+        Employee e = new Employee(1L, fName, lName, email, pass1, address, phoneNr, R.drawable.employee_avatar, ownerRefId,  0);
 
         String mondayHours = binding.etMondayHours.getText().toString();
         String tuesdayHours = binding.etTuesdayHours.getText().toString();
@@ -133,7 +141,7 @@ public class EmployeeRegistrationFragment extends Fragment {
         String sunHours = binding.etSundayHours.getText().toString();
         if(mondayHours.isEmpty() && tuesdayHours.isEmpty() && wedHours.isEmpty() && thurHours.isEmpty() && friHours.isEmpty()
         && satHours.isEmpty() && sunHours.isEmpty()){
-            e.setSchedule(currentCompany.getWorkSchedule());
+            e.setSchedule(currentOwner.getMyCompany().getWorkSchedule());
         }else{
             WorkSchedule customWorkSchedule = new WorkSchedule();
             if(!mondayHours.isEmpty()){
@@ -218,17 +226,6 @@ public class EmployeeRegistrationFragment extends Fragment {
             e.setSchedule(customWorkSchedule);
         }
 
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8, 30), LocalTime.of(16, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8, 30), LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
-//        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
-
 //*****************************************************
         //slanje notifikacije samom sebi
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "Kanal1")
@@ -254,10 +251,65 @@ public class EmployeeRegistrationFragment extends Fragment {
 //*****************************************************
 
         //cuvam u bazu zaposlenog i prebacujem na listu svih
-        CloudStoreUtil.insertEmployee(e, ownerRefId);
-        Thread.sleep(600);
-        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
-                true, R.id.scroll_employees_list, "EmployeeRegistration");
+//        auth.signOut();
+        createAccount(e);
+        //Thread.sleep(600);
+
+    }
+
+    private void updateUser() {
+        auth.updateCurrentUser(cuurentUser).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.i("GGREs",cuurentUser.getUid()+cuurentUser.getEmail());
+                FirebaseUser u = auth.getCurrentUser();
+                Log.i("HHHHHHHHHHHHHHHHHH", u.getEmail());
+                FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(), true, R.id.scroll_employees_list, "EmployeeRegistration");
+            } else {
+                Log.i("GGREs","ASAS");
+            }
+        });
+    }
+
+    private void createAccount(Employee employee) {
+        Log.d(TAG, "createAccount:" + employee.getEmail());
+
+        auth.createUserWithEmailAndPassword(employee.getEmail(), employee.getPassword())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
+                        if(user != null){
+                            employee.setUserUID(user.getUid());
+                            insert(employee);
+                            sendEmailVerification(user);
+                        }
+
+                    } else {
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(getContext(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void insert(Employee employee){
+        CloudStoreUtil.insertEmployeeNew(employee);
+    }
+
+    private void sendEmailVerification(FirebaseUser user) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(),
+                                "Verification email sent to " + user.getEmail(),
+                                Toast.LENGTH_SHORT).show();
+                        updateUser();
+                    } else {
+                        Log.e(TAG, "sendEmailVerification", task.getException());
+                        Toast.makeText(getContext(),
+                                "Failed to send verification email.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void alertShow(String day) {
@@ -298,31 +350,23 @@ public class EmployeeRegistrationFragment extends Fragment {
         return new String[]{startH, startM, endH, endM};
     }
     private void loadCompany() {
-        CloudStoreUtil.selectCompany(ownerRefId, new CloudStoreUtil.CompanyCallback(){
+        CloudStoreUtil.getOwner(ownerRefId, new CloudStoreUtil.OwnerCallback() {
             @Override
-            public void onCallback(Company retrieved) {
-                if (retrieved != null) {
-                    currentCompany = retrieved;
-                } else {
-                    currentCompany = null;
-                }
+            public void onSuccess(Owner myItem) {
+                // Handle the retrieved item (e.g., display it in UI)
+                System.out.println("Retrieved item: " + myItem);
+                currentOwner = myItem;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching document: " + e.getMessage());
             }
         });
     }
 
     private void chooseImage(){
-//        ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(null);
-//        companyWorkSchedule.setEndDay(null);
-//        CloudStoreUtil.insertCompany(new Company("22", "KK", companyWorkSchedule), ownerRefId);
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
