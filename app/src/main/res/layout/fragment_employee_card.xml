@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="170dp"
+        android:layout_height="180dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="3dp"
@@ -29,7 +29,7 @@
             android:padding="2dp"
             android:id="@+id/employee_image"
             android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_height="135dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -69,7 +69,7 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 >
                 <TextView
                     android:id="@+id/employee_email"
@@ -78,31 +78,30 @@
                     android:layout_margin="1dp"
                     android:text="email"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:orientation="horizontal"
                 >
                 <Button
                     android:id="@+id/button_employee_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="Details"
                     android:layout_margin="1dp"/>
                 <Button
                     android:id="@+id/button_employee_calendar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="Work calendar"
                     android:layout_margin="1dp"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                 >
                 <Button
