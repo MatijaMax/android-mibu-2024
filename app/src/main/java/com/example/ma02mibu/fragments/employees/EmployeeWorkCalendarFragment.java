@@ -26,6 +26,7 @@ import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.WorkSchedule;
 import com.example.ma02mibu.model.WorkTime;
 
@@ -163,6 +164,8 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
+        OurNotification notification = new OurNotification(mEmployee.getUserUID(), "New event","Event for you", "notRead");
+        CloudStoreUtil.insertNotification(notification);
         changeViews();
     }
     private void showDatePickerDialog(View parentV) {

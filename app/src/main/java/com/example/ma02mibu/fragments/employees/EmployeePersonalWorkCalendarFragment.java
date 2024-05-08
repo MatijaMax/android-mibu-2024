@@ -21,6 +21,7 @@ import com.example.ma02mibu.databinding.FragmentEmployeePersonalDetailsBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeePersonalWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.WorkTime;
 
 import java.text.DateFormat;
@@ -157,6 +158,8 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
+        OurNotification notification = new OurNotification(mEmployee.getOwnerRefId(), "New event","Event for: "+mEmployee.getFirstName() + " " + mEmployee.getLastName(), "notRead");
+        CloudStoreUtil.insertNotification(notification);
         changeViews();
     }
 

@@ -367,18 +367,6 @@ public class EmployeeRegistrationFragment extends Fragment {
     }
 
     private void chooseImage(){
-//        ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(null);
-//        companyWorkSchedule.setEndDay(null);
-//        CloudStoreUtil.insertCompany(new Company("22", "KK", companyWorkSchedule), ownerRefId);
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
