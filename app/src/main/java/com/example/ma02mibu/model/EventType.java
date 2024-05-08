@@ -5,36 +5,71 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
+
 public class EventType implements Parcelable {
-    private Long id;
+    private String documentRefId;
     private String name;
     private String description;
     private EVENTTYPESTATUS status;
+    private ArrayList<String> suggestedSubcategoryDocRefId;
+
+    protected EventType(Parcel in) {
+        documentRefId = in.readString();
+        name = in.readString();
+        description = in.readString();
+        suggestedSubcategoryDocRefId = in.createStringArrayList();
+        status = EVENTTYPESTATUS.values()[in.readInt()];
+    }
+
+    public static final Creator<EventType> CREATOR = new Creator<EventType>() {
+        @Override
+        public EventType createFromParcel(Parcel in) {
+            return new EventType(in);
+        }
+
+        @Override
+        public EventType[] newArray(int size) {
+            return new EventType[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(documentRefId);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeStringList(suggestedSubcategoryDocRefId);
+        dest.writeInt(status.ordinal());
+    }
+
     public enum EVENTTYPESTATUS  {ACTIVE, DEACTIVATED};
 
     public EventType() {
     }
 
-    public EventType(Long id, String name, String description, EVENTTYPESTATUS status) {
-        this.id = id;
+    public EventType(String documentRefId, String name, String description, EVENTTYPESTATUS status) {
+        this.documentRefId = documentRefId;
         this.name = name;
         this.description = description;
+        this.suggestedSubcategoryDocRefId = new ArrayList<>();
         this.status = status;
     }
 
-    protected EventType(Parcel in){
-        id = in.readLong();
-        name = in.readString();
-        description = in.readString();
-        status = EVENTTYPESTATUS.values()[in.readInt()];
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 
     public String getName() {
@@ -61,28 +96,11 @@ public class EventType implements Parcelable {
         this.status = status;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public ArrayList<String> getSuggestedSubcategoryDocRefId() {
+        return suggestedSubcategoryDocRefId;
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeInt(status.ordinal());
+    public void setSuggestedSubcategoryDocRefId(ArrayList<String> suggestedSubcategoryDocRefId) {
+        this.suggestedSubcategoryDocRefId = suggestedSubcategoryDocRefId;
     }
-
-    public static final Creator<EventType> CREATOR = new Creator<EventType>() {
-        @Override
-        public EventType createFromParcel(Parcel in) {
-            return new EventType(in);
-        }
-
-        @Override
-        public EventType[] newArray(int size) {
-            return new EventType[size];
-        }
-    };
 }
