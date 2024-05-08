@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
@@ -25,6 +26,7 @@ import com.example.ma02mibu.databinding.FragmentEmployeeRegistrationBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeWorkCalendarBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.WorkTime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -133,6 +135,31 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         String tTime = binding.eTimeTo.getText().toString();
         String date = binding.eventSelectedDate.getText().toString();
         EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getUserUID());
+        String[] dsA = date.split("-");
+        String ds = dsA[0];
+        String ms = dsA[1];
+        String ys = dsA[2];
+        int d = Integer.parseInt(ds);
+        int m = Integer.parseInt(ms);
+        int y = Integer.parseInt(ys);
+        LocalDate ld = LocalDate.of(y, m, d);
+        DayOfWeek weekday = ld.getDayOfWeek();
+//        Log.i("AAAAAAAA", ""+weekday+" "+d+" "+m+" "+y);
+        WorkTime wt = mEmployee.findActiveWorkSchedule().ScheduleForThisDay(weekday);
+        if(wt == null){
+            Toast.makeText(getContext(), "Not working that day.", Toast.LENGTH_LONG).show();
+            return;
+        }else{
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime ft = LocalTime.parse(fTime,dtf);
+            LocalTime wft = LocalTime.parse(wt.getStartTime(),dtf);
+            LocalTime et = LocalTime.parse(tTime,dtf);
+            LocalTime wet = LocalTime.parse(wt.getEndTime(),dtf);
+            if(ft.isBefore(wft) || et.isAfter(wet) || et.isBefore(ft)){
+                Toast.makeText(getContext(), "Not in working hours.", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
         changeViews();
@@ -164,6 +191,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         ExpandableListView expandableListView = parentV.findViewById((R.id.expandableListView));
                         HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
 
+                        Log.i("AAAAAAAAAA", ""+selectedCalendar.get(Calendar.DAY_OF_WEEK));
                         //monday
                         List<EventModel> eventsList1 = new ArrayList<EventModel>();
                         for(EventModel em : eventModels){
