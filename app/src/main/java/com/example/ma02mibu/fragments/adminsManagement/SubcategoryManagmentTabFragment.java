@@ -26,7 +26,7 @@ public class SubcategoryManagmentTabFragment extends Fragment {
     private ArrayList<Subcategory> subcategories = new ArrayList<>();
     public SubcategoryManagmentTabFragment() { }
 
-    public static SubcategoryManagmentTabFragment newInstance(String param1, String param2) {
+    public static SubcategoryManagmentTabFragment newInstance() {
         SubcategoryManagmentTabFragment fragment = new SubcategoryManagmentTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);

@@ -23,8 +23,6 @@ import com.example.ma02mibu.databinding.FragmentSubcategoryEditBinding;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Subcategory;
 
-import java.util.Objects;
-
 public class SubcategoryEditFragment extends Fragment {
 
     private EditText name;
@@ -101,7 +99,6 @@ public class SubcategoryEditFragment extends Fragment {
                 return;
             }
             if(isSubcategoryNew){
-                //TODO Add category id
                 Subcategory newSubcategory = new Subcategory(selectedCategory.getDocumentRefId(), name.getText().toString(), description.getText().toString(), Subcategory.SUBCATEGORYTYPE.valueOf((String) type.getSelectedItem()));
                 CloudStoreUtil.insertSubcategory(newSubcategory);
             }else {
