@@ -129,25 +129,27 @@ public class LoginFragment extends Fragment {
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = auth.getCurrentUser();
                         if(user.isEmailVerified()){
-                            CloudStoreUtil.getEmployee(user.getUid(), new CloudStoreUtil.EmployeeCallback() {
-                                @Override
-                                public void onSuccess(Employee myItem) {
-                                    System.out.println("Retrieved item: " + myItem);
-                                    if(myItem.getIsActive() == 1){
-                                        Toast.makeText(getContext(), "You have been blocked!",
-                                                Toast.LENGTH_LONG).show();
-                                        auth.signOut();
-                                    }else {
-                                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+//                            CloudStoreUtil.getEmployee(user.getUid(), new CloudStoreUtil.EmployeeCallback() {
+//                                @Override
+//                                public void onSuccess(Employee myItem) {
+//                                    System.out.println("Retrieved item: " + myItem);
+//                                    if(myItem.getIsActive() == 1){
+//                                        Toast.makeText(getContext(), "You have been blocked!",
+//                                                Toast.LENGTH_LONG).show();
+//                                        auth.signOut();
+//                                    }else {
+//                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+//                                        startActivity(intent);
+//                                    }
+//                                }
+//                                @Override
+//                                public void onFailure(Exception e) {
+//                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            });
                         }
                         else{
                             Toast.makeText(getContext(), "Please verify your email",
