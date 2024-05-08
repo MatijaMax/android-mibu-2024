@@ -1,14 +1,9 @@
 package com.example.ma02mibu.activities;
 
-
-import android.app.Notification;
-import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
 import com.example.ma02mibu.model.EventOrganizer;
@@ -107,10 +102,10 @@ public class CloudStoreUtil {
         void onFailure(Exception e);
     }
 
-    public static void getNotifications(String userId, NotificationCallback callback) {
+    public static void getNotifications(String email, NotificationCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("notifications")
-                .whereEqualTo("userUID", userId)
+                .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
                     ArrayList<OurNotification> itemList = new ArrayList<>();
@@ -171,7 +166,7 @@ public class CloudStoreUtil {
         db.collection("notifications")
                 .whereEqualTo("text", notification.getText())
                 .whereEqualTo("title", notification.getTitle())
-                .whereEqualTo("userUID", notification.getUserUID())
+                .whereEqualTo("email", notification.getEmail())
                 .limit(1) // Limit to one result
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
@@ -232,6 +227,74 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface UpdateUidCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+    public static void updateEmployeesUid(Employee employee, UpdateUidCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", employee.getEmail())
+                .limit(1) // Limit to one result
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        // Create a map with the updated fields
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("userUID", employee.getUserUID());
+                        updates.put("isActive", employee.getIsActive());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+    public interface UpdateIsActiveCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+    public static void updateEmployeesIsActive(Employee employee, UpdateIsActiveCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", employee.getEmail())
+                .limit(1) // Limit to one result
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        // Create a map with the updated fields
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("isActive", employee.getIsActive());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public static void insertProduct(Product product){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
@@ -268,10 +331,10 @@ public class CloudStoreUtil {
         void onSuccess(ArrayList<EventModel> myItems);
         void onFailure(Exception e);
     }
-    public static void getEventModels(String employeeId, EventModelsCallback callback) {
+    public static void getEventModels(String email, EventModelsCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("eventModels")
-                .whereEqualTo("userUID", employeeId)
+                .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
                     ArrayList<EventModel> itemList = new ArrayList<>();

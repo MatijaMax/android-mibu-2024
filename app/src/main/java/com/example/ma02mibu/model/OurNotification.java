@@ -2,13 +2,13 @@ package com.example.ma02mibu.model;
 
 public class OurNotification {
 
-    private String userUID;
+    private String email;
     private String title;
     private String text;
     private String status;
 
-    public OurNotification(String userUID, String title, String text, String status) {
-        this.userUID = userUID;
+    public OurNotification(String email, String title, String text, String status) {
+        this.email = email;
         this.title = title;
         this.text = text;
         this.status = status;
@@ -16,12 +16,12 @@ public class OurNotification {
 
     public OurNotification(){}
 
-    public String getUserUID() {
-        return userUID;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserUID(String userUID) {
-        this.userUID = userUID;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getStatus() {
