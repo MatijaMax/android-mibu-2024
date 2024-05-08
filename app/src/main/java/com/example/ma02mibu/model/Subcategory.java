@@ -5,47 +5,48 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class SubCategory implements Parcelable {
-    private Long id;
-    private Long categoryId;
+import com.google.firebase.firestore.Exclude;
+
+public class Subcategory implements Parcelable {
+    private String documentRefId;
+    private String categoryId;
     private String name;
     private String description;
     private SUBCATEGORYTYPE type;
     public enum SUBCATEGORYTYPE { USLUGA, PROIZVOD }
 
-    public SubCategory() {
-    }
+    public Subcategory() { }
 
-    public SubCategory(Long id, Long categoryId, String name, String description, SUBCATEGORYTYPE type) {
-        this.id = id;
+    public Subcategory(String categoryId, String name, String description, SUBCATEGORYTYPE type) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.type = type;
     }
 
-    protected SubCategory(Parcel in){
-        id = in.readLong();
+    protected Subcategory(Parcel in){
+        documentRefId = in.readString();
         name = in.readString();
         description = in.readString();
-        categoryId = in.readLong();
+        categoryId = in.readString();
         type = SUBCATEGORYTYPE.values()[in.readInt()];
     }
 
-    public Long getId() {
-        return id;
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
     }
 
     public String getName() {
@@ -79,22 +80,22 @@ public class SubCategory implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeString(documentRefId);
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeLong(categoryId);
+        dest.writeString(categoryId);
         dest.writeInt(type.ordinal());
     }
 
-    public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
+    public static final Creator<Subcategory> CREATOR = new Creator<Subcategory>() {
         @Override
-        public SubCategory createFromParcel(Parcel in) {
-            return new SubCategory(in);
+        public Subcategory createFromParcel(Parcel in) {
+            return new Subcategory(in);
         }
 
         @Override
-        public SubCategory[] newArray(int size) {
-            return new SubCategory[size];
+        public Subcategory[] newArray(int size) {
+            return new Subcategory[size];
         }
     };
 }

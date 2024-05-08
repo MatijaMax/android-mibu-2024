@@ -53,7 +53,7 @@ public class CategoryEditFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FragmentCategoryEditBinding binding = FragmentCategoryEditBinding.inflate(inflater, container, false);
 

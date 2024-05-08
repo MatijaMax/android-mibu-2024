@@ -11,6 +11,7 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.Subcategory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,9 +20,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class CloudStoreUtil {
     private static final String categoryCollection = "category";
+    private static final String subcategoryCollection = "subcategory";
 
 
     public static String insertOwner(Owner owner){
@@ -210,7 +213,7 @@ public class CloudStoreUtil {
 
 
 
-    //Categories//////////////////////////////////////////////////////////////
+    //Categories////////////////////////////////////////////////////////////////////////////////////
     public static String insertCategory(Category newCategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -218,11 +221,8 @@ public class CloudStoreUtil {
 
         String categoryRefId = categoryRef.getId();
         categoryRef.set(newCategory)
-                .addOnSuccessListener(command -> {
-                    Log.d("REZ_DB", "insertCategory: " + categoryRefId);
-                }).addOnFailureListener(command -> {
-                    Log.d("REZ_DB", "insertCategory failed");
-                });
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insertCategory: " + categoryRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insertCategory failed"));
         return categoryRefId;
     }
 
@@ -258,11 +258,8 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(categoryCollection).document(category.getDocumentRefId()).delete()
-                .addOnSuccessListener(task -> {
-                    Log.d("REZ_DB", "category deleted: " + category.getDocumentRefId());
-                }).addOnFailureListener(e -> {
-                    Log.w("REZ_DB", "Error deleting category: " + category.getDocumentRefId(), e);
-                });
+                .addOnSuccessListener(task -> Log.d("REZ_DB", "category deleted: " + category.getDocumentRefId()))
+                .addOnFailureListener(e -> Log.w("REZ_DB", "Error deleting category: " + category.getDocumentRefId(), e));
     }
 
     public interface CategoriesCallback {
@@ -294,4 +291,131 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface CategoryCallback {
+        void onCallback(Category category);
+    }
+    public static void selectCategoryById(String categoryId, final CategoryCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference categoryRef = db.collection(categoryCollection).document(categoryId);
+
+        categoryRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Category category = documentSnapshot.toObject(Category.class);
+                if (category != null) {
+                    category.setDocumentRefId(categoryId);
+                    callback.onCallback(category);
+                } else {
+                    Log.w("REZ_DB", "Error category data is missing.");
+                }
+            } else {
+                Log.w("REZ_DB", "Error document with id " + categoryId + " does not exists.");
+            }
+        });
+    }
+
+
+    //Subcategories/////////////////////////////////////////////////////////////////////////////////
+    public static String insertSubcategory(Subcategory newSubcategory){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference subcategoryRef = db.collection(subcategoryCollection).document();
+
+        String subcategoryRefId = subcategoryRef.getId();
+        subcategoryRef.set(newSubcategory)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert subcategory: " + subcategoryRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert subcategory failed"));
+        return subcategoryRefId;
+    }
+
+    public static void updateSubCategory(Subcategory newSubcategory){
+        if(newSubcategory.getDocumentRefId() == null){
+            Log.w("REZ_DB", "Error document reference id not provided.");
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference subcategoryRef = db.collection(subcategoryCollection).document(newSubcategory.getDocumentRefId());
+
+        subcategoryRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Subcategory subcategory = documentSnapshot.toObject(Subcategory.class);
+                if (subcategory != null) {
+                    subcategoryRef.update("name", newSubcategory.getName());
+                    subcategoryRef.update("description", newSubcategory.getDescription());
+                } else {
+                    Log.w("REZ_DB", "Error subcategory data is missing.");
+                }
+            } else {
+                Log.w("REZ_DB", "Error document with id " + newSubcategory.getDocumentRefId() + " does not exists.");
+            }
+        });
+    }
+
+    public static void deleteSubCategory(Subcategory subcategory){
+        if(subcategory.getDocumentRefId() == null){
+            Log.w("REZ_DB", "Error document reference id not provided.");
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(subcategoryCollection).document(subcategory.getDocumentRefId()).delete()
+                .addOnSuccessListener(task -> Log.d("REZ_DB", "subcategory deleted: " + subcategory.getDocumentRefId()))
+                .addOnFailureListener(e -> Log.w("REZ_DB", "Error deleting subcategory: " + subcategory.getDocumentRefId(), e));
+    }
+
+    public interface SubcategoriesCallback {
+        void onCallback(ArrayList<Subcategory> subcategories);
+    }
+
+    public static void selectSubCategories(final SubcategoriesCallback callback){
+        ArrayList<Subcategory> subcategories = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(subcategoryCollection)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            Subcategory temp = document.toObject(Subcategory.class);
+                            temp.setDocumentRefId(document.getId());
+                            subcategories.add(temp);
+                        }
+                        callback.onCallback(subcategories);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
+    }
+
+    public static void selectSubcategoriesFromCategory(String categoryId, final SubcategoriesCallback callback){
+        ArrayList<Subcategory> subcategories = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(subcategoryCollection)
+                .whereEqualTo("categoryId", categoryId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            Subcategory temp = document.toObject(Subcategory.class);
+                            temp.setDocumentRefId(document.getId());
+                            subcategories.add(temp);
+                        }
+                        callback.onCallback(subcategories);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
+    }
 }
