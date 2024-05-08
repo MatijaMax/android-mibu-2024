@@ -367,6 +367,7 @@ public class CloudStoreUtil {
                 "cancellationDeadline", service.getCancellationDeadline(),
                 "confirmAutomatically", service.isConfirmAutomatically(),
                 "discount", service.getDiscount(),
+                "persons", service.getPersons(),
                 "visible", service.isVisible(),
                 "availableToBuy", service.isAvailableToBuy());
     }

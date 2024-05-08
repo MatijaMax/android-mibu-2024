@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,11 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.EditServiceBinding;
 import com.example.ma02mibu.model.Deadline;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeInService;
 import com.example.ma02mibu.model.Service;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -29,7 +34,10 @@ public class EditServiceFragment extends Fragment {
     LinearLayout part1;
     LinearLayout part2;
     int currentPage;
+    ArrayList<EmployeeInService> employees = new ArrayList<>();
     private Service mService;
+    private FirebaseAuth auth;
+    private String ownerId;
     private ArrayList<String> deadlineFormats;
     private static final String ARG_PARAM = "param";
     public static EditServiceFragment newInstance(Service service) {
@@ -40,6 +48,9 @@ public class EditServiceFragment extends Fragment {
         return fragment;
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        ownerId = user.getUid();
         currentPage = 0;
         binding = EditServiceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -81,6 +92,7 @@ public class EditServiceFragment extends Fragment {
             RadioButton rb = binding.radioManually;
             rb.setChecked(true);
         }
+        getEmployees(ownerId);
         Button switchPageButton = binding.switchPageButton;
         switchPageButton.setOnClickListener(v -> switchFormPages());
         Button submitBtn = binding.submitButtonService;
@@ -99,6 +111,13 @@ public class EditServiceFragment extends Fragment {
 
 
     private void editService(){
+        ListView listView = binding.employeesListViewEdit;
+        ArrayList<EmployeeInService> checkedEmployees = new ArrayList<>();
+        int cnt = listView.getAdapter().getCount();
+        for(int i=0; i<cnt; i++){
+            if(listView.isItemChecked(i))
+                checkedEmployees.add(employees.get(i));
+        }
         String name = binding.ServiceNameEdit.getText().toString();
         String description = binding.ServiceDescriptionEdit.getText().toString();
         String price = binding.ServicePriceEdit.getText().toString();
@@ -137,6 +156,7 @@ public class EditServiceFragment extends Fragment {
         mService.setAvailableToBuy(isAvailableToBuy);
         mService.setConfirmAutomatically(confirmAuto);
         mService.setDiscount(discountInt);
+        mService.setPersons(checkedEmployees);
         CloudStoreUtil.updateService(mService);
         FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_services_list, "falsh");
@@ -179,6 +199,42 @@ public class EditServiceFragment extends Fragment {
             binding.resCancellationFormatEdit.setSelection(1);
         }
     }
+
+    private void getEmployees(String ownerRefId){
+        CloudStoreUtil.getEmployeesList(ownerRefId, new CloudStoreUtil.EmployeesListCallback() {
+            @Override
+            public void onSuccess(ArrayList<Employee> itemList) {
+                // Handle the retrieved list of items (e.g., display them in UI)
+                ArrayList<Employee> employeesDB = new ArrayList<>(itemList);
+                for(Employee e: employeesDB){
+                    employees.add(new EmployeeInService(e.getEmail(), e.getFirstName(), e.getLastName()));
+                }
+
+                ListView listView = binding.employeesListViewEdit;
+                ArrayList<String> employeesInList = new ArrayList<>();
+                for (EmployeeInService e: employees)
+                    employeesInList.add(e.getFirstName() + " " + e.getLastName());
+                ArrayAdapter<String> employeesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, employeesInList);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                listView.setAdapter(employeesAdapter);
+                for(EmployeeInService e: mService.getPersons()){
+                    for(int i=0; i<employees.size(); i++){
+                        if(employees.get(i).getEmail().equals(e.getEmail())){
+                            binding.employeesListViewEdit.setItemChecked(i, true);
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+        });
+    }
+
 
     @Override
     public void onDestroyView() {
