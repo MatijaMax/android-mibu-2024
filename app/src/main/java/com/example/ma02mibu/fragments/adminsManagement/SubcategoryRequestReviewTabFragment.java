@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.adapters.adminsManagment.SubcategoryRequestListAdapter;
-import com.example.ma02mibu.model.SubCategory;
+import com.example.ma02mibu.model.Subcategory;
 import com.example.ma02mibu.model.SubCategoryRequest;
 
 import java.util.ArrayList;
@@ -60,14 +60,14 @@ public class SubcategoryRequestReviewTabFragment extends Fragment {
     }
 
     private void createSubCategoryRequests(){
-        subCategoryRequests.add(new SubCategoryRequest(1L, 1L, "Ime podkategorije 1", "Opis podkategorije 1", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(2L, 2L, "Ime podkategorije 2", "Opis podkategorije 2", SubCategory.SUBCATEGORYTYPE.USLUGA, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(3L, 2L, "Ime podkategorije 3", "Opis podkategorije 3", SubCategory.SUBCATEGORYTYPE.USLUGA, 3L));
-        subCategoryRequests.add(new SubCategoryRequest(4L, 2L, "Ime podkategorije 4", "Opis podkategorije 4", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 2L));
-        subCategoryRequests.add(new SubCategoryRequest(5L, 4L, "Ime podkategorije 5", "Opis podkategorije 5", SubCategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(6L, 1L, "Ime podkategorije 6", "Opis podkategorije 6", SubCategory.SUBCATEGORYTYPE.USLUGA, 6L));
-        subCategoryRequests.add(new SubCategoryRequest(7L, 4L, "Ime podkategorije 7", "Opis podkategorije 7", SubCategory.SUBCATEGORYTYPE.USLUGA, 9L));
-        subCategoryRequests.add(new SubCategoryRequest(8L, 1L, "Ime podkategorije 8", "Opis podkategorije 8", SubCategory.SUBCATEGORYTYPE.USLUGA, 6L));
-        subCategoryRequests.add(new SubCategoryRequest(9L, 1L, "Ime podkategorije 9", "Opis podkategorije 9", SubCategory.SUBCATEGORYTYPE.USLUGA, 4L));
+        subCategoryRequests.add(new SubCategoryRequest(1L, 1L, "Ime podkategorije 1", "Opis podkategorije 1", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(2L, 2L, "Ime podkategorije 2", "Opis podkategorije 2", Subcategory.SUBCATEGORYTYPE.USLUGA, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(3L, 2L, "Ime podkategorije 3", "Opis podkategorije 3", Subcategory.SUBCATEGORYTYPE.USLUGA, 3L));
+        subCategoryRequests.add(new SubCategoryRequest(4L, 2L, "Ime podkategorije 4", "Opis podkategorije 4", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 2L));
+        subCategoryRequests.add(new SubCategoryRequest(5L, 4L, "Ime podkategorije 5", "Opis podkategorije 5", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
+        subCategoryRequests.add(new SubCategoryRequest(6L, 1L, "Ime podkategorije 6", "Opis podkategorije 6", Subcategory.SUBCATEGORYTYPE.USLUGA, 6L));
+        subCategoryRequests.add(new SubCategoryRequest(7L, 4L, "Ime podkategorije 7", "Opis podkategorije 7", Subcategory.SUBCATEGORYTYPE.USLUGA, 9L));
+        subCategoryRequests.add(new SubCategoryRequest(8L, 1L, "Ime podkategorije 8", "Opis podkategorije 8", Subcategory.SUBCATEGORYTYPE.USLUGA, 6L));
+        subCategoryRequests.add(new SubCategoryRequest(9L, 1L, "Ime podkategorije 9", "Opis podkategorije 9", Subcategory.SUBCATEGORYTYPE.USLUGA, 4L));
     }
 }

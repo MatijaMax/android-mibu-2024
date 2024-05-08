@@ -11,12 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.databinding.FragmentCategoryEditBinding;
 import com.example.ma02mibu.model.Category;
 
 public class CategoryEditFragment extends Fragment {
+
+    private EditText name;
+    private EditText description;
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -44,31 +53,59 @@ public class CategoryEditFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_category_edit, container, false);
+        FragmentCategoryEditBinding binding = FragmentCategoryEditBinding.inflate(inflater, container, false);
+
+        name = binding.categoryName;
+        description = binding.categoryDescription;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ((TextView) view.findViewById(R.id.categoryName)).setText(category.getName());
-        ((TextView) view.findViewById(R.id.categoryDescription)).setText(category.getDescription());
-        ((Button) view.findViewById(R.id.saveCategoryChanges)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
+        name.setText(category.getName());
+        description.setText(category.getDescription());
+        view.findViewById(R.id.saveCategoryChanges).setOnClickListener(v -> {
+            if(!fieldsAreValid()){
+                return;
             }
+            if(isCategoryNew){
+                CloudStoreUtil.insertCategory(new Category(name.getText().toString(), description.getText().toString()));
+            }else {
+                category.setName(name.getText().toString());
+                category.setDescription(description.getText().toString());
+                CloudStoreUtil.updateCategory(category);
+            }
+            FragmentTransition.goBack(requireActivity(), "categoryManagement");
         });
 
         Button deleteCategory = view.findViewById(R.id.deleteCategory);
-        deleteCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-            }
+        deleteCategory.setOnClickListener(v -> {
+            CloudStoreUtil.deleteCategory(category);
+            FragmentTransition.goBack(requireActivity(), "categoryManagement");
         });
         deleteCategory.setEnabled(!isCategoryNew);
+    }
+
+    private boolean fieldsAreValid() {
+        boolean valid = true;
+        if(name.getText().toString().isEmpty()){
+            name.setError("Name is required");
+            valid = false;
+        }
+        else {
+            name.setError(null);
+        }
+        if(description.getText().toString().isEmpty()){
+            description.setError("Description is required");
+            valid = false;
+        }
+        else{
+            description.setError(null);
+        }
+        return valid;
     }
 
 }

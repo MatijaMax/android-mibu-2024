@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.ma02mibu.R;
-import com.example.ma02mibu.model.SubCategory;
+import com.example.ma02mibu.model.Subcategory;
 import com.example.ma02mibu.model.SubCategoryRequest;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
         subcategoryRequestSpinner.setAdapter(new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.subcategory_types)));
-        if (subcategoryRequest.getType() == SubCategory.SUBCATEGORYTYPE.USLUGA) {
+        if (subcategoryRequest.getType() == Subcategory.SUBCATEGORYTYPE.USLUGA) {
             subcategoryRequestSpinner.setSelection(0);
         }
         else {
