@@ -117,7 +117,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
     }
 
     private void loadEventModels() {
-        CloudStoreUtil.getEventModels(mEmployee.getUserUID(), new CloudStoreUtil.EventModelsCallback() {
+        CloudStoreUtil.getEventModels(mEmployee.getEmail(), new CloudStoreUtil.EventModelsCallback() {
             @Override
             public void onSuccess(ArrayList<EventModel> itemList) {
                 eventModels = new ArrayList<>(itemList);
@@ -136,7 +136,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         String fTime = binding.eTimeFrom.getText().toString();
         String tTime = binding.eTimeTo.getText().toString();
         String date = binding.eventSelectedDate.getText().toString();
-        EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getUserUID());
+        EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getEmail());
         String[] dsA = date.split("-");
         String ds = dsA[0];
         String ms = dsA[1];
@@ -164,7 +164,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
-        OurNotification notification = new OurNotification(mEmployee.getUserUID(), "New event","Event for you", "notRead");
+        OurNotification notification = new OurNotification(mEmployee.getEmail(), "New event","Event for you " + eventModel.getDate() + " " + eventModel.getFromTime() + "-" + eventModel.getToTime(), "notRead");
         CloudStoreUtil.insertNotification(notification);
         changeViews();
     }

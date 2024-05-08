@@ -22,6 +22,7 @@ import com.example.ma02mibu.databinding.FragmentEmployeePersonalWorkCalendarBind
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventModel;
 import com.example.ma02mibu.model.OurNotification;
+import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.WorkTime;
 
 import java.text.DateFormat;
@@ -50,6 +51,7 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
     private Employee mEmployee;
     private ArrayList<EventModel> eventModels;
     private int currentYear, currentMonth, currentDayOfMonth;
+    private Owner currentOwner;
     private String mParam2;
 
     private FragmentEmployeePersonalWorkCalendarBinding binding;
@@ -78,6 +80,19 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
 
     private TextView tvSelectedWeek;
     private TextView eventSelectedDay;
+
+    private void loadOwner(String ownerRefId) {
+        CloudStoreUtil.getOwner(ownerRefId, new CloudStoreUtil.OwnerCallback() {
+            @Override
+            public void onSuccess(Owner myItem) {
+                currentOwner = myItem;
+            }
+            @Override
+            public void onFailure(Exception e) {
+                System.err.println("Error fetching owner document: " + e.getMessage());
+            }
+        });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,11 +123,12 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
             }
         });
         loadEventModels();
+        loadOwner(mEmployee.getOwnerRefId());
         return view;
     }
 
     private void loadEventModels() {
-        CloudStoreUtil.getEventModels(mEmployee.getUserUID(), new CloudStoreUtil.EventModelsCallback() {
+        CloudStoreUtil.getEventModels(mEmployee.getEmail(), new CloudStoreUtil.EventModelsCallback() {
             @Override
             public void onSuccess(ArrayList<EventModel> itemList) {
                 eventModels = new ArrayList<>(itemList);
@@ -130,7 +146,7 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         String fTime = binding.eTimeFrom.getText().toString();
         String tTime = binding.eTimeTo.getText().toString();
         String date = binding.eventSelectedDate.getText().toString();
-        EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getUserUID());
+        EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getEmail());
         String[] dsA = date.split("-");
         String ds = dsA[0];
         String ms = dsA[1];
@@ -158,7 +174,7 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
-        OurNotification notification = new OurNotification(mEmployee.getOwnerRefId(), "New event","Event for: "+mEmployee.getFirstName() + " " + mEmployee.getLastName(), "notRead");
+        OurNotification notification = new OurNotification(currentOwner.getEmail(), "New event","Event for: "+ mEmployee.getFirstName() + " " + mEmployee.getLastName() + " " + eventModel.getDate(), "notRead");
         CloudStoreUtil.insertNotification(notification);
         changeViews();
     }

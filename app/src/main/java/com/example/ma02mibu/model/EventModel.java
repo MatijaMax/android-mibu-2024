@@ -9,34 +9,26 @@ public class EventModel {
     private String fromTime;
     private String toTime;
     private String status;
-
-    private String userUID;
+    private String email;
 
     public EventModel(){}
 
-    public EventModel(String name, String date, String fromTime, String toTime, String status) {
+    public EventModel(String name, String date, String fromTime, String toTime, String status, String email) {
         this.name = name;
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.status = status;
+        this.email = email;
     }
 
-    public EventModel(String name, String date, String fromTime, String toTime, String status, String userUID) {
-        this.name = name;
-        this.date = date;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
-        this.status = status;
-        this.userUID = userUID;
+    public String getEmail() {
+        return email;
     }
 
-    public String getUserUID() {
-        return userUID;
-    }
 
-    public void setUserUID(String userUID) {
-        this.userUID = userUID;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getName() {

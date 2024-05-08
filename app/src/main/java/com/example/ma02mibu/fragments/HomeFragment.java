@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadNotification() {
-        CloudStoreUtil.getNotifications(user.getUid(), new CloudStoreUtil.NotificationCallback() {
+        CloudStoreUtil.getNotifications(user.getEmail(), new CloudStoreUtil.NotificationCallback() {
             @Override
             public void onSuccess(ArrayList<OurNotification> myItems) {
                 System.out.println("Retrieved item: " + myItems);
