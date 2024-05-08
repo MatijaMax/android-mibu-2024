@@ -15,6 +15,7 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.adminsManagment.SubcategoryListAdapter;
+import com.example.ma02mibu.databinding.FragmentEventTypeManagementTabBinding;
 import com.example.ma02mibu.model.Subcategory;
 
 import java.util.ArrayList;
@@ -39,14 +40,18 @@ public class SubcategoryManagmentTabFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_subcategory_managment_tab, container, false);
+        FragmentEventTypeManagementTabBinding binding = FragmentEventTypeManagementTabBinding.inflate(inflater, container, false);
+
+        subcategoryListView = binding.eventTypesListView;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        subcategoryListView = view.findViewById(R.id.subCategoriesListView);
+
         getSubcategories();
         subcategoryListView.setOnItemClickListener((parent, view1, position, id) -> FragmentTransition.to(SubcategoryEditFragment.newInstance(false, subcategoryListAdapter.getItem(position)),
                 requireActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement"));
@@ -62,7 +67,7 @@ public class SubcategoryManagmentTabFragment extends Fragment {
     }
 
     private void getSubcategories(){
-        CloudStoreUtil.selectSubCategories(result -> {
+        CloudStoreUtil.selectSubcategories(result -> {
             subcategories = result;
             subcategoryListAdapter = new SubcategoryListAdapter(getActivity(), subcategories);
             subcategoryListView.setAdapter(subcategoryListAdapter);

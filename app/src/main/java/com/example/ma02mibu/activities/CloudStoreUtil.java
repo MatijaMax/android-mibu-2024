@@ -9,6 +9,7 @@ import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Subcategory;
@@ -20,11 +21,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class CloudStoreUtil {
     private static final String categoryCollection = "category";
     private static final String subcategoryCollection = "subcategory";
+    private static final String eventTypeCollection = "eventtype";
 
 
     public static String insertOwner(Owner owner){
@@ -328,7 +329,7 @@ public class CloudStoreUtil {
         return subcategoryRefId;
     }
 
-    public static void updateSubCategory(Subcategory newSubcategory){
+    public static void updateSubcategory(Subcategory newSubcategory){
         if(newSubcategory.getDocumentRefId() == null){
             Log.w("REZ_DB", "Error document reference id not provided.");
             return;
@@ -352,7 +353,7 @@ public class CloudStoreUtil {
         });
     }
 
-    public static void deleteSubCategory(Subcategory subcategory){
+    public static void deleteSubcategory(Subcategory subcategory){
         if(subcategory.getDocumentRefId() == null){
             Log.w("REZ_DB", "Error document reference id not provided.");
             return;
@@ -368,7 +369,7 @@ public class CloudStoreUtil {
         void onCallback(ArrayList<Subcategory> subcategories);
     }
 
-    public static void selectSubCategories(final SubcategoriesCallback callback){
+    public static void selectSubcategories(final SubcategoriesCallback callback){
         ArrayList<Subcategory> subcategories = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -418,4 +419,72 @@ public class CloudStoreUtil {
                     Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
                 });
     }
+
+    //Event types///////////////////////////////////////////////////////////////////////////////////
+    public static String insertEventType(EventType newEventType){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference eventTypeRef = db.collection(eventTypeCollection).document();
+
+        String eventTypeRefId = eventTypeRef.getId();
+        eventTypeRef.set(newEventType)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert event type: " + eventTypeRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert event type failed"));
+        return eventTypeRefId;
+    }
+
+    public static void updateEventType(EventType newEventType){
+        if(newEventType.getDocumentRefId() == null){
+            Log.w("REZ_DB", "Error document reference id not provided.");
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference eventTypeRef = db.collection(eventTypeCollection).document(newEventType.getDocumentRefId());
+
+        eventTypeRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                EventType eventType = documentSnapshot.toObject(EventType.class);
+                if (eventType != null) {
+                    eventTypeRef.update("description", newEventType.getDescription());
+                    eventTypeRef.update("suggestedSubcategoryDocRefId", newEventType.getSuggestedSubcategoryDocRefId());
+                    eventTypeRef.update("status", newEventType.getStatus());
+                } else {
+                    Log.w("REZ_DB", "Error event type data is missing.");
+                }
+            } else {
+                Log.w("REZ_DB", "Error document with id " + newEventType.getDocumentRefId() + " does not exists.");
+            }
+        });
+    }
+
+    public interface EventTypesCallback {
+        void onCallback(ArrayList<EventType> eventTypes);
+    }
+
+    public static void selectEventTypes(final EventTypesCallback callback){
+        ArrayList<EventType> eventTypes = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(eventTypeCollection)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            EventType temp = document.toObject(EventType.class);
+                            temp.setDocumentRefId(document.getId());
+                            eventTypes.add(temp);
+                        }
+                        callback.onCallback(eventTypes);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + eventTypeCollection, e);
+                });
+    }
+
 }

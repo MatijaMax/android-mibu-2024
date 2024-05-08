@@ -104,14 +104,14 @@ public class SubcategoryEditFragment extends Fragment {
             }else {
                 subcategory.setName(name.getText().toString());
                 subcategory.setDescription(description.getText().toString());
-                CloudStoreUtil.updateSubCategory(subcategory);
+                CloudStoreUtil.updateSubcategory(subcategory);
             }
             FragmentTransition.goBack(requireActivity(), "subcategoryManagement");
         });
 
         Button deleteButton = view.findViewById(R.id.deleteSubcategory);
         deleteButton.setOnClickListener(v -> {
-            CloudStoreUtil.deleteSubCategory(subcategory);
+            CloudStoreUtil.deleteSubcategory(subcategory);
             FragmentTransition.goBack(requireActivity(), "subcategoryManagement");
         });
         deleteButton.setEnabled(!isSubcategoryNew);
