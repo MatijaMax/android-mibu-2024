@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.Event;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
@@ -354,4 +355,19 @@ public class CloudStoreUtil {
                 });
         return organizerRefId;
     }
+
+    public static String insertEventNew(Event newEvent){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference events = db.collection("events").document();
+
+        String eventId = events.getId();
+        events.set(newEvent)
+                .addOnSuccessListener(aVoid -> {
+                })
+                .addOnFailureListener(e -> {
+                });
+        return eventId;
+    }
+
 }

@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class Event implements Parcelable {
     private Long id;
+
+    private String type;
     private String name;
     private String description;
     private int participantNumber;
@@ -19,6 +21,7 @@ public class Event implements Parcelable {
 
     protected Event(Parcel in) {
         id = in.readLong();
+        type = in.readString();
         name = in.readString();
         description = in.readString();
         participantNumber = in.readInt();
@@ -27,7 +30,7 @@ public class Event implements Parcelable {
         date = in.readString();
     }
 
-    public Event(Long id, String name, String description, int participantNumber, String location, Boolean privacy, String date) {
+    public Event(Long id, String type, String name, String description, int participantNumber, String location, Boolean privacy, String date) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,6 +38,7 @@ public class Event implements Parcelable {
         this.location = location;
         this.privacy = privacy;
         this.date = date;
+        this.type = type;
     }
 
 
@@ -45,6 +49,7 @@ public class Event implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeString(type);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeInt(participantNumber);
@@ -118,6 +123,14 @@ public class Event implements Parcelable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 

@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.legacy.support.v4)
     implementation(libs.recyclerview)
+    implementation(libs.play.services.tasks)
     testImplementation(libs.junit)
 
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))

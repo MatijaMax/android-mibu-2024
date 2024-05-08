@@ -64,9 +64,9 @@ public class ProductsFilterFragment extends ListFragment {
         });
 
         Event event1 =
-                new Event(1L, "turica", "x", 3, "x", true, "x");
+                new Event(1L,"y", "turica", "x", 3, "x", true, "x");
         Event event2 =
-                new Event(2L, "idemooo", "x", 3, "x", true, "x");
+                new Event(2L,"y",  "idemooo", "x", 3, "x", true, "x");
         eventsFake.add(event1);
         eventsFake.add(event2);
 
