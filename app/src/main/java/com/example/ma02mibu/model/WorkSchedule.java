@@ -110,6 +110,13 @@ public class WorkSchedule implements Parcelable {
         return schedule.get(d.toString()).toString();
     }
 
+    public WorkTime ScheduleForThisDay(DayOfWeek d){
+        if(schedule.get(d.toString()) == null){
+            return null;
+        }
+        return schedule.get(d.toString());
+    }
+
     public String getStartDay() {
         return startDay;
     }

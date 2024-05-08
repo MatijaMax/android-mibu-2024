@@ -10,33 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Events for the week"
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/tvSelectedWeek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" number: "
-                android:textSize="20sp"/>
-            <Button
-                android:id="@+id/btnPickWeek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pick Week" />
 
-        </LinearLayout>
-
-        <ExpandableListView
-            android:id="@+id/expandableListView"
-            android:layout_width="match_parent"
-            android:layout_height="350dp" />
 
         <LinearLayout
             android:layout_marginTop="10dp"
@@ -59,6 +33,7 @@
                     android:text=" Name of the event: "
                     android:textSize="20sp"/>
                 <EditText
+                    android:id="@+id/eName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Name of the event"
@@ -95,10 +70,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From: "
+
                     android:textSize="20sp"/>
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/eTimeFrom"
                     android:hint="HH:mm"
                     android:textSize="20sp"/>
                 <TextView
@@ -110,6 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="HH:mm"
+                    android:id="@+id/eTimeTo"
                     android:textSize="20sp"/>
             </LinearLayout>
             <Button
@@ -119,6 +97,35 @@
                 android:layout_gravity="center"
                 android:text="Create event" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="25dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Events for the week"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/tvSelectedWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" number: "
+                android:textSize="20sp"/>
+            <Button
+                android:id="@+id/btnPickWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pick Week" />
+
+        </LinearLayout>
+
+        <ExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="350dp" />
 
     </LinearLayout>
 

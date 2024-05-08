@@ -111,7 +111,6 @@ public class EmployeePersonalDetailsFragment extends Fragment {
                     FragmentTransition.to(EmployeePersonalWorkCalendarFragment.newInstance(mEmployee,""), getActivity(),
                             true, R.id.personal_employee, "EmployeePersonalWorkCalendar");
                 });
-
             }
 
             @Override

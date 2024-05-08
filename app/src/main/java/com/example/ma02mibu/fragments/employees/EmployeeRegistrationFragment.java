@@ -226,17 +226,6 @@ public class EmployeeRegistrationFragment extends Fragment {
             e.setSchedule(customWorkSchedule);
         }
 
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8, 30), LocalTime.of(16, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8, 30), LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
-//        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
-
 //*****************************************************
         //slanje notifikacije samom sebi
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "Kanal1")
@@ -361,18 +350,6 @@ public class EmployeeRegistrationFragment extends Fragment {
         return new String[]{startH, startM, endH, endM};
     }
     private void loadCompany() {
-                    Log.i("OWNERRR", ownerRefId);
-//        CloudStoreUtil.selectCompany(ownerRefId, new CloudStoreUtil.CompanyCallback(){
-//            @Override
-//            public void onCallback(Company retrieved) {
-//                if (retrieved != null) {
-//                    currentCompany = retrieved;
-//                    Log.i("WQQQQQQQ", currentCompany.toString());
-//                } else {
-//                    currentCompany = null;
-//                }
-//            }
-//        });
         CloudStoreUtil.getOwner(ownerRefId, new CloudStoreUtil.OwnerCallback() {
             @Override
             public void onSuccess(Owner myItem) {
@@ -390,18 +367,6 @@ public class EmployeeRegistrationFragment extends Fragment {
     }
 
     private void chooseImage(){
-//        ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(null);
-//        companyWorkSchedule.setEndDay(null);
-//        CloudStoreUtil.insertCompany(new Company("22", "KK", companyWorkSchedule), ownerRefId);
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);

@@ -277,9 +277,19 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
-                        // Display the selected week
-                        eventSelectedDayEnd.setText(toSet);
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDayEnd.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDayEnd.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDayEnd.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDayEnd.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
                     }
                 },
                 year,
@@ -304,18 +314,19 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
-                        // Display the selected week
-//                        if(dayOfMonth < 10 && monthN < 10){
-//                            toSet = "0"+dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
-//                        }else if(dayOfMonth < 10){
-//                            toSet = "0"+dayOfMonth + "-" + monthN + "-" + year + " ";
-//                        }else if(monthN < 10){
-//                            toSet = dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
-//                        }else{
-//                            toSet = dayOfMonth + "-" + monthN + "-" + year + " ";
-//                        }
-                        eventSelectedDayStart.setText(toSet);
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDayStart.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDayStart.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDayStart.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDayStart.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
                     }
                 },
                 year,
