@@ -123,9 +123,15 @@ public class MainActivity extends AppCompatActivity {
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
+                m.findItem(R.id.nav_services).setVisible(true);
+                m.findItem(R.id.nav_products).setVisible(true);
+                m.findItem(R.id.nav_packages).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 //TODO
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
+                m.findItem(R.id.nav_services).setVisible(true);
+                m.findItem(R.id.nav_products).setVisible(true);
+                m.findItem(R.id.nav_packages).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();
