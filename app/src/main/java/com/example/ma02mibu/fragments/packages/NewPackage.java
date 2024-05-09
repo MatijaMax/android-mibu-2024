@@ -84,7 +84,7 @@ public class NewPackage extends Fragment {
         setPackageCollections();
         Button submitBtn = binding.submitButton;
         submitBtn.setOnClickListener(v -> savePackageDB());
-        setCategoryChangeListener();
+        //setCategoryChangeListener();
         return root;
     }
     @Override
@@ -127,14 +127,16 @@ public class NewPackage extends Fragment {
         int categoryPosition = binding.PackageCategory.getSelectedItemPosition();
         packageCreateDto = new PackageCreateDto(name, description, availableToBuy, visible, categoryPosition);
         viewModel.setPackage(packageCreateDto);
+        categorySharedViewModel.setCategory(categories.get(categoryPosition));
     }
 
-    private void setPackageData(){
+    private void setPackageData() {
         binding.PackageName.setText(packageCreateDto.getName());
         binding.packageDescription.setText(packageCreateDto.getDescription());
         binding.checkBoxODAvailable.setChecked(packageCreateDto.isVisible());
         binding.checkBoxBuyAvailable.setChecked(packageCreateDto.isAvailableToBuy());
-        binding.PackageCategory.setSelection(packageCreateDto.getCategoryPosition());
+        int x = packageCreateDto.getCategoryPosition();
+        binding.PackageCategory.setSelection(x);
     }
 
     private void savePackageDB(){
@@ -168,7 +170,11 @@ public class NewPackage extends Fragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             binding.PackageCategory.setAdapter(adapter);
-            categorySharedViewModel.setCategory(categories.get(0));
+            if(categorySharedViewModel.getCategory().getValue() == null)
+                categorySharedViewModel.setCategory(categories.get(0));
+            if(viewModel.getPackage().getValue() != null) {
+                binding.PackageCategory.setSelection(viewModel.getPackage().getValue().getCategoryPosition());
+            }
         });
     }
 
