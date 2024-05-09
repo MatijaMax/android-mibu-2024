@@ -361,6 +361,33 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface ServiceByUserCallback {
+        void onSuccess(ArrayList<Service> services);
+        void onFailure(Exception e);
+    }
+
+    public static void selectServicesByUser(String owner, final ServiceByUserCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .whereEqualTo("ownerUuid", owner)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<Service> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Service myItem = documentSnapshot.toObject(Service.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public interface EmployeeCallback {
         void onSuccess(Employee myItem);
         void onFailure(Exception e);
@@ -458,6 +485,8 @@ public class CloudStoreUtil {
                     }
                 });
     }
+
+
 
     public interface PackageCallback {
         void onCallbackPackage(ArrayList<Package> packages);
