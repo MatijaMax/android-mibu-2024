@@ -33,6 +33,7 @@ import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.UserRole;
 import com.example.ma02mibu.model.WorkSchedule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -362,6 +363,8 @@ public class EmployeeRegistrationFragment extends Fragment {
                         if(user != null){
                             employee.setUserUID(user.getUid());
                             insert(employee);
+                            UserRole ur = new UserRole(user.getEmail(), UserRole.USERROLE.EMPLOYEE);
+                            CloudStoreUtil.insertUserRole(ur);
                             sendEmailVerification(user);
                         }
 

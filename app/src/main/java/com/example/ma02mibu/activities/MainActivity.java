@@ -122,8 +122,10 @@ public class MainActivity extends AppCompatActivity {
                 //TODO
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
+                m.findItem(R.id.nav_employees).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 //TODO
+                m.findItem(R.id.nav_employee_personal).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();
