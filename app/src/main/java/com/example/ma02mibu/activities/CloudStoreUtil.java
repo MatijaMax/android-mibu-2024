@@ -459,6 +459,7 @@ public class CloudStoreUtil {
                         "description", product.getDescription(),
                         "discount", product.getDiscount(),
                         "price", product.getPrice(),
+                        "eventTypes", product.getEventTypes(),
                         "visible", product.isVisible(),
                         "availableToBuy", product.isAvailableToBuy());
     }
@@ -564,6 +565,7 @@ public class CloudStoreUtil {
                 "confirmAutomatically", service.isConfirmAutomatically(),
                 "discount", service.getDiscount(),
                 "persons", service.getPersons(),
+                "eventTypes", service.getEventTypes(),
                 "visible", service.isVisible(),
                 "availableToBuy", service.isAvailableToBuy());
     }

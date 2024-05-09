@@ -84,7 +84,7 @@ public class NewPackage extends Fragment {
         setPackageCollections();
         Button submitBtn = binding.submitButton;
         submitBtn.setOnClickListener(v -> savePackageDB());
-        setCategoryChangeListener();
+        //setCategoryChangeListener();
         return root;
     }
     @Override
@@ -124,15 +124,19 @@ public class NewPackage extends Fragment {
         String description = binding.packageDescription.getText().toString();
         boolean visible = binding.checkBoxODAvailable.isChecked();
         boolean availableToBuy = binding.checkBoxBuyAvailable.isChecked();
-        packageCreateDto = new PackageCreateDto(name, description, availableToBuy, visible);
+        int categoryPosition = binding.PackageCategory.getSelectedItemPosition();
+        packageCreateDto = new PackageCreateDto(name, description, availableToBuy, visible, categoryPosition);
         viewModel.setPackage(packageCreateDto);
+        categorySharedViewModel.setCategory(categories.get(categoryPosition));
     }
 
-    private void setPackageData(){
+    private void setPackageData() {
         binding.PackageName.setText(packageCreateDto.getName());
         binding.packageDescription.setText(packageCreateDto.getDescription());
         binding.checkBoxODAvailable.setChecked(packageCreateDto.isVisible());
         binding.checkBoxBuyAvailable.setChecked(packageCreateDto.isAvailableToBuy());
+        int x = packageCreateDto.getCategoryPosition();
+        binding.PackageCategory.setSelection(x);
     }
 
     private void savePackageDB(){
@@ -166,7 +170,11 @@ public class NewPackage extends Fragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             binding.PackageCategory.setAdapter(adapter);
-            categorySharedViewModel.setCategory(categories.get(0));
+            if(categorySharedViewModel.getCategory().getValue() == null)
+                categorySharedViewModel.setCategory(categories.get(0));
+            if(viewModel.getPackage().getValue() != null) {
+                binding.PackageCategory.setSelection(viewModel.getPackage().getValue().getCategoryPosition());
+            }
         });
     }
 
@@ -175,6 +183,14 @@ public class NewPackage extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categorySharedViewModel.setCategory(categories.get(position));
+                mChosenProducts = new ArrayList<>();
+                mChosenServices = new ArrayList<>();
+                viewModel.setProducts(mChosenProducts);
+                viewModel.setServices(mChosenServices);
+                String s = "0 services chosen";
+                binding.servicesNum.setText(s);
+                s = "0 products chosen";
+                binding.productsNum.setText(s);
             }
 
             @Override
