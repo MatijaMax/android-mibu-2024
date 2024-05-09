@@ -56,6 +56,7 @@ public class SubcategoryManagmentTabFragment extends Fragment {
         subcategoryListView.setOnItemClickListener((parent, view1, position, id) -> FragmentTransition.to(SubcategoryEditFragment.newInstance(false, subcategoryListAdapter.getItem(position)),
                 requireActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement"));
 
+        //TODO fix this
         view.findViewById(R.id.addNewSubcategory).setOnClickListener(v -> FragmentTransition.to(SubcategoryEditFragment.newInstance(true, new Subcategory()),
                 requireActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement"));
     }

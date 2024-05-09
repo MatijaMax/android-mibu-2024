@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 public class Owner implements Parcelable {
     private String email;
     private String name;
@@ -13,6 +15,8 @@ public class Owner implements Parcelable {
     private String addressOfResidence;
     private String userUID;
     private Company myCompany;
+    private ArrayList<String> categories;
+    private ArrayList<String> eventTypes;
 
     public Owner() {
     }
@@ -25,6 +29,8 @@ public class Owner implements Parcelable {
         this.addressOfResidence = addressOfResidence;
         this.userUID = userUID;
         this.myCompany = null;
+        categories = new ArrayList<>();
+        eventTypes = new ArrayList<>();
     }
 
     public Owner(String email, String name, String surname, String phoneNumber, String addressOfResidence, String userUID, Company myCompany) {
@@ -35,6 +41,8 @@ public class Owner implements Parcelable {
         this.addressOfResidence = addressOfResidence;
         this.userUID = userUID;
         this.myCompany = myCompany;
+        categories = new ArrayList<>();
+        eventTypes = new ArrayList<>();
     }
 
     protected Owner(Parcel in) {
@@ -129,5 +137,21 @@ public class Owner implements Parcelable {
 
     public void setMyCompany(Company myCompany) {
         this.myCompany = myCompany;
+    }
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(ArrayList<String> categories) {
+        this.categories = categories;
+    }
+
+    public ArrayList<String> getEventTypes() {
+        return eventTypes;
+    }
+
+    public void setEventTypes(ArrayList<String> eventTypes) {
+        this.eventTypes = eventTypes;
     }
 }
