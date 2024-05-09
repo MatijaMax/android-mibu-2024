@@ -9,6 +9,7 @@ public class SubcategoryProposal implements Parcelable {
     private Subcategory subcategory;
     //ID servisa ili usluge
     private String itemId;
+    private String ownerMail;
     public SubcategoryProposal(){}
 
     public SubcategoryProposal(Subcategory subcategory, String itemId) {
@@ -19,6 +20,14 @@ public class SubcategoryProposal implements Parcelable {
     protected SubcategoryProposal(Parcel in) {
         subcategory = in.readParcelable(Subcategory.class.getClassLoader());
         itemId = in.readString();
+    }
+
+    public String getOwnerMail() {
+        return ownerMail;
+    }
+
+    public void setOwnerMail(String ownerMail) {
+        this.ownerMail = ownerMail;
     }
 
     public static final Creator<SubcategoryProposal> CREATOR = new Creator<SubcategoryProposal>() {

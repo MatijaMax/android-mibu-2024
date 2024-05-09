@@ -52,6 +52,7 @@ public class NewProduct extends Fragment {
     ArrayList<Category> categoriesDB = new ArrayList<>();
     private FirebaseAuth auth;
     private String ownerId;
+    private String ownerMail;
     private static final int PICK_IMAGES_REQUEST = 1;
     public static NewProduct newInstance() {
         return new NewProduct();
@@ -60,6 +61,7 @@ public class NewProduct extends Fragment {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         ownerId = user.getUid();
+        ownerMail = user.getEmail();
         newSubCatShow = false;
         binding = NewProductBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -172,6 +174,7 @@ public class NewProduct extends Fragment {
             product.setSubCategory(newSubCategory);
             Subcategory proposedSubCategory = new Subcategory(currentCategory.getDocumentRefId(), newSubCategory, "opis", Subcategory.SUBCATEGORYTYPE.PROIZVOD);
             subcategoryProposal = new SubcategoryProposal(proposedSubCategory, "");
+            subcategoryProposal.setOwnerMail(ownerMail);
             saveNewSubCategory = true;
         }
         CloudStoreUtil.insertProduct(product, saveNewSubCategory, subcategoryProposal);

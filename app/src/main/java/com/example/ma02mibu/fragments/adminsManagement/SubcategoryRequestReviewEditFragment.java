@@ -18,6 +18,7 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.adminsManagment.CategoryListAdapter;
 import com.example.ma02mibu.model.Category;
+import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.Subcategory;
 import com.example.ma02mibu.model.SubcategoryProposal;
 
@@ -97,6 +98,12 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
                                                             description.getText().toString(),
                                                             Subcategory.SUBCATEGORYTYPE.values()[type.getSelectedItemPosition()]));
             CloudStoreUtil.deleteSubcategoryProposal(subcategoryProposal);
+            if(subcategoryProposal.getSubcategory().getType() == Subcategory.SUBCATEGORYTYPE.PROIZVOD)
+                CloudStoreUtil.acceptProduct(subcategoryProposal.getItemId());
+            else
+                CloudStoreUtil.acceptService(subcategoryProposal.getItemId());
+            OurNotification not = new OurNotification(subcategoryProposal.getOwnerMail(), "Sub category accepted", subcategoryProposal.getSubcategory().getName()+ " subcategory accepted", "notRead");
+            CloudStoreUtil.insertNotification(not);
         });
 
         view.findViewById(R.id.rejectSubcategoryRequest).setOnClickListener(v -> {

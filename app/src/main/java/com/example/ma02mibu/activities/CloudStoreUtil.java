@@ -485,6 +485,18 @@ public class CloudStoreUtil {
                         "availableToBuy", product.isAvailableToBuy());
     }
 
+    public static void acceptProduct(String id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("products").document(id);
+        docRef.update("pending", false);
+    }
+
+    public static void acceptService(String id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("services").document(id);
+        docRef.update("pending", false);
+    }
+
     public interface ServiceCallback {
         void onCallbackService(ArrayList<Service> services);
     }

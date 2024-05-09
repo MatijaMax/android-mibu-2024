@@ -64,6 +64,7 @@ public class NewService extends Fragment {
     NewServiceBinding binding;
     private FirebaseAuth auth;
     private String ownerId;
+    private String ownerMail;
     boolean newSubCatShow;
     public static NewService newInstance() {
         return new NewService();
@@ -73,6 +74,7 @@ public class NewService extends Fragment {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         ownerId = user.getUid();
+        ownerMail = user.getEmail();
         currentPage = 0;
         binding = NewServiceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -212,6 +214,7 @@ public class NewService extends Fragment {
             service.setSubCategory(newSubCategory);
             Subcategory proposedSubCategory = new Subcategory(currentCategory.getDocumentRefId(), newSubCategory, "opis", Subcategory.SUBCATEGORYTYPE.USLUGA);
             subcategoryProposal = new SubcategoryProposal(proposedSubCategory, "");
+            subcategoryProposal.setOwnerMail(ownerMail);
             saveNewSubCategory = true;
         }
         CloudStoreUtil.insertService(service, saveNewSubCategory, subcategoryProposal);
