@@ -18,6 +18,8 @@ public class Event implements Parcelable {
     private Boolean privacy;
     private String date;
 
+    private String email;
+
 
     protected Event(Parcel in) {
         id = in.readLong();
@@ -30,7 +32,7 @@ public class Event implements Parcelable {
         date = in.readString();
     }
 
-    public Event(Long id, String type, String name, String description, int participantNumber, String location, Boolean privacy, String date) {
+    public Event(Long id, String type, String name, String description, int participantNumber, String location, Boolean privacy, String date, String email) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,6 +41,11 @@ public class Event implements Parcelable {
         this.privacy = privacy;
         this.date = date;
         this.type = type;
+        this.email = email;
+    }
+
+    public Event(){
+
     }
 
 
@@ -131,6 +138,14 @@ public class Event implements Parcelable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

@@ -16,12 +16,13 @@ import androidx.annotation.Nullable;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.ProductDAO;
 
 import java.util.ArrayList;
 
-public class ProductFilterAdapter extends ArrayAdapter<Product> {
-    private ArrayList<Product> aProducts;
-    public ProductFilterAdapter(Context context, ArrayList<Product> products){
+public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
+    private ArrayList<ProductDAO> aProducts;
+    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products){
         super(context, R.layout.product_card, products);
         aProducts = products;
     }
@@ -32,7 +33,7 @@ public class ProductFilterAdapter extends ArrayAdapter<Product> {
 
     @Nullable
     @Override
-    public Product getItem(int position) {
+    public ProductDAO getItem(int position) {
         return aProducts.get(position);
     }
 
@@ -44,7 +45,7 @@ public class ProductFilterAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Product product = getItem(position);
+        ProductDAO product = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_card_fav,
                     parent, false);
@@ -56,13 +57,13 @@ public class ProductFilterAdapter extends ArrayAdapter<Product> {
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
         if(product != null){
-            int image = product.getImage().get(product.getCurrentImageIndex());
+            int image = product.getImage().get(0);
             imageView.setImageResource(image);
             productName.setText(product.getName());
             productDescription.setText(product.getDescription());
             category.setText(product.getCategory());
             subCategory.setText(product.getSubCategory());
-            price.setText(product.getPrice());
+            price.setText(String.valueOf(product.getPrice()));
         }
 
         return convertView;

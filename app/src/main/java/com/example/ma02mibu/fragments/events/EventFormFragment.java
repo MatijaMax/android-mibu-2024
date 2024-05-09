@@ -133,12 +133,13 @@ public class EventFormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        /*
+
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if(user != null){
-            eventCreatorId = user.getUid();
-        } */
+            eventCreatorId = user.getEmail();
+
+        }
         //getEventTypeList();
         binding = FragmentEventFormBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -236,7 +237,7 @@ public class EventFormFragment extends Fragment {
             return;
         }
 
-        Event e = new Event(1L, fType, fName,fDescription, Integer.parseInt(fParticipantNumber), fLocation, Boolean.parseBoolean(fPrivacy), fDate);
+        Event e = new Event(1L, fType, fName,fDescription, Integer.parseInt(fParticipantNumber), fLocation, Boolean.parseBoolean(fPrivacy), fDate, this.eventCreatorId);
 
         createEvent(e);
 
