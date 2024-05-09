@@ -23,24 +23,28 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.activities.MainActivity;
 import com.example.ma02mibu.adapters.authentication.CategoryListAdapter;
 import com.example.ma02mibu.adapters.authentication.EventTypeListAdapter;
+import com.example.ma02mibu.databinding.FragmentSignUpPUP4Binding;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.UserRole;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.model.mutation.ArrayTransformOperation;
 
 import java.util.ArrayList;
 
 public class SignUpPUP4Fragment extends Fragment {
 
-    //private ArrayList<Category> mCategories;
-    //private CategoryListAdapter mCategoriesAdapter;
-    //private ArrayList<EventType> mEventTypes;
-    //private EventTypeListAdapter mEventTypesAdapter;
-
-    private static final String ARG_PARAM3 = "param1";
-    private static final String ARG_PARAM4 = "param2";
+    private ArrayList<Category> categories;
+    private ArrayList<EventType> eventTypes;
+    private ArrayList<String> selectedCategories = new ArrayList<>();
+    private ArrayList<String> selectedEventTypes = new ArrayList<>();
+    private CategoryListAdapter categoryListAdapter;
+    private EventTypeListAdapter eventTypeListAdapter;
+    private ListView categoryListView;
+    private ListView eventTypeListView;
 
 
     private FirebaseAuth auth;
@@ -50,13 +54,11 @@ public class SignUpPUP4Fragment extends Fragment {
     private Owner owner;
     private String password;
 
-    public static SignUpPUP4Fragment newInstance(Owner owner, String password, ArrayList<Category> categories, ArrayList<EventType> eventTypes) {
+    public static SignUpPUP4Fragment newInstance(Owner owner, String password) {
         SignUpPUP4Fragment fragment = new SignUpPUP4Fragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, owner);
         args.putString(ARG_PARAM2, password);
-        args.putParcelableArrayList(ARG_PARAM3, categories);
-        args.putParcelableArrayList(ARG_PARAM4, eventTypes);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,34 +71,65 @@ public class SignUpPUP4Fragment extends Fragment {
         if (getArguments() != null) {
             owner = getArguments().getParcelable(ARG_PARAM1);
             password = getArguments().getString(ARG_PARAM2);
-            //mCategories = getArguments().getParcelableArrayList(ARG_PARAM2);
-            //mCategoriesAdapter = new CategoryListAdapter(getActivity(), mCategories);
-            //mEventTypes = getArguments().getParcelableArrayList(ARG_PARAM3);
-            //mEventTypesAdapter = new EventTypeListAdapter(getActivity(), mEventTypes);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FragmentSignUpPUP4Binding binding = FragmentSignUpPUP4Binding.inflate(inflater, container, false);
+
+        categoryListView = binding.categoryListView;
+        eventTypeListView = binding.eventTypeListView;
 
         auth = FirebaseAuth.getInstance();
 
-        return inflater.inflate(R.layout.fragment_sign_up_p_u_p4, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ListView categoryListView = view.findViewById(R.id.categoryListView);
-        ListView eventTypeListView = view.findViewById(R.id.eventTypeListView);
-        //categoryListView.setAdapter(mCategoriesAdapter);
-        //eventTypeListView.setAdapter(mEventTypesAdapter);
+        getCategories();
+        getEventTypes();
+
+        categoryListView.setOnItemClickListener((parent, view1, position, id) -> {
+            ((CategoryListAdapter)categoryListView.getAdapter()).toggleCheckedWithView(position, view, parent);
+            Category temp = ((CategoryListAdapter)categoryListView.getAdapter()).getItem(position);
+            Log.d(TAG, "onViewCreated: OVDE SUUUUUUUUUUUU");
+            if(selectedCategories.contains(temp.getDocumentRefId())){
+                selectedCategories.remove(temp.getDocumentRefId());
+            }else{
+                selectedCategories.add(temp.getDocumentRefId());
+            }
+            String s = "";
+            for(String c: selectedCategories){
+                s += c;
+            }
+            Log.d(TAG, "onViewCreated: OVDE SUUUUUUUUUUUU" + s);
+        });
+
+        eventTypeListView.setOnItemClickListener((parent, view1, position, id) -> {
+            ((EventTypeListAdapter)eventTypeListView.getAdapter()).toggleCheckedWithView(position, view1, parent);
+            EventType temp = ((EventTypeListAdapter)eventTypeListView.getAdapter()).getItem(position);
+            if(selectedEventTypes.contains(temp.getDocumentRefId())){
+                selectedEventTypes.remove(temp.getDocumentRefId());
+            }else{
+                selectedEventTypes.add(temp.getDocumentRefId());
+            }
+            Log.d(TAG, "onViewCreated: OVDE SUUUUUUUUUUUU");
+            String s = "";
+            for(String c: selectedEventTypes){
+                s += c;
+            }
+            Log.d(TAG, "onViewCreated: OVDE SUUUUUUUUUUUU" + s);
+        });
 
         Button btnLogin = view.findViewById(R.id.btnSignUpPUP);
         btnLogin.setOnClickListener(v -> {
+            if(selectedCategories.isEmpty()){
+                return;
+            }
             createAccount();
-
-            FragmentTransition.to(LoginFragment.newInstance(), requireActivity(), false, R.id.authenticationFragmentContainer, "signUpPUP");
         });
 
     }
@@ -107,20 +140,26 @@ public class SignUpPUP4Fragment extends Fragment {
         auth.createUserWithEmailAndPassword(owner.getEmail(), password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = auth.getCurrentUser();
-                        sendEmailVerification(user);
-                        owner.setUserUID(user.getUid());
-                        createOwner(owner);
-                        singOut();
+                        FirebaseUser user = task.getResult().getUser();
+                        if(user != null){
+                            owner.setUserUID(user.getUid());
+                            owner.setEventTypes(selectedEventTypes);
+                            owner.setCategories(selectedCategories);
+                            createOwner(owner);
+                            createUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.OWNER));
+                            sendEmailVerification(user);
+                        }
+
                     } else {
-                        // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(getContext(), "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createUserRole(UserRole userRole) {
+        CloudStoreUtil.insertUserRole(userRole);
     }
 
     private void createOwner(Owner owner) {
@@ -130,7 +169,6 @@ public class SignUpPUP4Fragment extends Fragment {
     private void singOut(){
         auth.signOut();
     }
-
 
     private void sendEmailVerification(FirebaseUser user) {
         user.sendEmailVerification()
@@ -146,6 +184,29 @@ public class SignUpPUP4Fragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCategories();
+        getEventTypes();
+    }
+
+    private void getCategories(){
+        CloudStoreUtil.selectCategories(result -> {
+            categories = result;
+            categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
+            categoryListView.setAdapter(categoryListAdapter);
+        });
+    }
+
+    private void getEventTypes(){
+        CloudStoreUtil.selectEventTypes(result -> {
+            eventTypes = result;
+            eventTypeListAdapter = new EventTypeListAdapter(getActivity(), eventTypes);
+            eventTypeListView.setAdapter(eventTypeListAdapter);
+        });
     }
 
 }

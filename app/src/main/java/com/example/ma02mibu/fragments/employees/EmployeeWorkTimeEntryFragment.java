@@ -131,7 +131,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!mondayHours.isEmpty()){
             String[] dayHM = extraxtHM(mondayHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Monday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.MONDAY, t1, t2);
             }else{
                 alertShow("Monday");
                 return;
@@ -142,7 +151,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!tuesdayHours.isEmpty()){
             String[] dayHM = extraxtHM(tuesdayHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Tuesday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, t1, t2);
             }else{
                 alertShow("Tuesday");
                 return;
@@ -153,7 +171,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!wedHours.isEmpty()){
             String[] dayHM = extraxtHM(wedHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Wednesday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, t1, t2);
             }else{
                 alertShow("Wednesday");
                 return;
@@ -164,7 +191,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!thurHours.isEmpty()){
             String[] dayHM = extraxtHM(thurHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Thursday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, t1, t2);
             }else{
                 alertShow("Thursday");
                 return;
@@ -175,7 +211,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!friHours.isEmpty()){
             String[] dayHM = extraxtHM(friHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Friday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, t1, t2);
             }else{
                 alertShow("Friday");
                 return;
@@ -186,7 +231,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!satHours.isEmpty()){
             String[] dayHM = extraxtHM(satHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Saturday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, t1, t2);
             }else{
                 alertShow("Saturday");
                 return;
@@ -197,7 +251,16 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         if(!sunHours.isEmpty()){
             String[] dayHM = extraxtHM(sunHours);
             if(dayHM.length == 4){
-                customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1])), LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3])));
+                if(!checkValid(dayHM)){
+                    return;
+                }
+                LocalTime t1 = LocalTime.of(Integer.parseInt(dayHM[0]), Integer.parseInt(dayHM[1]));
+                LocalTime t2 = LocalTime.of(Integer.parseInt(dayHM[2]), Integer.parseInt(dayHM[3]));
+                if(t1.isAfter(t2)){
+                    Toast.makeText(getContext(), "Sunday working hours are wrong.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, t1, t2);
             }else{
                 alertShow("Sunday");
                 return;
@@ -233,10 +296,53 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
 //        Thread.sleep(600);
     }
 
+    private boolean checkValid(String[] dayHM){
+        for (int i = 0; i < 4; i ++){
+            if (dayHM[i].length() != 2) {
+                Toast.makeText(getContext(), "Wrong time format entry.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            Integer r = parseIntOrNull(dayHM[i]);
+            if(r == null){
+                Toast.makeText(getContext(), "Wrong time entry.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        int hours1 = Integer.parseInt(dayHM[0]);
+        int minutes1 = Integer.parseInt(dayHM[1]);
+        if(hours1 < 0 || hours1 > 23){
+            Toast.makeText(getContext(), "Wrong time hours entry.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(minutes1 < 0 || minutes1 > 59){
+            Toast.makeText(getContext(), "Wrong time minutes entry.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        hours1 = Integer.parseInt(dayHM[2]);
+        minutes1 = Integer.parseInt(dayHM[3]);
+        if(hours1 < 0 || hours1 > 23){
+            Toast.makeText(getContext(), "Wrong time hours entry.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(minutes1 < 0 || minutes1 > 59){
+            Toast.makeText(getContext(), "Wrong time minutes entry.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    public Integer parseIntOrNull(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     private void alertShow(String day) {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("Wrong input");
-        alertDialog.setMessage(day + " working hours are in wrong format! \nPlease use hh:MM-hh:MM or leave empty");
+        alertDialog.setMessage(day + " working hours are in wrong format! \nPlease use HH:mm-HH:mm or leave empty");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // No action needed here since the button does nothing.

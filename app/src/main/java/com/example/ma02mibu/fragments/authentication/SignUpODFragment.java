@@ -22,7 +22,9 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.activities.MainActivity;
 import com.example.ma02mibu.databinding.FragmentSignUpODBinding;
+import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.UserRole;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -59,7 +61,7 @@ public class SignUpODFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSignUpODBinding.inflate(inflater, container, false);
 
@@ -182,19 +184,19 @@ public class SignUpODFragment extends Fragment {
         auth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = auth.getCurrentUser();
-                        sendEmailVerification(user);
-                        createEventOrganizer(new EventOrganizer(email.getText().toString(),
-                                                                name.getText().toString(),
-                                                                surname.getText().toString(),
-                                                                phone.getText().toString(),
-                                                                address.getText().toString(),
-                                                                user.getUid()));
-                        singOut();
+                        FirebaseUser user = task.getResult().getUser();
+                        if(user != null){
+                            createEventOrganizer(new EventOrganizer(email.getText().toString(),
+                                                                    name.getText().toString(),
+                                                                    surname.getText().toString(),
+                                                                    phone.getText().toString(),
+                                                                    address.getText().toString(),
+                                                                    user.getUid()));
+                            createUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.ORGANIZER));
+                            sendEmailVerification(user);
+                        }
+
                     } else {
-                        // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(getContext(), "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
@@ -202,12 +204,12 @@ public class SignUpODFragment extends Fragment {
                 });
     }
 
-    private void createEventOrganizer(EventOrganizer newEventOrganizer) {
-        CloudStoreUtil.insertEventOrganizer(newEventOrganizer);
+    private void createUserRole(UserRole userRole) {
+        CloudStoreUtil.insertUserRole(userRole);
     }
 
-    private void singOut(){
-        auth.signOut();
+    private void createEventOrganizer(EventOrganizer newEventOrganizer) {
+        CloudStoreUtil.insertEventOrganizer(newEventOrganizer);
     }
 
     private void sendEmailVerification(FirebaseUser user) {

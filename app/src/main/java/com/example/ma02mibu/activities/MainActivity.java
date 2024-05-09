@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -27,12 +28,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.ActivityMainBinding;
+import com.example.ma02mibu.model.UserRole;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth auth;
     private ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        auth = FirebaseAuth.getInstance();
 
         drawer = binding.drawerLayout;
         navigationView = binding.navView;
@@ -93,6 +100,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.nav_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Menu m = navigationView.getMenu();
+        FirebaseUser u = auth.getCurrentUser();
+        if(u == null){
+            return true;
+        }
+        CloudStoreUtil.selectUserRoleFor(u.getEmail(), result -> {
+            if(result == null) {
+                return;
+            }
+
+            if(result.getUserRole() == UserRole.USERROLE.ADMIN){
+                m.findItem(R.id.nav_admin_category_management).setVisible(true);
+                m.findItem(R.id.nav_event_type_management).setVisible(true);
+            } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
+                //TODO
+            } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
+                //TODO
+                m.findItem(R.id.nav_employees).setVisible(true);
+            } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
+                //TODO
+                m.findItem(R.id.nav_employee_personal).setVisible(true);
+            }
+            m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
+                auth.signOut();
+                Intent intent = new Intent(MainActivity.this, AuthenticationActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            });
+        });
         return true;
     }
 
