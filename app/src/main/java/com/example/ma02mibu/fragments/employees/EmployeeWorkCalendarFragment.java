@@ -136,6 +136,70 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         String fTime = binding.eTimeFrom.getText().toString();
         String tTime = binding.eTimeTo.getText().toString();
         String date = binding.eventSelectedDate.getText().toString();
+        if(name.isEmpty() || fTime.isEmpty() || tTime.isEmpty()){
+            Toast.makeText(getContext(), "Enter data first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(date.equals(" . ")){
+            Toast.makeText(getContext(), "Choose date first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String[] dayHM = extraxtHM(fTime);
+        if(dayHM.length == 2){
+            for (int i = 0; i < 2; i ++){
+                if (dayHM[i].length() != 2) {
+                    Toast.makeText(getContext(), "Wrong start time format entry.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Integer r = parseIntOrNull(dayHM[i]);
+                if(r == null){
+                    Toast.makeText(getContext(), "Wrong start time entry.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+            int hours1 = Integer.parseInt(dayHM[0]);
+            int minutes1 = Integer.parseInt(dayHM[1]);
+            Log.i("GGGGGGG", "" + hours1 + " " + minutes1 );
+            if(hours1 < 0 || hours1 > 23){
+                Toast.makeText(getContext(), "Wrong start time hours entry.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(minutes1 < 0 || minutes1 > 59){
+                Toast.makeText(getContext(), "Wrong start time minutes entry.", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }else{
+            Toast.makeText(getContext(), "Wrong start time format.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        dayHM = extraxtHM(tTime);
+        if(dayHM.length == 2){
+            for (int i = 0; i < 2; i ++){
+                if (dayHM[i].length() != 2) {
+                    Toast.makeText(getContext(), "Wrong end time format entry.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Integer r = parseIntOrNull(dayHM[i]);
+                if(r == null){
+                    Toast.makeText(getContext(), "Wrong end time entry.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+            int hours1 = Integer.parseInt(dayHM[0]);
+            int minutes1 = Integer.parseInt(dayHM[1]);
+            Log.i("GGGGGGG", "" + hours1 + " " + minutes1 );
+            if(hours1 < 0 || hours1 > 23){
+                Toast.makeText(getContext(), "Wrong end time hours entry.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(minutes1 < 0 || minutes1 > 59){
+                Toast.makeText(getContext(), "Wrong end time minutes entry.", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }else{
+            Toast.makeText(getContext(), "Wrong end time format.", Toast.LENGTH_LONG).show();
+            return;
+        }
         EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getEmail());
         String[] dsA = date.split("-");
         String ds = dsA[0];
@@ -181,6 +245,25 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         CloudStoreUtil.insertNotification(notification);
         changeViews();
     }
+    public Integer parseIntOrNull(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    private String[] extraxtHM(String hoursEntry){
+        String endH, endM;
+        String[] endHM = hoursEntry.split(":");
+        if(endHM.length == 2){
+            endH = endHM[0];
+            endM = endHM[1];
+        }else{
+            return new String[]{};
+        }
+        return new String[]{endH, endM};
+    }
+
     private void showDatePickerDialog(View parentV) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
