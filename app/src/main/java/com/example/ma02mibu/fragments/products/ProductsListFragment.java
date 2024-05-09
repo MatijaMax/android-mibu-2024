@@ -86,13 +86,13 @@ public class ProductsListFragment extends ListFragment {
                     } else {
                         mProducts = new ArrayList<>();
                     }
-                    mProductsBackup = new ArrayList<>(mProducts);
                     CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
                         @Override
                         public void onSuccess(Owner myItem) {
                             isOwner = true;
                             mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
                             mProducts.removeIf(p -> p.isPending());
+                            mProductsBackup = new ArrayList<>(mProducts);
                             adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), false, null, isOwner);
                             setListAdapter(adapter);
                         }

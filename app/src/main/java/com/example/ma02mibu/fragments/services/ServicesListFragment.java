@@ -90,13 +90,13 @@ public class ServicesListFragment extends ListFragment {
                     } else {
                         mServices = new ArrayList<>();
                     }
-                    mServicesBackup = new ArrayList<>(mServices);
                     CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
                         @Override
                         public void onSuccess(Owner myItem) {
                             isOwner = true;
                             mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
                             mServices.removeIf(s -> s.isPending());
+                            mServicesBackup = new ArrayList<>(mServices);
                             adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), false, null, isOwner);
                             setListAdapter(adapter);
                         }

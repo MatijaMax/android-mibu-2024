@@ -64,12 +64,12 @@ public class PackageListFragment extends ListFragment {
                 } else {
                     mPackages = new ArrayList<>();
                 }
-                mPackagesBackup = new ArrayList<>(mPackages);
                 CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
                     @Override
                     public void onSuccess(Owner myItem) {
                         isOwner = true;
                         mPackages.removeIf(p -> !p.getOwnerUuid().equals(userId));
+                        mPackagesBackup = new ArrayList<>(mPackages);
                         adapter = new PackageListAdapter(getActivity(), mPackages, getActivity(), isOwner);
                         setListAdapter(adapter);
                     }

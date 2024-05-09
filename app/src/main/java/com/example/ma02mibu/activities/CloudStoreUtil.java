@@ -635,7 +635,7 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("subcategoryProposals")
                 .add(subcategoryProposal);
-        OurNotification notification = new OurNotification("nada", "Sub category proposal","New sub category proposal: " + subcategoryProposal.getSubcategory().getName(), "notRead");
+        OurNotification notification = new OurNotification("vejihot961@mfyax.com", "Sub category proposal","New sub category proposal: " + subcategoryProposal.getSubcategory().getName(), "notRead");
         insertNotification(notification);
     }
 
