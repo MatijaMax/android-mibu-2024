@@ -8,7 +8,11 @@ import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
+
+import com.example.ma02mibu.model.Event;
+
 import com.example.ma02mibu.model.EventModel;
+
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.OurNotification;
@@ -577,6 +581,20 @@ public class CloudStoreUtil {
     }
 
 
+    public static String insertEventNew(Event newEvent){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference events = db.collection("events").document();
+
+        String eventId = events.getId();
+        events.set(newEvent)
+                .addOnSuccessListener(aVoid -> {
+                })
+                .addOnFailureListener(e -> {
+                });
+        return eventId;
+
+
 
     //Categories////////////////////////////////////////////////////////////////////////////////////
     public static String insertCategory(Category newCategory){
@@ -869,6 +887,7 @@ public class CloudStoreUtil {
                 }).addOnFailureListener(e -> {
                     Log.w("REZ_DB", "Error getting collection: " + eventTypeCollection, e);
                 });
+
     }
 
 }
