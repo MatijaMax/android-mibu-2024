@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -581,7 +582,7 @@ public class CloudStoreUtil {
     }
 
 
-    public static String insertEventNew(Event newEvent){
+    public static String insertEventNew(Event newEvent) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         DocumentReference events = db.collection("events").document();
@@ -593,7 +594,7 @@ public class CloudStoreUtil {
                 .addOnFailureListener(e -> {
                 });
         return eventId;
-
+    }
 
 
     //Categories////////////////////////////////////////////////////////////////////////////////////
