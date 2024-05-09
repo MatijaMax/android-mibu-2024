@@ -96,8 +96,9 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
                     if (task.isSuccessful()) {
                         FirebaseUser user = task.getResult().getUser();
                         if(user != null){
-                            employee.setUserUID(user.getUid());
                             employee.setIsActive(0);
+                            employee.setUserUID(user.getUid());
+                            Log.i("SASASSAASSAS", employee.getUserUID());
                             saveUpdate(employee);
                             sendEmailVerification(user);
                         }
@@ -116,7 +117,6 @@ public class EmployeeListAdapter extends ArrayAdapter<Employee>{
                 // Item updated successfully
                 System.out.println("Item updated!");
             }
-
             @Override
             public void onFailure(Exception e) {
                 // Handle the failure (e.g., show an error message)
