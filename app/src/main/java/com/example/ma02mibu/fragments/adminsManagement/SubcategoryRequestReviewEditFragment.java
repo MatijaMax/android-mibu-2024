@@ -23,6 +23,7 @@ import com.example.ma02mibu.model.SubcategoryProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class SubcategoryRequestReviewEditFragment extends Fragment {
 
@@ -73,6 +74,7 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getCategories();
         type.setAdapter(new ArrayAdapter<String>(requireActivity(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.subcategory_types)));
@@ -87,7 +89,10 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
         description.setText(subcategoryProposal.getSubcategory().getDescription());
 
         view.findViewById(R.id.acceptSubcategoryRequest).setOnClickListener(v -> {
-            CloudStoreUtil.insertSubcategory(new Subcategory(subcategoryProposal.getSubcategory().getCategoryId(),
+            if(!fieldsAreValid()){
+                return;
+            }
+            CloudStoreUtil.insertSubcategory(new Subcategory(selectedCategory.getDocumentRefId(),
                                                             name.getText().toString(),
                                                             description.getText().toString(),
                                                             Subcategory.SUBCATEGORYTYPE.values()[type.getSelectedItemPosition()]));
@@ -117,6 +122,13 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
                 selectedCategory = (Category) categoryListView.getAdapter().getItem(position);
                 categoryName.setText(selectedCategory.getName());
             });
+            for(Category c: result){
+                if(Objects.equals(c.getDocumentRefId(), subcategoryProposal.getSubcategory().getCategoryId())){
+                    selectedCategory = c;
+                    categoryName.setText(selectedCategory.getName());
+                    break;
+                }
+            }
         });
     }
 
