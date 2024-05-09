@@ -13,6 +13,7 @@ import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Subcategory;
+import com.example.ma02mibu.model.UserRole;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,6 +27,7 @@ public class CloudStoreUtil {
     private static final String categoryCollection = "category";
     private static final String subcategoryCollection = "subcategory";
     private static final String eventTypeCollection = "eventtype";
+    private static final String userRoleCollection = "userrole";
 
 
     public static String insertOwner(Owner owner){
@@ -484,6 +486,47 @@ public class CloudStoreUtil {
                     }
                 }).addOnFailureListener(e -> {
                     Log.w("REZ_DB", "Error getting collection: " + eventTypeCollection, e);
+                });
+    }
+
+    //UserRole//////////////////////////////////////////////////////////////////////////////////////
+    public static String insertUserRole(UserRole newUserRole){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference eventTypeRef = db.collection(userRoleCollection).document();
+
+        String userRoleRefId = eventTypeRef.getId();
+        eventTypeRef.set(newUserRole)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert user role: " + userRoleRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert user role failed"));
+        return userRoleRefId;
+    }
+
+    public interface UserRoleCallback {
+        void onCallback(UserRole userRole);
+    }
+
+    public static void selectUserRoleFor(String userEmail, final UserRoleCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(userRoleCollection)
+                .whereEqualTo("userEmail", userEmail)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            UserRole temp = document.toObject(UserRole.class);
+                            callback.onCallback(temp);
+                            break;
+                        }
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    callback.onCallback(null);
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
                 });
     }
 

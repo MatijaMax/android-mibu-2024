@@ -13,47 +13,61 @@
         <item android:id="@+id/nav_products"
             android:title="products"
             android:icon="@drawable/products_icon"
-            android:orderInCategory="100" />
+            android:orderInCategory="100"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_services"
             android:title="services"
             android:icon="@drawable/services_icon"
-            android:orderInCategory="200"/>
+            android:orderInCategory="200"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_packages"
             android:title="packages"
             android:icon="@drawable/packages_icon"
-            android:orderInCategory="200"/>
+            android:orderInCategory="200"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_event_creation"
             android:title="Create Event"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="200"/>
+            android:orderInCategory="200"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_explore_and_filter"
             android:title="Explore and Filter"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="200"/>
+            android:orderInCategory="200"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_employees"
             android:title="employees pup v"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="300"/>
+            android:orderInCategory="300"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_employee_personal"
             android:title="employee pup z"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="400"/>
+            android:orderInCategory="400"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_admin_category_management"
             android:title="category management"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="500"/>
+            android:orderInCategory="500"
+            android:visible="false"/>
 
         <item android:id="@+id/nav_event_type_management"
             android:title="event type management"
             android:icon="@drawable/ic_product"
-            android:orderInCategory="600"/>
+            android:orderInCategory="600"
+            android:visible="false"/>
 
+        <item android:id="@+id/log_out"
+            android:title="Log out"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="1000"
+            android:visible="true"/>
     </group>
 </menu>
