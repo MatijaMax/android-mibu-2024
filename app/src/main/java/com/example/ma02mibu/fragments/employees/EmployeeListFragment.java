@@ -97,7 +97,7 @@ public class EmployeeListFragment extends ListFragment {
     private void filterEmployees(){
         String fName = binding.searchFirstName.getQuery().toString();
         String lName = binding.searchLastName.getQuery().toString();
-        String email = binding.searchLastName.getQuery().toString();
+        String email = binding.searchEmail.getQuery().toString();
         mEmployees=new ArrayList<>(mEmployeesBackup);
         Log.i("RRRRRRRRR",""+mEmployeesBackup.toArray().length);
         if(fName.isEmpty() && lName.isEmpty() && email.isEmpty()){

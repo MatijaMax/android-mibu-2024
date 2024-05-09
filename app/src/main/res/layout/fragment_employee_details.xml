@@ -56,6 +56,12 @@
                     android:text="Phone Number"
                     android:textSize="18sp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Services of employee"
+                    android:textSize="18sp"/>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -103,6 +109,14 @@
                     android:text="Phone Number"
                     android:textSize="18sp"/>
 
+                <TextView
+                    android:id="@+id/servicesEmployee"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:textSize="18sp"
+                    android:maxLines="3"
+                    android:text="services of employee"/>
+
                 <!-- Employee Image -->
                 <ImageView
                     android:id="@+id/employeeImageView"
@@ -111,6 +125,7 @@
                     android:src="@drawable/employee_avatar"
                     android:scaleType="centerCrop"
                     android:contentDescription="Employee Image" />
+
 
             </LinearLayout>
         </LinearLayout>
