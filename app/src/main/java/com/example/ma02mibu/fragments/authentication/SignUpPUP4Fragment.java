@@ -27,6 +27,7 @@ import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.UserRole;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -113,6 +114,7 @@ public class SignUpPUP4Fragment extends Fragment {
                         sendEmailVerification(user);
                         owner.setUserUID(user.getUid());
                         createOwner(owner);
+                        createUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.OWNER));
                         singOut();
                     } else {
                         // If sign in fails, display a message to the user.
@@ -121,6 +123,10 @@ public class SignUpPUP4Fragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createUserRole(UserRole userRole) {
+        CloudStoreUtil.insertUserRole(userRole);
     }
 
     private void createOwner(Owner owner) {

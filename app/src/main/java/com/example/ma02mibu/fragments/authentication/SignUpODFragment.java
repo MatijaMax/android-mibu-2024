@@ -23,6 +23,7 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.activities.MainActivity;
 import com.example.ma02mibu.databinding.FragmentSignUpODBinding;
 import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.UserRole;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -192,6 +193,7 @@ public class SignUpODFragment extends Fragment {
                                                                 phone.getText().toString(),
                                                                 address.getText().toString(),
                                                                 user.getUid()));
+                        createRole(new UserRole(user.getEmail(), UserRole.USERROLE.ORGANIZER));
                         singOut();
                     } else {
                         // If sign in fails, display a message to the user.
@@ -200,6 +202,10 @@ public class SignUpODFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createRole(UserRole userRole) {
+        CloudStoreUtil.insertUserRole(userRole);
     }
 
     private void createEventOrganizer(EventOrganizer newEventOrganizer) {
