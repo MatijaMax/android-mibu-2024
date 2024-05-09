@@ -717,6 +717,55 @@ public class CloudStoreUtil {
         return subcategoryRefId;
     }
 
+    public interface SubcategoryProposalsCallback {
+        void onCallback(ArrayList<SubcategoryProposal> subcategoryProposals);
+    }
+
+    public static void selectSubcategoryProposal(SubcategoryProposalsCallback callback){
+        ArrayList<SubcategoryProposal> subcategoryProposals = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("subcategoryProposals")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            SubcategoryProposal temp = document.toObject(SubcategoryProposal.class);
+                            subcategoryProposals.add(temp);
+                        }
+                        callback.onCallback(subcategoryProposals);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
+    }
+
+    public static void deleteSubcategoryProposal(SubcategoryProposal proposal){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("subcategoryProposals")
+                .whereEqualTo("subcategory", proposal.getSubcategory())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            db.collection("subcategoryProposals").document(document.getId()).delete();
+                            break;
+                        }
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
+    }
+
     //Subcategories/////////////////////////////////////////////////////////////////////////////////
     public static String insertSubcategory(Subcategory newSubcategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

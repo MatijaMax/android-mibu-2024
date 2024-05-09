@@ -12,12 +12,13 @@ import androidx.annotation.Nullable;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.model.SubCategoryRequest;
+import com.example.ma02mibu.model.SubcategoryProposal;
 
 import java.util.ArrayList;
 
-public class SubcategoryRequestListAdapter extends ArrayAdapter<SubCategoryRequest> {
-    private ArrayList<SubCategoryRequest> aSubCategoryRequests;
-    public SubcategoryRequestListAdapter(Context context, ArrayList<SubCategoryRequest> subCategoryRequests){
+public class SubcategoryRequestListAdapter extends ArrayAdapter<SubcategoryProposal> {
+    private ArrayList<SubcategoryProposal> aSubCategoryRequests;
+    public SubcategoryRequestListAdapter(Context context, ArrayList<SubcategoryProposal> subCategoryRequests){
         super(context, R.layout.subcategory_request_card, subCategoryRequests);
         aSubCategoryRequests = subCategoryRequests;
     }
@@ -29,7 +30,7 @@ public class SubcategoryRequestListAdapter extends ArrayAdapter<SubCategoryReque
 
     @Nullable
     @Override
-    public SubCategoryRequest getItem(int position) {
+    public SubcategoryProposal getItem(int position) {
         return aSubCategoryRequests.get(position);
     }
 
@@ -41,7 +42,7 @@ public class SubcategoryRequestListAdapter extends ArrayAdapter<SubCategoryReque
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        SubCategoryRequest subCategoryRequest = getItem(position);
+        SubcategoryProposal subCategoryRequest = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.subcategory_request_card,
                     parent, false);
@@ -50,9 +51,9 @@ public class SubcategoryRequestListAdapter extends ArrayAdapter<SubCategoryReque
         TextView subcategoryRequestDescription = convertView.findViewById(R.id.subcategoryRequestDescription);
         TextView subcategoryRequestType = convertView.findViewById(R.id.subcategoryRequestType);
         if(subCategoryRequest != null){
-            subcategoryRequestName.setText(subCategoryRequest.getName());
-            subcategoryRequestDescription.setText(subCategoryRequest.getDescription());
-            subcategoryRequestType.setText(subCategoryRequest.getType().toString());
+            subcategoryRequestName.setText(subCategoryRequest.getSubcategory().getName());
+            subcategoryRequestDescription.setText(subCategoryRequest.getSubcategory().getDescription());
+            subcategoryRequestType.setText(subCategoryRequest.getSubcategory().getType().toString());
         }
 
         return convertView;
