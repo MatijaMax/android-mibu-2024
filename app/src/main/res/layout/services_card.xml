@@ -148,6 +148,14 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="1900"/>
+        <TextView
+            android:id="@+id/service_discount"
+            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="10% off"/>
         <CheckBox android:id="@+id/choose_service_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -162,6 +170,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="2dp"
         android:layout_marginStart="5dp"
+        android:id="@+id/serviceAvailability"
         android:text="Available to buy, visible"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@+id/service_price_layout"

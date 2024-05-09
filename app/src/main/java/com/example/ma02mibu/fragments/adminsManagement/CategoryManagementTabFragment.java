@@ -2,6 +2,8 @@ package com.example.ma02mibu.fragments.adminsManagement;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,13 +14,14 @@ import android.widget.ListView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.adminsManagment.CategoryListAdapter;
 import com.example.ma02mibu.model.Category;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class CategoryManagementTabFragment extends Fragment {
+    private ListView categoryListView;
     private CategoryListAdapter categoryListAdapter;
     private ArrayList<Category> categories = new ArrayList<>();
     public CategoryManagementTabFragment() { }
@@ -33,43 +36,38 @@ public class CategoryManagementTabFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createCategories();
-        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category_management_tab, container, false);
 
-        ListView categoryListView = view.findViewById(R.id.categoriesListView);
-        categoryListView.setAdapter(categoryListAdapter);
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransition.to(CategoryEditFragment.newInstance(false, categoryListAdapter.getItem(position)),
-                        getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
-            }
-        });
-
-        ((FloatingActionButton) view.findViewById(R.id.addNewCategory)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransition.to(CategoryEditFragment.newInstance(true, new Category()),
-                        getActivity(), true, R.id.categoryManagementContainer, "categoryManagement");
-            }
-        });
-
-        return view;
+        return inflater.inflate(R.layout.fragment_category_management_tab, container, false);
     }
-    private void createCategories(){
-        categories.add(new Category(1L, "Ime kategorije 1", "Opis kategorije 1"));
-        categories.add(new Category(2L, "Ime kategorije 2", "Opis kategorije 2"));
-        categories.add(new Category(3L, "Ime kategorije 3", "Opis kategorije 3"));
-        categories.add(new Category(4L, "Ime kategorije 4", "Opis kategorije 4"));
-        categories.add(new Category(5L, "Ime kategorije 5", "Opis kategorije 5"));
-        categories.add(new Category(6L, "Ime kategorije 6", "Opis kategorije 6"));
-        categories.add(new Category(7L, "Ime kategorije 7", "Opis kategorije 7"));
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        categoryListView = view.findViewById(R.id.categoriesListView);
+        getCategories();
+
+        categoryListView.setOnItemClickListener((parent, view1, position, id) -> FragmentTransition.to(CategoryEditFragment.newInstance(false, categoryListAdapter.getItem(position)),
+                requireActivity(), true, R.id.categoryManagementContainer, "categoryManagement"));
+
+        view.findViewById(R.id.addNewCategory).setOnClickListener(v -> FragmentTransition.to(CategoryEditFragment.newInstance(true, new Category()),
+                requireActivity(), true, R.id.categoryManagementContainer, "categoryManagement"));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCategories();
+    }
+
+    private void getCategories(){
+        CloudStoreUtil.selectCategories(result -> {
+            categories = result;
+            categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
+            categoryListView.setAdapter(categoryListAdapter);
+        });
     }
 }

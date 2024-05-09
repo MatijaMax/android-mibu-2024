@@ -45,7 +45,8 @@ import java.util.ArrayList;
 public class EmployeeRegistrationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private String ownerRefId;
-    private Company currentCompany;
+    private Owner currentOwner;
+    private FirebaseUser cuurentUser;
     private FirebaseAuth auth;
 
     public EmployeeRegistrationFragment() {
@@ -76,6 +77,7 @@ public class EmployeeRegistrationFragment extends Fragment {
         binding = FragmentEmployeeRegistrationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         auth = FirebaseAuth.getInstance();
+        cuurentUser = auth.getCurrentUser();
         Button btnSelectImage = binding.btnUploadImage;
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +141,7 @@ public class EmployeeRegistrationFragment extends Fragment {
         String sunHours = binding.etSundayHours.getText().toString();
         if(mondayHours.isEmpty() && tuesdayHours.isEmpty() && wedHours.isEmpty() && thurHours.isEmpty() && friHours.isEmpty()
         && satHours.isEmpty() && sunHours.isEmpty()){
-            e.setSchedule(currentCompany.getWorkSchedule());
+            e.setSchedule(currentOwner.getMyCompany().getWorkSchedule());
         }else{
             WorkSchedule customWorkSchedule = new WorkSchedule();
             if(!mondayHours.isEmpty()){
@@ -224,17 +226,6 @@ public class EmployeeRegistrationFragment extends Fragment {
             e.setSchedule(customWorkSchedule);
         }
 
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8, 30), LocalTime.of(16, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8, 30), LocalTime.of(15, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8, 30), LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14, 30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(LocalDate.of(2024, 3, 14).toString());
-//        companyWorkSchedule.setEndDay(LocalDate.of(2024, 7, 22).toString());
-
 //*****************************************************
         //slanje notifikacije samom sebi
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "Kanal1")
@@ -260,10 +251,23 @@ public class EmployeeRegistrationFragment extends Fragment {
 //*****************************************************
 
         //cuvam u bazu zaposlenog i prebacujem na listu svih
+//        auth.signOut();
         createAccount(e);
         //Thread.sleep(600);
-        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
-                true, R.id.scroll_employees_list, "EmployeeRegistration");
+
+    }
+
+    private void updateUser() {
+        auth.updateCurrentUser(cuurentUser).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.i("GGREs",cuurentUser.getUid()+cuurentUser.getEmail());
+                FirebaseUser u = auth.getCurrentUser();
+                Log.i("HHHHHHHHHHHHHHHHHH", u.getEmail());
+                FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(), true, R.id.scroll_employees_list, "EmployeeRegistration");
+            } else {
+                Log.i("GGREs","ASAS");
+            }
+        });
     }
 
     private void createAccount(Employee employee) {
@@ -272,19 +276,23 @@ public class EmployeeRegistrationFragment extends Fragment {
         auth.createUserWithEmailAndPassword(employee.getEmail(), employee.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = task.getResult().getUser();
-                        sendEmailVerification(user);
-                        employee.setUserUID(user.getUid());
-                        CloudStoreUtil.insertEmployeeNew(employee);
+                        if(user != null){
+                            employee.setUserUID(user.getUid());
+                            insert(employee);
+                            sendEmailVerification(user);
+                        }
+
                     } else {
-                        // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(getContext(), "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void insert(Employee employee){
+        CloudStoreUtil.insertEmployeeNew(employee);
     }
 
     private void sendEmailVerification(FirebaseUser user) {
@@ -294,6 +302,7 @@ public class EmployeeRegistrationFragment extends Fragment {
                         Toast.makeText(getContext(),
                                 "Verification email sent to " + user.getEmail(),
                                 Toast.LENGTH_SHORT).show();
+                        updateUser();
                     } else {
                         Log.e(TAG, "sendEmailVerification", task.getException());
                         Toast.makeText(getContext(),
@@ -341,24 +350,12 @@ public class EmployeeRegistrationFragment extends Fragment {
         return new String[]{startH, startM, endH, endM};
     }
     private void loadCompany() {
-                    Log.i("OWNERRR", ownerRefId);
-//        CloudStoreUtil.selectCompany(ownerRefId, new CloudStoreUtil.CompanyCallback(){
-//            @Override
-//            public void onCallback(Company retrieved) {
-//                if (retrieved != null) {
-//                    currentCompany = retrieved;
-//                    Log.i("WQQQQQQQ", currentCompany.toString());
-//                } else {
-//                    currentCompany = null;
-//                }
-//            }
-//        });
-        CloudStoreUtil.getCompany(ownerRefId, new CloudStoreUtil.MyCompanyCallback() {
+        CloudStoreUtil.getOwner(ownerRefId, new CloudStoreUtil.OwnerCallback() {
             @Override
-            public void onSuccess(Company myItem) {
+            public void onSuccess(Owner myItem) {
                 // Handle the retrieved item (e.g., display it in UI)
                 System.out.println("Retrieved item: " + myItem);
-                currentCompany = myItem;
+                currentOwner = myItem;
             }
 
             @Override
@@ -370,18 +367,6 @@ public class EmployeeRegistrationFragment extends Fragment {
     }
 
     private void chooseImage(){
-//        ownerRefId = CloudStoreUtil.insertOwner(new Owner("10", "PUPV"));
-//        WorkSchedule companyWorkSchedule = new WorkSchedule();
-//        companyWorkSchedule.setWorkTime(DayOfWeek.MONDAY, LocalTime.NOON, LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.TUESDAY, LocalTime.of(8,30), LocalTime.of(16,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.WEDNESDAY, LocalTime.of(8,30), LocalTime.of(15,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.THURSDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.FRIDAY, LocalTime.of(8,30), LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SATURDAY, LocalTime.NOON, LocalTime.of(14,30));
-//        companyWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
-//        companyWorkSchedule.setStartDay(null);
-//        companyWorkSchedule.setEndDay(null);
-//        CloudStoreUtil.insertCompany(new Company("22", "KK", companyWorkSchedule), ownerRefId);
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);

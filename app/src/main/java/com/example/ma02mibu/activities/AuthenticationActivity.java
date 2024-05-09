@@ -20,7 +20,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_authentication);
-        CloudStoreUtil.initDB();
         Button btnSignUpPUP = findViewById(R.id.btn_signUpPUP);
         btnSignUpPUP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +40,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CloudStoreUtil.insert();
                 FragmentTransition.to(LoginFragment.newInstance(), AuthenticationActivity.this, false, R.id.authenticationFragmentContainer, "");
             }
         });

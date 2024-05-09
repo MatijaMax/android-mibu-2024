@@ -5,32 +5,24 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Category implements Parcelable {
-    private Long id;
+    private String documentRefId;
     private String name;
     private String description;
 
-    public Category() {
-    }
+    public Category() { }
 
-    public Category(Long id, String name, String description) {
-        this.id = id;
+    public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     protected Category(Parcel in){
-        id = in.readLong();
+        documentRefId = in.readString();
         name = in.readString();
         description = in.readString();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -54,9 +46,18 @@ public class Category implements Parcelable {
         return 0;
     }
 
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
+    }
+
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeString(documentRefId);
         dest.writeString(name);
         dest.writeString(description);
     }

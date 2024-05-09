@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Service implements Parcelable {
 
     private Long id;
+    private String firestoreId;
     private String name;
     private String description;
     private String category;
@@ -22,22 +23,24 @@ public class Service implements Parcelable {
     private int minMinutesDuration;
     private int maxMinutesDuration;
     private String location;
-    private String reservationDeadline;
-    private String cancellationDeadline;
+    private String ownerUuid;
+    private Deadline reservationDeadline;
+    private Deadline cancellationDeadline;
     private boolean visible;
     private boolean availableToBuy;
     private boolean confirmAutomatically;
     private ArrayList<Integer> images;
     private ArrayList<String> eventTypes;
-    private ArrayList<String> persons;
+    private ArrayList<EmployeeInService> persons;
     private int currentImageIndex;
+    private boolean pending;
 
     public Service() {
         this.discount = 0;
     }
 
-    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, String reservationDeadline,
-                   String cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<String> persons, boolean confirmAutomatically) {
+    public Service(Long id, String name, String description, String category, String subCategory, String specificity, int priceByHour, int minHourDuration, int minMinutesDuration, int maxHourDuration, int maxMinutesDuration, String location, Deadline reservationDeadline,
+                   Deadline cancellationDeadline, ArrayList<Integer> images, ArrayList<String> eventTypes, ArrayList<EmployeeInService> persons, boolean confirmAutomatically) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -60,6 +63,8 @@ public class Service implements Parcelable {
         this.confirmAutomatically = confirmAutomatically;
         this.visible = true;
         this.availableToBuy = true;
+        ownerUuid = "";
+        pending = false;
     }
 
     protected Service(Parcel in) {
@@ -129,6 +134,15 @@ public class Service implements Parcelable {
             minPrice = minPrice*(100-discount)/100;
             return minPrice+" din";
         }
+    }
+
+    public int getMinPrice(){
+        int minPrice = minHourDuration*priceByHour;
+        return minPrice;
+    }
+    public int getMaxPrice(){
+        int maxPrice = maxHourDuration*priceByHour;
+        return maxPrice;
     }
     public void setDiscount(int discount) {
         this.discount = discount;
@@ -206,6 +220,14 @@ public class Service implements Parcelable {
         this.maxMinutesDuration = maxMinutesDuration;
     }
 
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
     public String getDuration(){
         if(minHourDuration == maxHourDuration && minMinutesDuration == maxMinutesDuration){
             return minHourDuration+" hours, "+ minMinutesDuration+" min";
@@ -222,20 +244,36 @@ public class Service implements Parcelable {
         this.location = location;
     }
 
-    public String getReservationDeadline() {
+    public Deadline getReservationDeadline() {
         return reservationDeadline;
     }
 
-    public void setReservationDeadline(String reservationDeadline) {
+    public String getReservationDeadlineText() {
+        return reservationDeadline.getNumber() + reservationDeadline.getDateFormat() + " before start";
+    }
+
+    public String getCancellationDeadlineText() {
+        return cancellationDeadline.getNumber() + cancellationDeadline.getDateFormat() + " before start";
+    }
+
+    public void setReservationDeadline(Deadline reservationDeadline) {
         this.reservationDeadline = reservationDeadline;
     }
 
-    public String getCancellationDeadline() {
+    public Deadline getCancellationDeadline() {
         return cancellationDeadline;
     }
 
-    public void setCancellationDeadline(String cancellationDeadline) {
+    public void setCancellationDeadline(Deadline cancellationDeadline) {
         this.cancellationDeadline = cancellationDeadline;
+    }
+
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
     }
 
     public ArrayList<Integer> getImages() {
@@ -254,17 +292,17 @@ public class Service implements Parcelable {
         this.eventTypes = eventTypes;
     }
 
-    public ArrayList<String> getPersons() {
+    public ArrayList<EmployeeInService> getPersons() {
         return persons;
     }
 
-    public void setPersons(ArrayList<String> persons) {
+    public void setPersons(ArrayList<EmployeeInService> persons) {
         this.persons = persons;
     }
 
     public boolean containsPerson(String employee){
-        for(String person: persons){
-            if(person.toLowerCase().contains(employee))
+        for(EmployeeInService person: persons){
+            if(person.getFirstName().toLowerCase().contains(employee))
                 return true;
         }
         return false;
@@ -283,7 +321,7 @@ public class Service implements Parcelable {
     }
 
     public void setCurrentImageIndex(int direction) {
-        if(direction == 1){
+        /*if(direction == 1){
             currentImageIndex++;
             if(currentImageIndex >= images.size())
                 currentImageIndex = 0;
@@ -291,8 +329,17 @@ public class Service implements Parcelable {
             currentImageIndex--;
             if(currentImageIndex <= -1)
                 currentImageIndex = images.size() - 1;
-        }
+        }*/
     }
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
     @Override
     public int describeContents() {
         return 0;

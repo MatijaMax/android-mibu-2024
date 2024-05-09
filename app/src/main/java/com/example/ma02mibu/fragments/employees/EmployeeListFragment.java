@@ -70,22 +70,6 @@ public class EmployeeListFragment extends ListFragment {
     }
 
     private void loadEmployees() {
-//        CloudStoreUtil.selectEmployees(ownerRefId, new CloudStoreUtil.EmployeeCallback(){
-//            @Override
-//            public void onCallback(ArrayList<Employee> retrieved) {
-//                if (retrieved != null) {
-//                    mEmployees = new ArrayList<>(retrieved);
-//                    mEmployeesBackup = new ArrayList<>(retrieved);
-//                    Log.i("RRRRRRRRRRRRRRRRRRRR", ""+mEmployeesBackup.toArray().length);
-//                } else {
-//                    mEmployees = new ArrayList<>();
-//                    mEmployeesBackup = new ArrayList<>();
-//                }
-//
-//                adapter = new EmployeeListAdapter(getActivity(), mEmployees, ownerRefId, getActivity());
-//                setListAdapter(adapter);
-//            }
-//        });
         CloudStoreUtil.getEmployeesList(ownerRefId, new CloudStoreUtil.EmployeesListCallback() {
             @Override
             public void onSuccess(ArrayList<Employee> itemList) {
@@ -102,28 +86,18 @@ public class EmployeeListFragment extends ListFragment {
                 System.err.println("Error fetching documents: " + e.getMessage());
             }
         });
-//        mEmployees = new ArrayList<>();
-//        mEmployeesBackup = new ArrayList<>();
-//        CloudStoreUtil.selectEmployeesNew(ownerRefId, mEmployeesBackup);
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mEmployees = getArguments().getParcelableArrayList(ARG_EMPLOYEES);
-//            adapter = new EmployeeListAdapter(getActivity(), mEmployees, getActivity());
-//            setListAdapter(adapter);
-//        }
-
-
     }
 
     private void filterEmployees(){
         String fName = binding.searchFirstName.getQuery().toString();
         String lName = binding.searchLastName.getQuery().toString();
-        String email = binding.searchLastName.getQuery().toString();
+        String email = binding.searchEmail.getQuery().toString();
         mEmployees=new ArrayList<>(mEmployeesBackup);
         Log.i("RRRRRRRRR",""+mEmployeesBackup.toArray().length);
         if(fName.isEmpty() && lName.isEmpty() && email.isEmpty()){

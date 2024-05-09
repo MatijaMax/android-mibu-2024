@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
@@ -25,7 +26,9 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 /**
@@ -202,13 +205,32 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         }else{
             customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dM1 = LocalDate.parse(eventSelectedDayStart.getText().toString(), formatter);
+        LocalDate dM2 = LocalDate.parse(eventSelectedDayEnd.getText().toString(), formatter);
+        if(dM2.isBefore(dM1)){
+            Toast.makeText(getContext(), "End date has to be after start.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         customWorkSchedule.setStartDay(eventSelectedDayStart.getText().toString());
         customWorkSchedule.setEndDay(eventSelectedDayEnd.getText().toString());
         mEmployee.setSchedule(customWorkSchedule);
-        CloudStoreUtil.updateEmployeeWorkingHours(mEmployee, ownerRefId);
-        Thread.sleep(600);
-        FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),
-                true, R.id.scroll_employees_list, "EmployeeWTE");
+        CloudStoreUtil.updateEmployeesWS(mEmployee, new CloudStoreUtil.UpdateItemCallback() {
+            @Override
+            public void onSuccess() {
+                // Item updated successfully
+                System.out.println("Item updated!");
+                FragmentTransition.to(EmployeeListFragment.newInstance(), getActivity(),true, R.id.scroll_employees_list, "EmployeeWTE");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error updating item: " + e.getMessage());
+            }
+        });
+//        Thread.sleep(600);
     }
 
     private void alertShow(String day) {
@@ -266,9 +288,19 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
-                        // Display the selected week
-                        eventSelectedDayEnd.setText(toSet);
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDayEnd.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDayEnd.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDayEnd.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDayEnd.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
                     }
                 },
                 year,
@@ -293,18 +325,19 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         int monthN = month + 1;
-                        String toSet = dayOfMonth + "-" + monthN + "-" + year;
-                        // Display the selected week
-//                        if(dayOfMonth < 10 && monthN < 10){
-//                            toSet = "0"+dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
-//                        }else if(dayOfMonth < 10){
-//                            toSet = "0"+dayOfMonth + "-" + monthN + "-" + year + " ";
-//                        }else if(monthN < 10){
-//                            toSet = dayOfMonth + "-" + "0"+monthN + "-" + year + " ";
-//                        }else{
-//                            toSet = dayOfMonth + "-" + monthN + "-" + year + " ";
-//                        }
-                        eventSelectedDayStart.setText(toSet);
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDayStart.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDayStart.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDayStart.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDayStart.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
                     }
                 },
                 year,

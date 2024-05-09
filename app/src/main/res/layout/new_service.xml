@@ -8,7 +8,7 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:paddingTop="2dp"
-    android:windowSoftInputMode="adjustPan | adjustResize"
+    android:windowSoftInputMode="adjustPan"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -87,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="text"
+            android:visibility="gone"
             android:layout_marginStart="10dp"
             />
     </LinearLayout>
@@ -146,7 +147,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/ProductPrice"
+            android:id="@+id/ServicePrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -277,27 +278,43 @@
             android:text="Reservation deadline"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/editTextReservationDeadline"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:lines="1" />
+            android:orientation="horizontal">
+        <EditText
+            android:id="@+id/editTextReservationDeadline"
+            android:layout_width="150dp"
+            android:inputType="number"
+            android:layout_height="wrap_content" />
 
-
+        <Spinner
+            android:id="@+id/resDeadlineFormat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp" />
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Cancellation deadline"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        <EditText
-            android:id="@+id/editTextCancellationDeadline"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:lines="1" />
-
+            android:orientation="horizontal">
+        <EditText
+            android:id="@+id/editTextCancellationDeadline"
+            android:layout_width="150dp"
+            android:inputType="number"
+            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/cancDeadlineFormat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -467,7 +484,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:textColor="#FF130C"
+                android:visibility="gone"
+                android:id="@+id/validation"
+                android:text="Fill all the fields, please" />
+                <LinearLayout
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/switch_page_button"
                 android:layout_width="wrap_content"
@@ -475,6 +508,7 @@
                 android:layout_gravity="right"
                 android:layout_marginTop="2dp"
                 android:text="Page 1/3" />
+            </LinearLayout>
         <Button
             android:id="@+id/submitButtonService"
             android:layout_width="match_parent"

@@ -280,28 +280,28 @@ public class SignUpPUP3Fragment extends Fragment {
     }
 
     private void prepareCategory(){
-        categories.add(new Category(1L, "Ime1", "Opis"));
-        categories.add(new Category(2L, "Ime2", "Opis"));
-        categories.add(new Category(3L, "Ime3", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(5L, "Ime5", "Opis recimo da je ovaj malko duzi od ostalih da vidim kako ce da se wtapuje na ostale ulaze"));
+        categories.add(new Category("Ime1", "Opis"));
+        categories.add(new Category("Ime2", "Opis"));
+        categories.add(new Category("Ime3", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime5", "Opis recimo da je ovaj malko duzi od ostalih da vidim kako ce da se wtapuje na ostale ulaze"));
 
 
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
-        categories.add(new Category(4L, "Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
+        categories.add(new Category("Ime4", "Opis"));
     }
 
     private void prepareEventTypes(){
-        eventTypes.add(new EventType(1L, "EventType1", "Some description of EventType 1", EventType.EVENTTYPESTATUS.DEACTIVATED));
-        eventTypes.add(new EventType(2L, "EventType2", "Some description of EventType 2", EventType.EVENTTYPESTATUS.DEACTIVATED));
-        eventTypes.add(new EventType(3L, "EventType3", "Some description of EventType 3", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType(4L, "EventType4", "Some description of EventType 4", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType(5L, "EventType5", "Some description of EventType 5", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType(6L, "EventType6", "Some description of EventType 6", EventType.EVENTTYPESTATUS.DEACTIVATED));
+        eventTypes.add(new EventType("1", "EventType1", "Some description of EventType 1", EventType.EVENTTYPESTATUS.DEACTIVATED));
+        eventTypes.add(new EventType("2", "EventType2", "Some description of EventType 2", EventType.EVENTTYPESTATUS.DEACTIVATED));
+        eventTypes.add(new EventType("3", "EventType3", "Some description of EventType 3", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType("4", "EventType4", "Some description of EventType 4", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType("5", "EventType5", "Some description of EventType 5", EventType.EVENTTYPESTATUS.ACTIVE));
+        eventTypes.add(new EventType("6", "EventType6", "Some description of EventType 6", EventType.EVENTTYPESTATUS.DEACTIVATED));
     }
 }

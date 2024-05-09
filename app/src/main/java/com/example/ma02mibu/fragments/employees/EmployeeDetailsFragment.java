@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,15 @@ import android.widget.TextView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.EmployeeListAdapter;
+import com.example.ma02mibu.adapters.ServiceListAdapter;
 import com.example.ma02mibu.databinding.FragmentEmployeeDetailsBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ public class EmployeeDetailsFragment extends Fragment {
     private String ownerRefId;
     private FragmentEmployeeDetailsBinding binding;
 
+    private ArrayList<Service> services;
     public EmployeeDetailsFragment() {
         // Required empty public constructor
     }
@@ -72,20 +80,12 @@ public class EmployeeDetailsFragment extends Fragment {
         textLName.setText(mEmployee.getLastName());
         TextView textEmail = view.findViewById(R.id.emailText);
         textEmail.setText(mEmployee.getEmail());
-//        TextView textPass = view.findViewById(R.id.passwordText);
-//        textPass.setText(mEmployee.getPassword());
         TextView texAddress = view.findViewById(R.id.addressText);
         texAddress.setText(mEmployee.getAddress());
         TextView textPhone = view.findViewById(R.id.phoneNumberText);
         textPhone.setText(mEmployee.getPhoneNumber());
         ImageView imageView = view.findViewById(R.id.employeeImageView);
         imageView.setImageResource(mEmployee.getImage());
-//        TextView textMonday = view.findViewById(R.id.workingTable);
-//        StringBuilder working = new StringBuilder();
-//        for (WorkSchedule workSchedule: mEmployee.getWorkSchedules()) {
-//            working.append(workSchedule.toString()).append("\n\n");
-//        }
-//        textMonday.setText(working);
         ArrayList<String> workingHours = new ArrayList<String>();
         for (WorkSchedule workSchedule: mEmployee.getWorkSchedules()) {
             workingHours.add(workSchedule.toString());
@@ -97,6 +97,27 @@ public class EmployeeDetailsFragment extends Fragment {
         newEmployeeButton.setOnClickListener(v -> {
             FragmentTransition.to(EmployeeWorkTimeEntryFragment.newInstance(mEmployee,ownerRefId), getActivity(),
                     true, R.id.scroll_employees_list, "newWorkTimePage");
+        });
+        CloudStoreUtil.selectServicesByUser(mEmployee.getOwnerRefId(), new CloudStoreUtil.ServiceByUserCallback() {
+            @Override
+            public void onSuccess(ArrayList<Service> itemList) {
+                services = new ArrayList<>(itemList);
+                StringBuilder stringBuilder = new StringBuilder();
+                for(Service s : services){
+                    for(EmployeeInService e : s.getPersons()){
+                        if(e.getEmail().equals(mEmployee.getEmail())){
+                            stringBuilder.append(s.getName());
+                            stringBuilder.append(", ");
+                        }
+                    }
+                }
+                binding.servicesEmployee.setText(stringBuilder.toString());
+            }
+            @Override
+            public void onFailure(Exception e) {
+                binding.servicesEmployee.setText("No services");
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
         });
         return view;
     }

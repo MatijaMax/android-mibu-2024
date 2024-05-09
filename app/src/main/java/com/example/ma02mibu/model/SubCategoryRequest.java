@@ -10,12 +10,12 @@ public class SubCategoryRequest implements Parcelable {
     private Long categoryId;
     private String name;
     private String description;
-    private SubCategory.SUBCATEGORYTYPE type;
+    private Subcategory.SUBCATEGORYTYPE type;
     private Long userId;
 
     public SubCategoryRequest() { }
 
-    public SubCategoryRequest(Long id, Long categoryId, String name, String description, SubCategory.SUBCATEGORYTYPE type, Long userId) {
+    public SubCategoryRequest(Long id, Long categoryId, String name, String description, Subcategory.SUBCATEGORYTYPE type, Long userId) {
         this.id = id;
         this.categoryId = categoryId;
         this.name = name;
@@ -29,7 +29,7 @@ public class SubCategoryRequest implements Parcelable {
         name = in.readString();
         description = in.readString();
         categoryId = in.readLong();
-        type = SubCategory.SUBCATEGORYTYPE.values()[in.readInt()];
+        type = Subcategory.SUBCATEGORYTYPE.values()[in.readInt()];
         userId = in.readLong();
     }
 
@@ -65,11 +65,11 @@ public class SubCategoryRequest implements Parcelable {
         this.description = description;
     }
 
-    public SubCategory.SUBCATEGORYTYPE getType() {
+    public Subcategory.SUBCATEGORYTYPE getType() {
         return type;
     }
 
-    public void setType(SubCategory.SUBCATEGORYTYPE type) {
+    public void setType(Subcategory.SUBCATEGORYTYPE type) {
         this.type = type;
     }
 

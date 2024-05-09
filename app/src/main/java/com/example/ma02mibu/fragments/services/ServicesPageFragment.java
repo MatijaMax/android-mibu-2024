@@ -22,8 +22,7 @@ public class ServicesPageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = ServicesPageFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        prepareServicesList(services);
-        FragmentTransition.to(ServicesListFragment.newInstance(services), getActivity(),
+        FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_services_list, "servicesPage");
 
         return root;
@@ -35,18 +34,4 @@ public class ServicesPageFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareServicesList(ArrayList<Service> services){
-        services.clear();
-        ArrayList<Integer> images = new ArrayList<>();
-        images.add(R.drawable.product1);
-        images.add(R.drawable.ic_product);
-        ArrayList<String> eventTypes = new ArrayList<>();
-        eventTypes.add("svadbe");
-        eventTypes.add("rodjendani");
-        eventTypes.add("vencanje");
-        ArrayList<String> persons = new ArrayList<>();
-        persons.add("Jovan");
-        services.add(new Service(1L, "Usluga 1", "Opis 1", "kategorija 1", "podkategorija 1", "/", 1000, 2, 0, 2, 0, "Novi Sad", "2 meseca pred pocetak", "3 dana pred pocetak", images, eventTypes, persons, true));
-        services.add(new Service(2L, "Usluga 2", "Opis 2", "kategorija 2", "podkategorija 2", "specificnost", 1000, 2, 30, 5, 0,"Novi Sad", "1 mesec pred pocetak", "2 dana pred pocetak", images, eventTypes, persons, true));
-    }
 }

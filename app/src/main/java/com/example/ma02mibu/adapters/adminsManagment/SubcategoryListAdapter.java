@@ -11,13 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.ma02mibu.R;
-import com.example.ma02mibu.model.SubCategory;
+import com.example.ma02mibu.model.Subcategory;
 
 import java.util.ArrayList;
 
-public class SubcategoryListAdapter extends ArrayAdapter<SubCategory> {
-    private ArrayList<SubCategory> aSubCategories;
-    public SubcategoryListAdapter(Context context, ArrayList<SubCategory> subCategories){
+public class SubcategoryListAdapter extends ArrayAdapter<Subcategory> {
+    private ArrayList<Subcategory> aSubCategories;
+    public SubcategoryListAdapter(Context context, ArrayList<Subcategory> subCategories){
         super(context, R.layout.subcategory_managment_card, subCategories);
         aSubCategories = subCategories;
     }
@@ -29,7 +29,7 @@ public class SubcategoryListAdapter extends ArrayAdapter<SubCategory> {
 
     @Nullable
     @Override
-    public SubCategory getItem(int position) {
+    public Subcategory getItem(int position) {
         return aSubCategories.get(position);
     }
 
@@ -41,7 +41,7 @@ public class SubcategoryListAdapter extends ArrayAdapter<SubCategory> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        SubCategory subCategory = getItem(position);
+        Subcategory subCategory = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.subcategory_managment_card,
                     parent, false);
