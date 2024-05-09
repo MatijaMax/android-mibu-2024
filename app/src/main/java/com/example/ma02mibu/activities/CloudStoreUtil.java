@@ -8,7 +8,11 @@ import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
+
+import com.example.ma02mibu.model.Event;
+
 import com.example.ma02mibu.model.EventModel;
+
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.OurNotification;
@@ -28,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -361,6 +366,33 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface ServiceByUserCallback {
+        void onSuccess(ArrayList<Service> services);
+        void onFailure(Exception e);
+    }
+
+    public static void selectServicesByUser(String owner, final ServiceByUserCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .whereEqualTo("ownerUuid", owner)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<Service> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Service myItem = documentSnapshot.toObject(Service.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public interface EmployeeCallback {
         void onSuccess(Employee myItem);
         void onFailure(Exception e);
@@ -459,6 +491,8 @@ public class CloudStoreUtil {
                 });
     }
 
+
+
     public interface PackageCallback {
         void onCallbackPackage(ArrayList<Package> packages);
     }
@@ -545,6 +579,20 @@ public class CloudStoreUtil {
         return organizerRefId;
     }
 
+
+    public static String insertEventNew(Event newEvent) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference events = db.collection("events").document();
+
+        String eventId = events.getId();
+        events.set(newEvent)
+                .addOnSuccessListener(aVoid -> {
+                })
+                .addOnFailureListener(e -> {
+                });
+        return eventId;
+    }
 
 
     //Categories////////////////////////////////////////////////////////////////////////////////////
@@ -838,6 +886,7 @@ public class CloudStoreUtil {
                 }).addOnFailureListener(e -> {
                     Log.w("REZ_DB", "Error getting collection: " + eventTypeCollection, e);
                 });
+
     }
 
     //UserRole//////////////////////////////////////////////////////////////////////////////////////

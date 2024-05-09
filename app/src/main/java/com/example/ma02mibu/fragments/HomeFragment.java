@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
-        int notificationId = n.getText().length();     //ovo bi trebalo unique da bude
+        int notificationId = n.getText().hashCode();     //ovo bi trebalo unique da bude
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return;

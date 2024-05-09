@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
@@ -25,7 +26,9 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 /**
@@ -202,6 +205,14 @@ public class EmployeeWorkTimeEntryFragment extends Fragment {
         }else{
             customWorkSchedule.setWorkTime(DayOfWeek.SUNDAY, null, null);
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dM1 = LocalDate.parse(eventSelectedDayStart.getText().toString(), formatter);
+        LocalDate dM2 = LocalDate.parse(eventSelectedDayEnd.getText().toString(), formatter);
+        if(dM2.isBefore(dM1)){
+            Toast.makeText(getContext(), "End date has to be after start.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         customWorkSchedule.setStartDay(eventSelectedDayStart.getText().toString());
         customWorkSchedule.setEndDay(eventSelectedDayEnd.getText().toString());
         mEmployee.setSchedule(customWorkSchedule);

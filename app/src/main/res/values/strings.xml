@@ -26,7 +26,7 @@
 
     <string name="sugcat">Suggested categories:</string>
     <string name="sugsubcat">Suggested subcategories:</string>
-    <string name="suggestions">Suggestions:</string>
+    <string name="suggestions">Suggestion!:</string>
 
     <!-- Authentication strings -->
     <string name="login" translatable="false">Login</string>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,17 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.ProductsPageFragmentBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.EventTypeDTO;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.databinding.FragmentExploreAndFilterBinding;
+import com.example.ma02mibu.model.ProductDAO;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 /**
@@ -29,8 +39,13 @@ public class ExploreAndFilter extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    public static ArrayList<Product> products = new ArrayList<Product>();
+    public  ArrayList<ProductDAO> products = new ArrayList<ProductDAO>();
     private FragmentExploreAndFilterBinding binding;
+
+    private FirebaseAuth auth;
+
+    private String suggestions;
+    private String eventCreatorId;
 
     // TODO: Rename and change types and number of parameters
     public static ExploreAndFilter newInstance(String param1, String param2) {
@@ -56,21 +71,97 @@ public class ExploreAndFilter extends Fragment {
     } */
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            eventCreatorId = user.getEmail();
+
+        }
+
+
         binding = FragmentExploreAndFilterBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        prepareProductList(products);
-        FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
-                true, R.id.scroll_products_list, "filterAllPage");
-
+        auth = FirebaseAuth.getInstance();
+        prepareProductList(products, () -> {
+            // Callback when prepareProductList completes
+            FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
+                    true, R.id.scroll_products_list, "filterAllPage");
+        });
         return root;
     }
 
-    private void prepareProductList(ArrayList<Product> products){
+    private void prepareProductList(ArrayList<ProductDAO> products, Runnable callback) {
         ArrayList<Integer> images = new ArrayList<>();
         images.add(R.drawable.product1);
-        ArrayList<String> eventTypes = new ArrayList<>();
-        products.add(new Product(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes, 5));
-        products.add(new Product(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", 2000, images, eventTypes, 5));
+        ArrayList<ProductDAO> allProducts = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("services")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
+                                if(myItem!=null){
+                                    myItem.setTypeDAO(0);
+                                    //myItem.setImage(images);
+                                    allProducts.add(myItem);
+                                }
+                            }
+
+
+
+
+                        });
+        db.collection("products")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
+                        if(myItem!=null){
+                            myItem.setTypeDAO(1);
+                            allProducts.add(myItem);
+                        }
+                    }
+
+
+
+
+
+                });
+        db.collection("packagesFilterTest")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
+                        if(myItem!=null){
+                            myItem.setTypeDAO(2);
+                            allProducts.add(myItem);
+
+                        }
+                    }
+                    this.products = allProducts;
+                    products.addAll(allProducts);
+                    for (ProductDAO product : this.products) {
+                        Log.d("ProductX", product.toString());
+                        product.setImage(images);
+                    }
+                    ArrayList<String> eventTypes = new ArrayList<>();
+                    eventTypes.add("text");
+                   //products.add(new ProductDAO(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes , 5, 1));
+                   // products.add(new ProductDAO(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", 2000, images, eventTypes, 5, 1));
+                    callback.run();
+                });
+
+
+        //ArrayList<String> eventTypes = new ArrayList<>();
+        //eventTypes.add("text");
+        //products.add(new ProductDAO(1L, "Proizvod 1", "Opis 1", "kategorija 1", "podkategorija 1", 2000, images, eventTypes , 5, 1));
+        //products.add(new ProductDAO(1L, "Proizvod 2", "Opis 2", "kategorija 2", "podkategorija 2", 2000, images, eventTypes, 5, 1));
     }
+
+
+
+
 
 }

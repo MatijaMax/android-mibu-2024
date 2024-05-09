@@ -146,6 +146,10 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         String fTime = binding.eTimeFrom.getText().toString();
         String tTime = binding.eTimeTo.getText().toString();
         String date = binding.eventSelectedDate.getText().toString();
+        if(name.isEmpty() || fTime.isEmpty() || tTime.isEmpty()){
+            Toast.makeText(getContext(), "Enter data first.", Toast.LENGTH_LONG).show();
+            return;
+        }
         EventModel eventModel = new EventModel(name, date, fTime, tTime, "taken", mEmployee.getEmail());
         String[] dsA = date.split("-");
         String ds = dsA[0];
@@ -161,19 +165,33 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         if(wt == null){
             Toast.makeText(getContext(), "Not working that day.", Toast.LENGTH_LONG).show();
             return;
-        }else{
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime ft = LocalTime.parse(fTime,dtf);
-            LocalTime wft = LocalTime.parse(wt.getStartTime(),dtf);
-            LocalTime et = LocalTime.parse(tTime,dtf);
-            LocalTime wet = LocalTime.parse(wt.getEndTime(),dtf);
-            if(ft.isBefore(wft) || et.isAfter(wet) || et.isBefore(ft)){
-                Toast.makeText(getContext(), "Not in working hours.", Toast.LENGTH_LONG).show();
-                return;
+        }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime ft = LocalTime.parse(fTime,dtf);
+        LocalTime wft = LocalTime.parse(wt.getStartTime(),dtf);
+        LocalTime et = LocalTime.parse(tTime,dtf);
+        LocalTime wet = LocalTime.parse(wt.getEndTime(),dtf);
+        if(ft.isAfter(et)){
+            Toast.makeText(getContext(), "Start time has to be before end time.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(ft.isBefore(wft) || et.isAfter(wet)){
+            Toast.makeText(getContext(), "Not in working hours.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        for(EventModel em : eventModels){
+            if(em.getDate().equals(date)){
+                LocalTime t1 = LocalTime.parse(em.getFromTime(),dtf);
+                LocalTime t2 = LocalTime.parse(em.getToTime(),dtf);
+                if(t1.isBefore(et) && ft.isBefore(t2)){
+                    Toast.makeText(getContext(), "You have an event in that time.", Toast.LENGTH_LONG).show();
+                    return;
+                }
             }
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
+        Toast.makeText(getContext(), "Event created.", Toast.LENGTH_LONG).show();
         OurNotification notification = new OurNotification(currentOwner.getEmail(), "New event","Event for: "+ mEmployee.getFirstName() + " " + mEmployee.getLastName() + " " + eventModel.getDate(), "notRead");
         CloudStoreUtil.insertNotification(notification);
         changeViews();

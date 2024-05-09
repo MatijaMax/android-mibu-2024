@@ -146,24 +146,37 @@ public class EmployeeWorkCalendarFragment extends Fragment {
         int y = Integer.parseInt(ys);
         LocalDate ld = LocalDate.of(y, m, d);
         DayOfWeek weekday = ld.getDayOfWeek();
-//        Log.i("AAAAAAAA", ""+weekday+" "+d+" "+m+" "+y);
         WorkTime wt = mEmployee.findActiveWorkScheduleAlt(ld).ScheduleForThisDay(weekday);
         if(wt == null){
             Toast.makeText(getContext(), "Not working that day.", Toast.LENGTH_LONG).show();
             return;
-        }else{
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime ft = LocalTime.parse(fTime,dtf);
-            LocalTime wft = LocalTime.parse(wt.getStartTime(),dtf);
-            LocalTime et = LocalTime.parse(tTime,dtf);
-            LocalTime wet = LocalTime.parse(wt.getEndTime(),dtf);
-            if(ft.isBefore(wft) || et.isAfter(wet) || et.isBefore(ft)){
-                Toast.makeText(getContext(), "Not in working hours.", Toast.LENGTH_LONG).show();
-                return;
+        }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime ft = LocalTime.parse(fTime,dtf);
+        LocalTime wft = LocalTime.parse(wt.getStartTime(),dtf);
+        LocalTime et = LocalTime.parse(tTime,dtf);
+        LocalTime wet = LocalTime.parse(wt.getEndTime(),dtf);
+        if(ft.isAfter(et)){
+            Toast.makeText(getContext(), "Start time has to be before end time.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(ft.isBefore(wft) || et.isAfter(wet)){
+            Toast.makeText(getContext(), "Not in working hours.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        for(EventModel em : eventModels){
+            if(em.getDate().equals(date)){
+                LocalTime t1 = LocalTime.parse(em.getFromTime(),dtf);
+                LocalTime t2 = LocalTime.parse(em.getToTime(),dtf);
+                if(t1.isBefore(et) && ft.isBefore(t2)){
+                    Toast.makeText(getContext(), "You have an event in that time.", Toast.LENGTH_LONG).show();
+                    return;
+                }
             }
         }
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
+        Toast.makeText(getContext(), "Event created.", Toast.LENGTH_LONG).show();
         OurNotification notification = new OurNotification(mEmployee.getEmail(), "New event","Event for you " + eventModel.getDate() + " " + eventModel.getFromTime() + "-" + eventModel.getToTime(), "notRead");
         CloudStoreUtil.insertNotification(notification);
         changeViews();
@@ -195,7 +208,6 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         ExpandableListView expandableListView = parentV.findViewById((R.id.expandableListView));
                         HashMap<String, List<EventModel>> expandableListDetail = new HashMap<String, List<EventModel>>();
 
-
                         //monday
                         List<EventModel> eventsList1 = new ArrayList<EventModel>();
                         for(EventModel em : eventModels){
@@ -205,9 +217,7 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                         }
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                         LocalDate dM1 = LocalDate.parse(df.format(selectedCalendar.getTime()), formatter);
-//                        WorkSchedule ws = mEmployee.findActiveWorkScheduleAlt();
-//                        LocalDate dM2 = LocalDate.parse(ws.getStartDay(), formatter);
-//                        Log.i("AAAAAAAAAA", dM1.toString() + " "+ dM2.toString());
+
                         expandableListDetail.put(df.format(selectedCalendar.getTime()) + "\t    " + mEmployee.findActiveWorkScheduleAlt(dM1).ScheduleForDay(DayOfWeek.MONDAY), eventsList1);
                         //tuesday
                         selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -417,7 +427,6 @@ public class EmployeeWorkCalendarFragment extends Fragment {
                 month,
                 dayOfMonth
         );
-
         datePickerDialog.show();
     }
 }
