@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
@@ -72,11 +72,6 @@ public class LoginFragment extends Fragment {
         password = binding.password;
 
         auth = FirebaseAuth.getInstance();
-//
-//        if(auth.getCurrentUser() != null){
-//            Intent intent = new Intent(getActivity(), MainActivity.class);
-//            startActivity(intent);
-//        }
 
         return binding.getRoot();
     }

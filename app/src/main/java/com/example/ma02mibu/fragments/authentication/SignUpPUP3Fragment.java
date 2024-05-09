@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,11 @@ import android.widget.Toast;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.FragmentSignUpPUP3Binding;
-import com.example.ma02mibu.model.Category;
-import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.WorkSchedule;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 public class SignUpPUP3Fragment extends Fragment {
 
@@ -57,8 +53,6 @@ public class SignUpPUP3Fragment extends Fragment {
     private CheckBox saturdayCheckBox;
     private CheckBox sundayCheckBox;
 
-    private ArrayList<Category> categories = new ArrayList<>();
-    private ArrayList<EventType> eventTypes = new ArrayList<>();
     public SignUpPUP3Fragment() { }
 
     public static SignUpPUP3Fragment newInstance(Owner param1, String password) {
@@ -77,8 +71,6 @@ public class SignUpPUP3Fragment extends Fragment {
             owner = getArguments().getParcelable(ARG_PARAM1);
             password = getArguments().getString(ARG_PARAM2);
         }
-        prepareCategory();
-        prepareEventTypes();
     }
 
     @Override
@@ -123,7 +115,7 @@ public class SignUpPUP3Fragment extends Fragment {
                 return;
             }
             owner.getMyCompany().setWorkSchedule(setWorkSchedule());
-            FragmentTransition.to(SignUpPUP4Fragment.newInstance(owner, password, categories, eventTypes), requireActivity(), true, R.id.authenticationFragmentContainer, "signUpPUP");
+            FragmentTransition.to(SignUpPUP4Fragment.newInstance(owner, password), requireActivity(), true, R.id.authenticationFragmentContainer, "signUpPUP");
         });
     }
 
@@ -277,31 +269,5 @@ public class SignUpPUP3Fragment extends Fragment {
         sundayFromTime.setMinute(0);
         sundayToTime.setHour(16);
         sundayToTime.setMinute(0);
-    }
-
-    private void prepareCategory(){
-        categories.add(new Category("Ime1", "Opis"));
-        categories.add(new Category("Ime2", "Opis"));
-        categories.add(new Category("Ime3", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime5", "Opis recimo da je ovaj malko duzi od ostalih da vidim kako ce da se wtapuje na ostale ulaze"));
-
-
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-        categories.add(new Category("Ime4", "Opis"));
-    }
-
-    private void prepareEventTypes(){
-        eventTypes.add(new EventType("1", "EventType1", "Some description of EventType 1", EventType.EVENTTYPESTATUS.DEACTIVATED));
-        eventTypes.add(new EventType("2", "EventType2", "Some description of EventType 2", EventType.EVENTTYPESTATUS.DEACTIVATED));
-        eventTypes.add(new EventType("3", "EventType3", "Some description of EventType 3", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType("4", "EventType4", "Some description of EventType 4", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType("5", "EventType5", "Some description of EventType 5", EventType.EVENTTYPESTATUS.ACTIVE));
-        eventTypes.add(new EventType("6", "EventType6", "Some description of EventType 6", EventType.EVENTTYPESTATUS.DEACTIVATED));
     }
 }

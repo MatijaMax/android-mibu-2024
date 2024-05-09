@@ -81,10 +81,8 @@ public class CloudStoreUtil {
 
         String ownerRefId = ownerRef.getId();
         ownerRef.set(owner)
-                .addOnSuccessListener(aVoid -> {
-                })
-                .addOnFailureListener(e -> {
-                });
+                .addOnSuccessListener(command -> Log.d("REZ-DB", "insertOwner: " + ownerRefId))
+                .addOnFailureListener(e -> Log.w("REZ-DB", "insertOwner failed", e));
         return ownerRefId;
     }
 
@@ -576,10 +574,8 @@ public class CloudStoreUtil {
 
         String organizerRefId = organizers.getId();
         organizers.set(newEventOrganizer)
-                .addOnSuccessListener(aVoid -> {
-                })
-                .addOnFailureListener(e -> {
-                });
+                .addOnSuccessListener(command -> Log.d("REZ-DB", "insertEventOrganizer: " + organizerRefId))
+                .addOnFailureListener(e -> Log.w("RED-DB", "insertEventOrganizer failed", e));
         return organizerRefId;
     }
 
