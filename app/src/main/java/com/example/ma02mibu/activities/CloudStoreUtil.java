@@ -86,6 +86,27 @@ public class CloudStoreUtil {
         return ownerRefId;
     }
 
+    public interface OwnersCallback {
+        void onCallback(ArrayList<Owner> owners);
+    }
+
+    public static void selectOwners(OwnersCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("owners")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<Owner> owners = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Owner myItem = documentSnapshot.toObject(Owner.class);
+                        owners.add(myItem);
+                    }
+                    callback.onCallback(owners);
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onCallback(null);
+                });
+    }
+
 
     public static void insertEmployeeNew(Employee employee){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

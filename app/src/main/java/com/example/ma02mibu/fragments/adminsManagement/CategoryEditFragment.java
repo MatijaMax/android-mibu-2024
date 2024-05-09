@@ -19,6 +19,8 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.FragmentCategoryEditBinding;
 import com.example.ma02mibu.model.Category;
+import com.example.ma02mibu.model.OurNotification;
+import com.example.ma02mibu.model.Owner;
 
 public class CategoryEditFragment extends Fragment {
 
@@ -74,7 +76,14 @@ public class CategoryEditFragment extends Fragment {
             if(isCategoryNew){
                 CloudStoreUtil.insertCategory(new Category(name.getText().toString(), description.getText().toString()));
             }else {
-                category.setName(name.getText().toString());
+                if(!category.getName().equals(name.getText().toString())) {
+                    CloudStoreUtil.selectOwners(result -> {
+                        for(Owner o: result){
+                            CloudStoreUtil.insertNotification(new OurNotification(o.getEmail(), "Category name changed", "Name changed from: " + category.getName() + " to: " + name.getText().toString(),"notRead"));
+                        }
+                    });
+                    category.setName(name.getText().toString());
+                }
                 category.setDescription(description.getText().toString());
                 CloudStoreUtil.updateCategory(category);
             }
