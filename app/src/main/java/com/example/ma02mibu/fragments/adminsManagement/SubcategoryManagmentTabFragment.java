@@ -42,21 +42,17 @@ public class SubcategoryManagmentTabFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentEventTypeManagementTabBinding binding = FragmentEventTypeManagementTabBinding.inflate(inflater, container, false);
-
-        subcategoryListView = binding.eventTypesListView;
-
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_subcategory_managment_tab, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        subcategoryListView = view.findViewById(R.id.subCategoriesListView);
         getSubcategories();
+
         subcategoryListView.setOnItemClickListener((parent, view1, position, id) -> FragmentTransition.to(SubcategoryEditFragment.newInstance(false, subcategoryListAdapter.getItem(position)),
                 requireActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement"));
 
-        //TODO fix this
         view.findViewById(R.id.addNewSubcategory).setOnClickListener(v -> FragmentTransition.to(SubcategoryEditFragment.newInstance(true, new Subcategory()),
                 requireActivity(), true, R.id.categoryManagementContainer, "subcategoryManagement"));
     }

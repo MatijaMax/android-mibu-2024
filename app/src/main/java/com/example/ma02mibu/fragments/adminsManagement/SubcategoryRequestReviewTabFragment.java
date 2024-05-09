@@ -9,20 +9,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.adminsManagment.SubcategoryRequestListAdapter;
-import com.example.ma02mibu.model.Subcategory;
-import com.example.ma02mibu.model.SubCategoryRequest;
+import com.example.ma02mibu.model.SubcategoryProposal;
 
 import java.util.ArrayList;
 
 public class SubcategoryRequestReviewTabFragment extends Fragment {
+    private ListView subcategoryRequestListView;
     private SubcategoryRequestListAdapter subcategoryRequestListAdapter;
-    private ArrayList<SubCategoryRequest> subCategoryRequests = new ArrayList<>();
+    private ArrayList<SubcategoryProposal> subcategoryProposals = new ArrayList<>();
     public SubcategoryRequestReviewTabFragment() { }
 
     public static SubcategoryRequestReviewTabFragment newInstance() {
@@ -35,39 +35,30 @@ public class SubcategoryRequestReviewTabFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createSubCategoryRequests();
-        subcategoryRequestListAdapter = new SubcategoryRequestListAdapter(getActivity(), subCategoryRequests);
+        subcategoryRequestListAdapter = new SubcategoryRequestListAdapter(getActivity(), subcategoryProposals);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_subcategory_request_review_tab, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ListView subcategoryRequestListView = view.findViewById(R.id.subCategoriesRequestsListView);
+        subcategoryRequestListView = view.findViewById(R.id.subCategoriesRequestsListView);
+        getProposals();
+
         subcategoryRequestListView.setAdapter(subcategoryRequestListAdapter);
-        subcategoryRequestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransition.to(SubcategoryRequestReviewEditFragment.newInstance(subcategoryRequestListAdapter.getItem(position)),
-                        getActivity(), true, R.id.categoryManagementContainer, "subcategoryRequestManagement");
-            }
-        });
+        subcategoryRequestListView.setOnItemClickListener((parent, view1, position, id) -> FragmentTransition.to(SubcategoryRequestReviewEditFragment.newInstance(subcategoryRequestListAdapter.getItem(position)),
+                requireActivity(), true, R.id.categoryManagementContainer, "subcategoryRequestManagement"));
     }
 
-    private void createSubCategoryRequests(){
-        subCategoryRequests.add(new SubCategoryRequest(1L, 1L, "Ime podkategorije 1", "Opis podkategorije 1", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(2L, 2L, "Ime podkategorije 2", "Opis podkategorije 2", Subcategory.SUBCATEGORYTYPE.USLUGA, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(3L, 2L, "Ime podkategorije 3", "Opis podkategorije 3", Subcategory.SUBCATEGORYTYPE.USLUGA, 3L));
-        subCategoryRequests.add(new SubCategoryRequest(4L, 2L, "Ime podkategorije 4", "Opis podkategorije 4", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 2L));
-        subCategoryRequests.add(new SubCategoryRequest(5L, 4L, "Ime podkategorije 5", "Opis podkategorije 5", Subcategory.SUBCATEGORYTYPE.PROIZVOD, 1L));
-        subCategoryRequests.add(new SubCategoryRequest(6L, 1L, "Ime podkategorije 6", "Opis podkategorije 6", Subcategory.SUBCATEGORYTYPE.USLUGA, 6L));
-        subCategoryRequests.add(new SubCategoryRequest(7L, 4L, "Ime podkategorije 7", "Opis podkategorije 7", Subcategory.SUBCATEGORYTYPE.USLUGA, 9L));
-        subCategoryRequests.add(new SubCategoryRequest(8L, 1L, "Ime podkategorije 8", "Opis podkategorije 8", Subcategory.SUBCATEGORYTYPE.USLUGA, 6L));
-        subCategoryRequests.add(new SubCategoryRequest(9L, 1L, "Ime podkategorije 9", "Opis podkategorije 9", Subcategory.SUBCATEGORYTYPE.USLUGA, 4L));
+    private void getProposals(){
+        CloudStoreUtil.selectSubcategoryProposal(result -> {
+            subcategoryProposals = result;
+            subcategoryRequestListAdapter = new SubcategoryRequestListAdapter(getActivity(), subcategoryProposals);
+            subcategoryRequestListView.setAdapter(subcategoryRequestListAdapter);
+        });
     }
 }

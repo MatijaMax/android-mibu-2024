@@ -10,22 +10,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.adminsManagment.CategoryListAdapter;
+import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Subcategory;
-import com.example.ma02mibu.model.SubCategoryRequest;
+import com.example.ma02mibu.model.SubcategoryProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SubcategoryRequestReviewEditFragment extends Fragment {
+
+    private EditText name;
+    private EditText description;
+    private Spinner type;
+    private ListView categoryListView;
+    private Category selectedCategory = null;
+    private EditText categoryName;
+
+
     private static final String ARG_PARAM1 = "param1";
-    private SubCategoryRequest subcategoryRequest;
+    private SubcategoryProposal subcategoryProposal;
 
     public SubcategoryRequestReviewEditFragment() { }
 
-    public static SubcategoryRequestReviewEditFragment newInstance(SubCategoryRequest param1) {
+    public static SubcategoryRequestReviewEditFragment newInstance(SubcategoryProposal param1) {
         SubcategoryRequestReviewEditFragment fragment = new SubcategoryRequestReviewEditFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, param1);
@@ -37,34 +51,101 @@ public class SubcategoryRequestReviewEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            subcategoryRequest = getArguments().getParcelable(ARG_PARAM1);
+            subcategoryProposal = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_subcategory_request_review_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_subcategory_request_review_edit, container, false);
+
+        name = view.findViewById(R.id.subcategoryRequestName);
+        description = view.findViewById(R.id.subcategoryRequestDescription);
+        type = view.findViewById(R.id.subcategoryRequestType);
+
+        categoryName = view.findViewById(R.id.categoryName);
+        categoryName.setEnabled(false);
+        categoryListView = view.findViewById(R.id.categoriesListView);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Spinner subcategoryRequestSpinner = view.findViewById(R.id.subcategoryRequestType);
-        subcategoryRequestSpinner.setAdapter(new ArrayAdapter<String>(getActivity(),
+        type.setAdapter(new ArrayAdapter<String>(requireActivity(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.subcategory_types)));
-        if (subcategoryRequest.getType() == Subcategory.SUBCATEGORYTYPE.USLUGA) {
-            subcategoryRequestSpinner.setSelection(0);
+        if (subcategoryProposal.getSubcategory().getType() == Subcategory.SUBCATEGORYTYPE.USLUGA) {
+            type.setSelection(0);
         }
         else {
-            subcategoryRequestSpinner.setSelection(1);
+            type.setSelection(1);
         }
 
+        name.setText(subcategoryProposal.getSubcategory().getName());
+        description.setText(subcategoryProposal.getSubcategory().getDescription());
+
+        view.findViewById(R.id.acceptSubcategoryRequest).setOnClickListener(v -> {
+            CloudStoreUtil.insertSubcategory(new Subcategory(subcategoryProposal.getSubcategory().getCategoryId(),
+                                                            name.getText().toString(),
+                                                            description.getText().toString(),
+                                                            Subcategory.SUBCATEGORYTYPE.values()[type.getSelectedItemPosition()]));
+            CloudStoreUtil.deleteSubcategoryProposal(subcategoryProposal);
+        });
+
+        view.findViewById(R.id.rejectSubcategoryRequest).setOnClickListener(v -> {
+            CloudStoreUtil.deleteSubcategoryProposal(subcategoryProposal);
+        });
+
+        view.findViewById(R.id.acceptSuggestedSubcategory).setOnClickListener(v -> {
+            //TODO this is the stupid one
+        });
+
+
+        //TODO change
         Spinner subcategorySuggestionSpinner = view.findViewById(R.id.suggestedSubcategories);
         subcategorySuggestionSpinner.setAdapter(new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item,
                 new ArrayList<String>(Arrays.asList(new String[]{"Idemo bre", "Nesto drugo"}))));
     }
+
+    private void getCategories(){
+        CloudStoreUtil.selectCategories(result -> {
+            categoryListView.setAdapter(new CategoryListAdapter(getActivity(), result));
+            categoryListView.setOnItemClickListener((parent, view, position, id) -> {
+                selectedCategory = (Category) categoryListView.getAdapter().getItem(position);
+                categoryName.setText(selectedCategory.getName());
+            });
+        });
+    }
+
+    private boolean fieldsAreValid() {
+        boolean valid = true;
+        if(name.getText().toString().isEmpty()){
+            name.setError("Name is required");
+            valid = false;
+        }
+        else {
+            name.setError(null);
+        }
+        if(description.getText().toString().isEmpty()){
+            description.setError("Description is required");
+            valid = false;
+        }
+        else{
+            description.setError(null);
+        }
+        if(selectedCategory == null){
+            categoryName.setError("Select category from the list");
+            valid = false;
+        }
+        else{
+            categoryName.setError(null);
+        }
+
+        return valid;
+    }
+
 
 }

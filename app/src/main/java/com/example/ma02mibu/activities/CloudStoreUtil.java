@@ -86,6 +86,27 @@ public class CloudStoreUtil {
         return ownerRefId;
     }
 
+    public interface OwnersCallback {
+        void onCallback(ArrayList<Owner> owners);
+    }
+
+    public static void selectOwners(OwnersCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("owners")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<Owner> owners = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Owner myItem = documentSnapshot.toObject(Owner.class);
+                        owners.add(myItem);
+                    }
+                    callback.onCallback(owners);
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onCallback(null);
+                });
+    }
+
 
     public static void insertEmployeeNew(Employee employee){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -717,6 +738,55 @@ public class CloudStoreUtil {
                 .addOnSuccessListener(command -> Log.d("REZ_DB", "insert subcategory: " + subcategoryRefId))
                 .addOnFailureListener(command -> Log.d("REZ_DB", "insert subcategory failed"));
         return subcategoryRefId;
+    }
+
+    public interface SubcategoryProposalsCallback {
+        void onCallback(ArrayList<SubcategoryProposal> subcategoryProposals);
+    }
+
+    public static void selectSubcategoryProposal(SubcategoryProposalsCallback callback){
+        ArrayList<SubcategoryProposal> subcategoryProposals = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("subcategoryProposals")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            SubcategoryProposal temp = document.toObject(SubcategoryProposal.class);
+                            subcategoryProposals.add(temp);
+                        }
+                        callback.onCallback(subcategoryProposals);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
+    }
+
+    public static void deleteSubcategoryProposal(SubcategoryProposal proposal){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("subcategoryProposals")
+                .whereEqualTo("subcategory", proposal.getSubcategory())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            db.collection("subcategoryProposals").document(document.getId()).delete();
+                            break;
+                        }
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                });
     }
 
     //Subcategories/////////////////////////////////////////////////////////////////////////////////
