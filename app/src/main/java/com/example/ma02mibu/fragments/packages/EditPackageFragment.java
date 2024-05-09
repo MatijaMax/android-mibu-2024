@@ -26,6 +26,7 @@ import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.PackageEditDto;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.viewmodels.CategorySharedViewModel;
 import com.example.ma02mibu.viewmodels.PackageEditViewModel;
 import com.example.ma02mibu.viewmodels.PackageViewModel;
 
@@ -36,6 +37,7 @@ public class EditPackageFragment extends Fragment {
     private Package mPackage = new Package();
     private PackageEditDto packageDto;
     private PackageEditViewModel viewModel;
+    private CategorySharedViewModel categorySharedViewModel;
     private boolean readFromViewModel;
     private static final String ARG_PARAM = "param";
     public static EditPackageFragment newInstance(Package aPackage) {
@@ -53,6 +55,7 @@ public class EditPackageFragment extends Fragment {
         binding = EditPackageBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         viewModel = new ViewModelProvider(requireActivity()).get(PackageEditViewModel.class);
+        categorySharedViewModel = new ViewModelProvider(requireActivity()).get(CategorySharedViewModel.class);
         if(readFromViewModel){
             setPackageData();
             if(viewModel.getProducts().getValue() != null)
@@ -60,6 +63,7 @@ public class EditPackageFragment extends Fragment {
             if(viewModel.getServices().getValue() != null)
                 mPackage.setServices(viewModel.getServices().getValue());
         }
+        categorySharedViewModel.setCategory(mPackage.getCategory());
         EditText productName = binding.PackageName;
         productName.setText(mPackage.getName());
         EditText productDescription = binding.editTextPackageDescription;

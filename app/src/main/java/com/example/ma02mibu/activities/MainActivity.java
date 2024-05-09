@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
                 //TODO
+                m.findItem(R.id.nav_event_creation).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
