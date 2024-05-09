@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,11 +25,14 @@ import androidx.fragment.app.Fragment;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.adminsManagment.EventTypeListAdapter;
 import com.example.ma02mibu.databinding.NewProductBinding;
 import com.example.ma02mibu.databinding.ServicesPageFragmentBinding;
 import com.example.ma02mibu.fragments.HomeFragment;
 import com.example.ma02mibu.fragments.services.ServicesListFragment;
 import com.example.ma02mibu.model.Category;
+import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Subcategory;
 import com.example.ma02mibu.model.SubcategoryProposal;
@@ -68,6 +72,7 @@ public class NewProduct extends Fragment {
         ImageButton newSubCat = binding.newSubCategory;
         newSubCat.setOnClickListener(v -> toggleNewSubCategory());
         Button submitBtn = binding.submitButton;
+        setEventTypesAdapter();
         submitBtn.setOnClickListener(v -> addProduct());
         setCategoryChangeListener();
         return root;
@@ -133,6 +138,13 @@ public class NewProduct extends Fragment {
     }
     private void addProduct(){
         binding.validation.setVisibility(View.GONE);
+        ListView listView = binding.eventTypesList;
+        int cnt = listView.getAdapter().getCount();
+        ArrayList<String> eventTypes = new ArrayList<>();
+        for(int i=0; i<cnt; i++){
+            if(listView.isItemChecked(i))
+                eventTypes.add(listView.getItemAtPosition(i).toString());
+        }
         String category = binding.ProductCategory.getSelectedItem().toString();
         String subcategory = binding.ProductSubCategory.getSelectedItem().toString();
         String name = binding.ProductName.getText().toString();
@@ -146,9 +158,7 @@ public class NewProduct extends Fragment {
         boolean visible = binding.checkBoxODAvailable.isChecked();
         boolean isAvailableToBuy = binding.checkBoxBuyAvailable.isChecked();
         int priceInt = Integer.parseInt(price);
-        ArrayList<String> eventTypes = new ArrayList<>();
-        eventTypes.add("tip1");
-        eventTypes.add("tip2");
+
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         Product product = new Product(id, name, description, category, subcategory, priceInt,
                 new ArrayList<Integer>(), eventTypes, 0);
@@ -210,6 +220,20 @@ public class NewProduct extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+        });
+    }
+
+    private void setEventTypesAdapter(){
+        ListView listView = binding.eventTypesList;
+        CloudStoreUtil.selectEventTypes(result -> {
+            ArrayList<String> eventTypes = new ArrayList<>();
+            for(EventType e: result){
+                if(e.getStatus() == EventType.EVENTTYPESTATUS.ACTIVE)
+                    eventTypes.add(e.getName());
+            }
+            ArrayAdapter<String> eventTypesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, eventTypes);
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            listView.setAdapter(eventTypesAdapter);
         });
     }
     @Override

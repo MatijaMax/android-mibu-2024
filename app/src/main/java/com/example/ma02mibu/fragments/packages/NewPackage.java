@@ -124,7 +124,8 @@ public class NewPackage extends Fragment {
         String description = binding.packageDescription.getText().toString();
         boolean visible = binding.checkBoxODAvailable.isChecked();
         boolean availableToBuy = binding.checkBoxBuyAvailable.isChecked();
-        packageCreateDto = new PackageCreateDto(name, description, availableToBuy, visible);
+        int categoryPosition = binding.PackageCategory.getSelectedItemPosition();
+        packageCreateDto = new PackageCreateDto(name, description, availableToBuy, visible, categoryPosition);
         viewModel.setPackage(packageCreateDto);
     }
 
@@ -133,6 +134,7 @@ public class NewPackage extends Fragment {
         binding.packageDescription.setText(packageCreateDto.getDescription());
         binding.checkBoxODAvailable.setChecked(packageCreateDto.isVisible());
         binding.checkBoxBuyAvailable.setChecked(packageCreateDto.isAvailableToBuy());
+        binding.PackageCategory.setSelection(packageCreateDto.getCategoryPosition());
     }
 
     private void savePackageDB(){
@@ -175,6 +177,14 @@ public class NewPackage extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categorySharedViewModel.setCategory(categories.get(position));
+                mChosenProducts = new ArrayList<>();
+                mChosenServices = new ArrayList<>();
+                viewModel.setProducts(mChosenProducts);
+                viewModel.setServices(mChosenServices);
+                String s = "0 services chosen";
+                binding.servicesNum.setText(s);
+                s = "0 products chosen";
+                binding.productsNum.setText(s);
             }
 
             @Override

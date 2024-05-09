@@ -320,24 +320,12 @@
                         android:text="Type of event"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <CheckBox
-                        android:id="@+id/checkBoxType1"
+                    <ListView
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="Type 1" />
-
-                    <CheckBox
-                        android:id="@+id/checkBoxType2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="Type 2" />
-
-                    <CheckBox
-                        android:id="@+id/checkBoxType3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="Type 3" />
-
+                        android:layout_height="120dp"
+                        android:scrollbars="vertical"
+                        android:id="@+id/event_types_list_service_edit"
+                        />
                 </LinearLayout>
 
                 <LinearLayout

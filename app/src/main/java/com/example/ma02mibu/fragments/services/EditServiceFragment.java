@@ -23,6 +23,7 @@ import com.example.ma02mibu.databinding.EditServiceBinding;
 import com.example.ma02mibu.model.Deadline;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Service;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,6 +94,7 @@ public class EditServiceFragment extends Fragment {
             rb.setChecked(true);
         }
         getEmployees(ownerId);
+        getEventTypes();
         Button switchPageButton = binding.switchPageButton;
         switchPageButton.setOnClickListener(v -> switchFormPages());
         Button submitBtn = binding.submitButtonService;
@@ -118,6 +120,15 @@ public class EditServiceFragment extends Fragment {
             if(listView.isItemChecked(i))
                 checkedEmployees.add(employees.get(i));
         }
+
+        ListView listViewEventTypes = binding.eventTypesListServiceEdit;
+        cnt = listViewEventTypes.getAdapter().getCount();
+        ArrayList<String> eventTypes = new ArrayList<>();
+        for(int i=0; i<cnt; i++){
+            if(listViewEventTypes.isItemChecked(i))
+                eventTypes.add(listViewEventTypes.getItemAtPosition(i).toString());
+        }
+
         String name = binding.ServiceNameEdit.getText().toString();
         String description = binding.ServiceDescriptionEdit.getText().toString();
         String price = binding.ServicePriceEdit.getText().toString();
@@ -157,6 +168,7 @@ public class EditServiceFragment extends Fragment {
         mService.setConfirmAutomatically(confirmAuto);
         mService.setDiscount(discountInt);
         mService.setPersons(checkedEmployees);
+        mService.setEventTypes(eventTypes);
         CloudStoreUtil.updateService(mService);
         FragmentTransition.to(ServicesListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_services_list, "falsh");
@@ -236,6 +248,26 @@ public class EditServiceFragment extends Fragment {
     }
 
 
+    private void getEventTypes(){
+        CloudStoreUtil.selectEventTypes(result -> {
+            ListView listView = binding.eventTypesListServiceEdit;
+            ArrayList<String> eventTypes = new ArrayList<>();
+            for (EventType e: result)
+                if(e.getStatus() == EventType.EVENTTYPESTATUS.ACTIVE)
+                    eventTypes.add(e.getName());
+            ArrayAdapter<String> eventTypeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, eventTypes);
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            listView.setAdapter(eventTypeAdapter);
+            for(String s: mService.getEventTypes()){
+                for(int i=0; i<eventTypes.size(); i++){
+                    if(eventTypes.get(i).equals(s)){
+                        binding.eventTypesListServiceEdit.setItemChecked(i, true);
+                    }
+                }
+            }
+
+        });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

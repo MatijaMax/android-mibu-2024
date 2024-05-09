@@ -3,6 +3,7 @@ package com.example.ma02mibu.model;
 public class PackageCreateDto {
     private String name;
     private String description;
+    private int categoryPosition;
     private boolean availableToBuy;
     private boolean visible;
 
@@ -10,11 +11,12 @@ public class PackageCreateDto {
         name="";
         description="";
     }
-    public PackageCreateDto(String name, String description, boolean availableToBuy, boolean visible) {
+    public PackageCreateDto(String name, String description, boolean availableToBuy, boolean visible, int categoryPosition) {
         this.name = name;
         this.description = description;
         this.availableToBuy = availableToBuy;
         this.visible = visible;
+        this.categoryPosition = categoryPosition;
     }
 
     public String getName() {
@@ -47,5 +49,13 @@ public class PackageCreateDto {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public int getCategoryPosition() {
+        return categoryPosition;
+    }
+
+    public void setCategoryPosition(int categoryPosition) {
+        this.categoryPosition = categoryPosition;
     }
 }

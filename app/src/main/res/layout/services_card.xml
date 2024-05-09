@@ -22,7 +22,7 @@
         android:layout_height="170dp">
         <ImageButton
             android:id="@+id/left_button_service"
-            android:layout_width="30dp"
+            android:layout_width="10dp"
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:contentDescription="TODO"
@@ -48,13 +48,13 @@
             android:layout_width="25dp"
             android:layout_height="35dp"
             android:background="@color/white"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="2dp"
             android:contentDescription="TODO"
             app:srcCompat="@drawable/more"
             />
         <ImageButton
             android:id="@+id/right_button_service"
-            android:layout_width="30dp"
+            android:layout_width="10dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"

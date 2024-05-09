@@ -35,6 +35,7 @@ import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Deadline;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.Subcategory;
@@ -84,6 +85,7 @@ public class NewService extends Fragment {
         ImageButton newSubCat = binding.newSubCategory;
         newSubCat.setOnClickListener(v -> toggleNewSubCategory());
         setCategoriesSpinnerAdapter();
+        setEventTypesAdapter();
         getEmployees(ownerId);
         binding.resDeadlineFormat.setAdapter(setDateFormatAdapter());
         binding.cancDeadlineFormat.setAdapter(setDateFormatAdapter());
@@ -157,6 +159,15 @@ public class NewService extends Fragment {
             if(listView.isItemChecked(i))
                 checkedEmployees.add(employees.get(i));
         }
+
+        ListView listViewEventTypes = binding.eventTypesListService;
+        cnt = listViewEventTypes.getAdapter().getCount();
+        ArrayList<String> eventTypes = new ArrayList<>();
+        for(int i=0; i<cnt; i++){
+            if(listViewEventTypes.isItemChecked(i))
+                eventTypes.add(listViewEventTypes.getItemAtPosition(i).toString());
+        }
+
         binding.validation.setVisibility(View.GONE);
         String category = binding.ServiceCategory.getSelectedItem().toString();
         String subcategory = binding.ServiceSubCategory.getSelectedItem().toString();
@@ -186,9 +197,6 @@ public class NewService extends Fragment {
         int maxHourInt = Integer.parseInt(maxHour);
         int minMinInt = Integer.parseInt(minMin);
         int maxMinInt = Integer.parseInt(maxMin);
-        ArrayList<String> eventTypes = new ArrayList<>();
-        eventTypes.add("tip1");
-        eventTypes.add("tip2");
         Deadline resDeadline = new Deadline(reservationDeadlineFormat, Integer.parseInt(reservationDeadlineNum));
         Deadline cancDeadline = new Deadline(cancelationDeadlineFormat, Integer.parseInt(cancelationDeadlineNum));
         Service service = new Service(0L, name, description, category, subcategory, specificity, priceInt, minHourInt, minMinInt,
@@ -323,6 +331,19 @@ public class NewService extends Fragment {
         return adapter;
     }
 
+    private void setEventTypesAdapter(){
+        ListView listView = binding.eventTypesListService;
+        CloudStoreUtil.selectEventTypes(result -> {
+            ArrayList<String> eventTypes = new ArrayList<>();
+            for(EventType e: result){
+                if(e.getStatus() == EventType.EVENTTYPESTATUS.ACTIVE)
+                    eventTypes.add(e.getName());
+            }
+            ArrayAdapter<String> eventTypesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, eventTypes);
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            listView.setAdapter(eventTypesAdapter);
+        });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
