@@ -252,7 +252,7 @@ public class EmployeePersonalWorkCalendarFragment extends Fragment {
         CloudStoreUtil.insertEventModel(eventModel);
         eventModels.add(eventModel);
         Toast.makeText(getContext(), "Event created.", Toast.LENGTH_LONG).show();
-        OurNotification notification = new OurNotification(currentOwner.getEmail(), "New event","Event for: "+ mEmployee.getFirstName() + " " + mEmployee.getLastName() + " " + eventModel.getDate(), "notRead");
+        OurNotification notification = new OurNotification(currentOwner.getEmail(), "New event","Event for: "+ mEmployee.getFirstName() + " " + mEmployee.getLastName() + " " + eventModel.getDate() + " " + eventModel.getFromTime() + " " + eventModel.getToTime(), "notRead");
         CloudStoreUtil.insertNotification(notification);
         changeViews();
     }
