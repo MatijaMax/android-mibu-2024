@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
 import com.example.ma02mibu.fragments.services.ChooseServicesListFragment;
 import com.example.ma02mibu.fragments.services.EditServiceFragment;
@@ -42,13 +43,15 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
     Context context;
     private boolean isFromPackage;
     ChooseServicesListFragment currFragment;
-    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseServicesListFragment fragment){
+    private boolean isOwner = false;
+    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseServicesListFragment fragment, boolean isOwner){
         super(context, R.layout.services_card, services);
         this.context = context;
         aServices = services;
         currFragActivity = fragmentActivity;
         this.isFromPackage = isFromPackage;
         currFragment = fragment;
+        this.isOwner = isOwner;
     }
     @Override
     public int getCount() {
@@ -82,23 +85,42 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         TextView category = convertView.findViewById(R.id.service_category);
         TextView subCategory = convertView.findViewById(R.id.service_subcategory);
         TextView duration = convertView.findViewById(R.id.service_duration);
+        TextView availabilityText = convertView.findViewById(R.id.serviceAvailability);
+        TextView servicePrice = convertView.findViewById(R.id.service_price);
+        TextView serviceDiscount = convertView.findViewById(R.id.service_discount);
         ImageButton rightButton = convertView.findViewById(R.id.right_button_service);
         ImageButton leftButton = convertView.findViewById(R.id.left_button_service);
         ImageButton menuButton = convertView.findViewById(R.id.more_button_service);
-        handleRightButtonClick(rightButton, imageView, service);
-        handleLeftButtonClick(leftButton, imageView, service);
-
-        handleCardClick(layout, service);
+        if(!isOwner)
+            menuButton.setVisibility(View.GONE);
+        if(!service.getImages().isEmpty()) {
+            handleRightButtonClick(rightButton, imageView, service);
+            handleLeftButtonClick(leftButton, imageView, service);
+        }
+        if(!isFromPackage)
+            handleCardClick(layout, service);
         if(service != null){
-            int image = service.getImages().get(service.getCurrentImageIndex());
+            /*int image = service.getImages().get(service.getCurrentImageIndex());
+            imageView.setImageResource(image);*/
             String heading = service.getName() + ", " + service.getLocation();
-            imageView.setImageResource(image);
             productName.setText(heading);
             productDescription.setText(service.getDescription());
             category.setText(service.getCategory());
             subCategory.setText(service.getSubCategory());
             String durationText = "Duration: "+service.getDuration();
             duration.setText(durationText);
+            String a = "";
+            if(service.isVisible())
+                a+="Visible";
+            if(service.isAvailableToBuy())
+                a+=", available to buy";
+            availabilityText.setText(a);
+            servicePrice.setText(service.getTotalPrice());
+            String d = "";
+            if(service.getDiscount() != 0){
+                d = service.getDiscount() + "% off";
+            }
+            serviceDiscount.setText(d);
         }
         LinearLayoutManager layoutManager= new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = convertView.findViewById(R.id.event_type_tags_service);
@@ -108,6 +130,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         if(isFromPackage){
             menuButton.setVisibility(View.GONE);
             checkBox.setVisibility(View.VISIBLE);
+            checkIfServiceChecked(checkBox, service);
             handleServiceCheck(checkBox, service);
         }else {
             handleServiceMenuButtonClick(menuButton, service);
@@ -165,7 +188,9 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                             builder.setIcon(R.drawable.warning_icon);
                             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
                             builder.setPositiveButton("Yes", (dialog, id) -> {
-                                //obrisi uslugu
+                                CloudStoreUtil.deleteService(service.getFirestoreId());
+                                aServices.remove(service);
+                                notifyDataSetChanged();
                             });
                             AlertDialog alert = builder.create();
                             alert.show();
@@ -188,5 +213,13 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                 }
             }
         });
+    }
+
+    private void checkIfServiceChecked(CheckBox cb, Service service){
+        for(Service s: currFragment.servicesChosen){
+            if(service.getFirestoreId().equals(s.getFirestoreId())){
+                cb.setChecked(true);
+            }
+        }
     }
 }

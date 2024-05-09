@@ -15,14 +15,18 @@ public class Package implements Parcelable {
     private String description;
     private String category;
     private int discount;
+    private boolean availableToBuy;
+    private boolean visible;
     private ArrayList<Integer> images;
     private ArrayList<Service> services;
     private ArrayList<Product> products;
     private int currentImageIndex;
-    private String price;
-    private Set<String> eventTypes;
+    private ArrayList<String> eventTypes;
+    private String firestoreId;
+    private String ownerUuid;
     public Package(){
-
+        products = new ArrayList<>();
+        services = new ArrayList<>();
     }
 
     public Package(Long id, String name, String description, String category, int discount, ArrayList<Service> services, ArrayList<Product> products) {
@@ -35,16 +39,18 @@ public class Package implements Parcelable {
         this.services = services;
         this.products = products;
         images = new ArrayList<>();
-        eventTypes = new HashSet<>();
-        price = "18000";
+        eventTypes = new ArrayList<>();
+        Set<String> eventTypesSet = new HashSet<>();
         for (Service s: services) {
             images.addAll(s.getImages());
-            eventTypes.addAll(s.getEventTypes());
+            eventTypesSet.addAll(s.getEventTypes());
         }
         for (Product p: products) {
             images.addAll(p.getImage());
-            eventTypes.addAll(p.getEventTypes());
+            eventTypesSet.addAll(p.getEventTypes());
         }
+        this.eventTypes.addAll(eventTypesSet);
+        ownerUuid = "";
     }
 
     protected Package(Parcel in) {
@@ -63,18 +69,44 @@ public class Package implements Parcelable {
     }
 
     public String getPrice() {
-        return price;
+        int minPrice = 0;
+        for(Product p: products)
+            minPrice += p.getPrice();
+        int maxPrice = minPrice;
+        for(Service s: services) {
+            minPrice += s.getMinPrice();
+            maxPrice += s.getMaxPrice();
+        }
+        minPrice = minPrice * (100 - discount) / 100;
+        maxPrice = maxPrice * (100 - discount) / 100;
+        return minPrice+ " - " +maxPrice+ " din";
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public int getMinPrice() {
+        int minPrice = 0;
+        for(Product p: products)
+            minPrice += p.getPrice();
+        for(Service s: services) {
+            minPrice += s.getMinPrice();
+        }
+        return minPrice;
     }
 
-    public Set<String> getEventTypes() {
+    public int getMaxPrice() {
+        int maxPrice = 0;
+        for(Product p: products)
+            maxPrice += p.getPrice();
+        for(Service s: services) {
+            maxPrice += s.getMaxPrice();
+        }
+        return maxPrice;
+    }
+
+    public ArrayList<String> getEventTypes() {
         return eventTypes;
     }
 
-    public void setEventTypes(Set<String> eventTypes) {
+    public void setEventTypes(ArrayList<String> eventTypes) {
         this.eventTypes = eventTypes;
     }
 
@@ -110,9 +142,39 @@ public class Package implements Parcelable {
         this.discount = discount;
     }
 
+    public boolean containsProductName(String productName){
+        for (Product p: products){
+            if(p.getName().toLowerCase().contains(productName.toLowerCase()))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean containsServiceName(String serviceName){
+        for (Service s: services){
+            if(s.getName().toLowerCase().contains(serviceName.toLowerCase()))
+                return true;
+        }
+        return false;
+    }
+
     public ArrayList<Service> getServices() {
         return services;
     }
+
+    public String getReservationConfirm() {
+        if(services.isEmpty())
+            return "/";
+        String res = "Manually";
+        for(Service s: services){
+            if(s.isConfirmAutomatically()){
+                res = "Automatically";
+                break;
+            }
+        }
+        return res;
+    }
+
 
     public void setServices(ArrayList<Service> services) {
         this.services = services;
@@ -125,6 +187,39 @@ public class Package implements Parcelable {
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
+
+    public boolean isAvailableToBuy() {
+        return availableToBuy;
+    }
+
+    public void setAvailableToBuy(boolean availableToBuy) {
+        this.availableToBuy = availableToBuy;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
+    }
+
     public void setCurrentImageIndex(int direction) {
         if(direction == 1){
             currentImageIndex++;
@@ -136,6 +231,56 @@ public class Package implements Parcelable {
                 currentImageIndex = images.size() - 1;
         }
     }
+
+    public String getReservationDeadline(){
+        String s="";
+        Deadline deadline;
+        if(!services.isEmpty()){
+            deadline = services.get(0).getReservationDeadline();
+            for (Service service: services){
+                if(deadline.getDateFormat().equals("month")){
+                    if(service.getReservationDeadline().getDateFormat().equals("days"))
+                        deadline = service.getReservationDeadline();
+                    else {
+                        if (deadline.getNumber() > service.getReservationDeadline().getNumber())
+                            deadline = service.getReservationDeadline();
+                    }
+                }else{
+                    if(service.getReservationDeadline().getDateFormat().equals("days") && deadline.getNumber() > service.getReservationDeadline().getNumber())
+                        deadline = service.getReservationDeadline();
+                }
+            }
+            return deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }else{
+            return "/";
+        }
+    }
+
+    public String getCancellationDeadline(){
+        String s="";
+        Deadline deadline;
+        if(!services.isEmpty()){
+            deadline = services.get(0).getCancellationDeadline();
+            for (Service service: services){
+                if(deadline.getDateFormat().equals("month")){
+                    if(service.getCancellationDeadline().getDateFormat().equals("days"))
+                        deadline = service.getCancellationDeadline();
+                    else {
+                        if (deadline.getNumber() > service.getCancellationDeadline().getNumber())
+                            deadline = service.getCancellationDeadline();
+                    }
+                }else{
+                    if(service.getCancellationDeadline().getDateFormat().equals("days") && deadline.getNumber() > service.getCancellationDeadline().getNumber())
+                        deadline = service.getCancellationDeadline();
+                }
+            }
+            return deadline.getNumber() +" "+deadline.getDateFormat()+ " before start";
+        }else{
+            return "/";
+        }
+
+    }
+
     public ArrayList<Integer> getImages() {
         return images;
     }

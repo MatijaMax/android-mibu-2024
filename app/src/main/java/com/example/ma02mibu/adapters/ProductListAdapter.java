@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.packages.ChooseProductsListFragment;
 import com.example.ma02mibu.fragments.products.EditProductFragment;
 import com.example.ma02mibu.model.Product;
@@ -40,14 +41,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private ChooseProductsListFragment currFragment;
     private boolean isFromPackage;
     Context context;
-    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment){
+    private boolean isOwner;
+
+    public ProductListAdapter(Context context, ArrayList<Product> products, FragmentActivity fragmentActivity, boolean isFromPackage, ChooseProductsListFragment myFragment, boolean isOwner){
         super(context, R.layout.product_card, products);
         this.context = context;
         this.isFromPackage = isFromPackage;
         aProducts = products;
         currFragActivity = fragmentActivity;
         currFragment = myFragment;
+        this.isOwner = isOwner;
     }
+
     @Override
     public int getCount() {
         return aProducts.size();
@@ -80,9 +85,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
         TextView oldPrice = convertView.findViewById(R.id.old_price);
+        TextView availabilityText = convertView.findViewById(R.id.availability);
         ImageButton rightButton = convertView.findViewById(R.id.right_button);
         ImageButton leftButton = convertView.findViewById(R.id.left_button);
         ImageButton menuButton = convertView.findViewById(R.id.more_button);
+        if(!isOwner)
+            menuButton.setVisibility(View.GONE);
         handleRightButtonClick(rightButton, imageView, product);
         handleLeftButtonClick(leftButton, imageView, product);
         if(product != null){
@@ -95,6 +103,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             category.setText(product.getCategory());
             subCategory.setText(product.getSubCategory());
             price.setText(product.getNewPrice());
+            String a = "";
+            if(product.isVisible())
+                a+="Visible";
+            if(product.isAvailableToBuy())
+                a+=", available to buy";
+            availabilityText.setText(a);
             if(product.getDiscount() != 0) {
                 oldPrice.setVisibility(View.VISIBLE);
                 oldPrice.setText(String.valueOf(product.getPrice()));
@@ -110,6 +124,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         if(isFromPackage){
             menuButton.setVisibility(View.GONE);
             checkBox.setVisibility(View.VISIBLE);
+            checkIfProductChecked(checkBox, product);
             handleProductCheck(checkBox, product);
         }else {
             handleProductMenuButtonClick(menuButton, product);
@@ -158,7 +173,9 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                             builder.setIcon(R.drawable.warning_icon);
                             builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
                             builder.setPositiveButton("Yes", (dialog, id) -> {
-                                //obrisi proizvod
+                                CloudStoreUtil.deleteProduct(product.getFirestoreId());
+                                aProducts.remove(product);
+                                notifyDataSetChanged();
                             });
                             AlertDialog alert = builder.create();
                             alert.show();
@@ -175,11 +192,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    currFragment.productChosen(product.getId());
+                    currFragment.productChosen(product.getFirestoreId());
                 } else {
-                    currFragment.productUnChosen(product.getId());
+                    currFragment.productUnChosen(product.getFirestoreId());
                 }
             }
         });
+    }
+    private void checkIfProductChecked(CheckBox cb, Product product){
+        for(Product p: currFragment.productsChosen){
+            if(product.getFirestoreId().equals(p.getFirestoreId())){
+                cb.setChecked(true);
+            }
+        }
     }
 }
