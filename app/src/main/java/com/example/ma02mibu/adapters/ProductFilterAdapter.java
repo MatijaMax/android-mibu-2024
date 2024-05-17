@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,8 +66,20 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             subCategory.setText(product.getSubCategory());
             price.setText(String.valueOf(product.getPrice()));
         }
+        Button buyButton = convertView.findViewById(R.id.buyProduct);
+        handleBuyProductButton(buyButton, imageView, product);
 
         return convertView;
+    }
+
+    private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
+        buyButton.setOnClickListener(v -> {
+            if (!product.isAvailableToBuy()) {
+                Toast.makeText(imageView.getContext(), "Product is not available to buy!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
 
