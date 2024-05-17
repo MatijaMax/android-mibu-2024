@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.OwnerRequest;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
@@ -46,6 +47,7 @@ public class CloudStoreUtil {
     private static final String subcategoryCollection = "subcategory";
     private static final String eventTypeCollection = "eventtype";
     private static final String userRoleCollection = "userrole";
+    private static final String ownerRequestCollection = "ownerrequest";
 
     public interface NotificationCallback {
         void onSuccess(ArrayList<OurNotification> myItem);
@@ -1010,8 +1012,75 @@ public class CloudStoreUtil {
                     }
                 }).addOnFailureListener(e -> {
                     callback.onCallback(null);
-                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                    Log.w("REZ_DB", "Error getting collection: " + userRoleCollection, e);
                 });
     }
+
+
+
+
+    //OwnerRequests/////////////////////////////////////////////////////////////////////////////////
+    public static String insertOwnerRequest(OwnerRequest newOwnerRequest){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference ownerRequestRef = db.collection(ownerRequestCollection).document();
+
+        String ownerRequestRefId = ownerRequestRef.getId();
+        ownerRequestRef.set(newOwnerRequest)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert owner request: " + ownerRequestRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert owner request failed"));
+        return ownerRequestRefId;
+    }
+
+    public interface OwnerRequestCallback {
+        void onCallback(ArrayList<OwnerRequest> ownerRequests);
+    }
+
+    public static void selectOwnerRequest(final OwnerRequestCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(ownerRequestCollection)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<OwnerRequest> owners = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            OwnerRequest temp = document.toObject(OwnerRequest.class);
+                            owners.add(temp);
+                            break;
+                        }
+                        callback.onCallback(owners);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    callback.onCallback(null);
+                    Log.w("REZ_DB", "Error getting collection: " + ownerRequestCollection, e);
+                });
+    }
+
+    private static void privateDeleteOwnerRequest(OwnerRequest ownerRequest){
+        if(ownerRequest.getDocumentRefId() == null){
+            Log.w("REZ_DB", "Error document reference id not provided.");
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(categoryCollection).document(ownerRequest.getDocumentRefId()).delete()
+                .addOnSuccessListener(task -> Log.d("REZ_DB", "owner request deleted: " + ownerRequest.getDocumentRefId()))
+                .addOnFailureListener(e -> Log.w("REZ_DB", "Error deleting owner request: " + ownerRequest.getDocumentRefId(), e));
+    }
+    public static void deleteOwnerRequest(OwnerRequest ownerRequest){
+        privateDeleteOwnerRequest(ownerRequest);
+    }
+
+    public static void activate(OwnerRequest ownerRequest){
+        privateDeleteOwnerRequest(ownerRequest);
+
+        insertOwner(ownerRequest.getOwner());
+    }
+
 
 }

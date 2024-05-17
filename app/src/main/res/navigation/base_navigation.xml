@@ -66,4 +66,10 @@
         android:label="Explore and Filter"
         tools:layout="@layout/fragment_explore_and_filter"
         />
+    <fragment
+        android:id="@+id/nav_owner_request_managment"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.OwnerRequestManagmentFragment"
+        android:label="Owner request management"
+        tools:layout="@layout/fragment_owner_request_managment"
+        />
 </navigation>
