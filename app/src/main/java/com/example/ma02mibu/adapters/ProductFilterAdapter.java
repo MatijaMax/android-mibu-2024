@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.fragments.events.BuyProductFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
 
@@ -23,9 +26,11 @@ import java.util.ArrayList;
 
 public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     private ArrayList<ProductDAO> aProducts;
-    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products){
+    private FragmentActivity currentActivity;
+    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products, FragmentActivity activity){
         super(context, R.layout.product_card, products);
         aProducts = products;
+        currentActivity = activity;
     }
     @Override
     public int getCount() {
@@ -76,8 +81,10 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         buyButton.setOnClickListener(v -> {
             if (!product.isAvailableToBuy()) {
                 Toast.makeText(imageView.getContext(), "Product is not available to buy!", Toast.LENGTH_SHORT).show();
-            }else{
+            } else if (product.getTypeDAO() == 0) {//Type is product
                 Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+            } else {
+                FragmentTransition.to(BuyProductFragment.newInstance(product), currentActivity, true, R.id.products_container, "productsManagement");
             }
         });
     }

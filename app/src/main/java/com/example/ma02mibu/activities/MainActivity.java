@@ -212,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
             }
+            if ("productsManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("productsManagement", 0);
+            }
         }
         super.onBackPressed();
     }

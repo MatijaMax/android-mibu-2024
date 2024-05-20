@@ -631,6 +631,35 @@ public class CloudStoreUtil {
         return eventId;
     }
 
+    public interface EventsCallback {
+        void onCallback(ArrayList<Event> events);
+    }
+
+    public static void selectEventsFrom(String userEmail, EventsCallback callback){
+        ArrayList<Event> events = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("events")
+                .whereEqualTo("email", userEmail)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            Event temp = document.toObject(Event.class);
+                            events.add(temp);
+                        }
+                        callback.onCallback(events);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + "events", e);
+                });
+    }
+
 
     //Categories////////////////////////////////////////////////////////////////////////////////////
     public static String insertCategory(Category newCategory){

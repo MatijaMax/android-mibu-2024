@@ -62,9 +62,9 @@
         />
     <fragment
         android:id="@+id/nav_explore_and_filter"
-        android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
-        android:label="Explore and Filter"
-        tools:layout="@layout/fragment_explore_and_filter"
+        android:name="com.example.ma02mibu.fragments.events.ProductsContainerFragment"
+        android:label="@string/Products"
+        tools:layout="@layout/fragment_products_container"
         />
     <fragment
         android:id="@+id/nav_owner_request_managment"
