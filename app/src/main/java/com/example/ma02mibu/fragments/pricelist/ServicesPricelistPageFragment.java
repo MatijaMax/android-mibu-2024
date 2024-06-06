@@ -10,19 +10,17 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
-import com.example.ma02mibu.databinding.PackagesPageFragmentBinding;
-import com.example.ma02mibu.databinding.ProductsPricelistFragmentBinding;
 import com.example.ma02mibu.databinding.ProductsPricelistPageFragmentBinding;
-import com.example.ma02mibu.fragments.packages.PackageListFragment;
+import com.example.ma02mibu.databinding.ServicesPricelistPageFragmentBinding;
 
-public class ProductsPricelistPageFragment extends Fragment {
+public class ServicesPricelistPageFragment extends Fragment {
 
-    private ProductsPricelistPageFragmentBinding binding;
+    private ServicesPricelistPageFragmentBinding binding;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = ProductsPricelistPageFragmentBinding.inflate(inflater, container, false);
+        binding = ServicesPricelistPageFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        FragmentTransition.to(ProductsPricelistFragment.newInstance(), getActivity(),
-                true, R.id.scroll_product_pricelist, "productsPricelist1");
+        FragmentTransition.to(ServicesPricelistFragment.newInstance(), getActivity(),
+                true, R.id.scroll_services_pricelist, "servicesPricelist1");
         return root;
     }
 

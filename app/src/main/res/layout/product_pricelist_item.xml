@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Product name"
+            android:layout_marginLeft="20dp"
             android:textSize="20dp">
         </TextView>
     </LinearLayout>
@@ -57,4 +58,10 @@
             android:textSize="17dp"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/changeProductPrice"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Change" />
 </LinearLayout>

@@ -575,6 +575,12 @@ public class CloudStoreUtil {
                 "services", aPackage.getServices());
     }
 
+    public static void updatePackageDiscount(Package aPackage){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("packages").document(aPackage.getFirestoreId());
+        docRef.update("discount", aPackage.getDiscount());
+    }
+
     public static void deleteService(String firestoreId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")

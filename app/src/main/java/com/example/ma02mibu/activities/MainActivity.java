@@ -128,14 +128,18 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
-                m.findItem(R.id.nav_pricelist).setVisible(true);
+                m.findItem(R.id.nav_pricelist_prod).setVisible(true);
+                m.findItem(R.id.nav_pricelist_serv).setVisible(true);
+                m.findItem(R.id.nav_pricelist_pack).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 //TODO
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
-                m.findItem(R.id.nav_pricelist).setVisible(true);
+                m.findItem(R.id.nav_pricelist_prod).setVisible(true);
+                m.findItem(R.id.nav_pricelist_serv).setVisible(true);
+                m.findItem(R.id.nav_pricelist_pack).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();

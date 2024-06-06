@@ -4,34 +4,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import com.example.ma02mibu.activities.CloudStoreUtil;
-import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.ProductPricelistAdapter;
+import com.example.ma02mibu.adapters.ServiceListAdapter;
+import com.example.ma02mibu.adapters.ServicesPricelistAdapter;
 import com.example.ma02mibu.databinding.ProductsPricelistFragmentBinding;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.Service;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
-public class ProductsPricelistFragment extends ListFragment {
+public class ServicesPricelistFragment extends ListFragment {
     private ProductsPricelistFragmentBinding binding;
-    private ArrayList<Product> mProducts;
+    private ArrayList<Service> mServices;
     private boolean isOwner = false;
     private String userId;
     private FirebaseAuth auth;
-    private ProductPricelistAdapter adapter;
+    private ServicesPricelistAdapter adapter;
 
-    public static ProductsPricelistFragment newInstance(){
-        ProductsPricelistFragment fragment = new ProductsPricelistFragment();
+    public static ServicesPricelistFragment newInstance(){
+        ServicesPricelistFragment fragment = new ServicesPricelistFragment();
         return fragment;
     }
     @Override
@@ -42,47 +44,50 @@ public class ProductsPricelistFragment extends ListFragment {
             userId = user.getUid();
         }
         super.onCreate(savedInstanceState);
-        CloudStoreUtil.selectProducts(new CloudStoreUtil.ProductCallback() {
+        CloudStoreUtil.selectServices(new CloudStoreUtil.ServiceCallback() {
             @Override
-            public void onCallback(ArrayList<Product> retrievedProducts) {
-                if (retrievedProducts != null) {
-                    mProducts = retrievedProducts;
+            public void onCallbackService(ArrayList<Service> retrievedServices) {
+                if (retrievedServices != null) {
+                    mServices = retrievedServices;
                 } else {
-                    mProducts = new ArrayList<>();
+                    mServices = new ArrayList<>();
                 }
                 CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
                     @Override
                     public void onSuccess(Owner myItem) {
                         isOwner = true;
-                        mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
-                        mProducts.removeIf(p -> p.isPending());
-                        adapter = new ProductPricelistAdapter(getActivity(), mProducts, getActivity(), isOwner);
+                        mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
+                        mServices.removeIf(s -> s.isPending());
+                        adapter = new ServicesPricelistAdapter(getActivity(), mServices, getActivity(), isOwner);
                         setListAdapter(adapter);
                     }
                     @Override
                     public void onFailure(Exception e) {
                         isOwner = false;
-                        getEmployeesProducts();
-                        mProducts.removeIf(p -> p.isPending());
-                        adapter = new ProductPricelistAdapter(getActivity(), mProducts, getActivity(), isOwner);
+                        getEmployeesServices();
+                        mServices.removeIf(s -> s.isPending());
+                        adapter = new ServicesPricelistAdapter(getActivity(), mServices, getActivity(), isOwner);
                         setListAdapter(adapter);
                     }
                 });
+
             }
         });
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = ProductsPricelistFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        TextView header = binding.pricelistHeader;
+        String headerText = "Services pricelist";
+        header.setText(headerText);
         return root;
     }
 
-    private void getEmployeesProducts(){
+    private void getEmployeesServices(){
         CloudStoreUtil.getEmployee(userId, new CloudStoreUtil.EmployeeCallback() {
             @Override
             public void onSuccess(Employee myItem) {
-                mProducts.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
+                mServices.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
             }
             @Override
             public void onFailure(Exception e) {

@@ -1,53 +1,47 @@
 package com.example.ma02mibu.adapters;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
-import com.example.ma02mibu.fragments.packages.ChooseProductsListFragment;
-import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
-import com.example.ma02mibu.fragments.pricelist.ProductsPricelistFragment;
-import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.fragments.pricelist.EditPackagePriceFragment;
+import com.example.ma02mibu.fragments.pricelist.EditServicePriceFragment;
+import com.example.ma02mibu.model.Package;
+import com.example.ma02mibu.model.Service;
 
 import java.util.ArrayList;
 
-public class ProductPricelistAdapter extends ArrayAdapter<Product> {
+public class PackagesPricelistAdapter extends ArrayAdapter<Package> {
     Context context;
-    private ArrayList<Product> aProducts;
+    private ArrayList<Package> aPackages;
     private FragmentActivity activity;
     private boolean isOwner;
-    public ProductPricelistAdapter(Context context, ArrayList<Product> products, FragmentActivity activity, boolean isOwner){
-        super(context, R.layout.product_pricelist_item, products);
+    public PackagesPricelistAdapter(Context context, ArrayList<Package> packages, FragmentActivity activity, boolean isOwner){
+        super(context, R.layout.product_pricelist_item, packages);
         this.context = context;
-        aProducts = products;
+        aPackages = packages;
         this.activity = activity;
         this.isOwner = isOwner;
     }
     @Override
     public int getCount() {
-        return aProducts.size();
+        return aPackages.size();
     }
 
     @Nullable
     @Override
-    public Product getItem(int position) {
-        return aProducts.get(position);
+    public Package getItem(int position) {
+        return aPackages.get(position);
     }
 
     @Override
@@ -59,7 +53,7 @@ public class ProductPricelistAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Product product = getItem(position);
+        Package aPackage = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_pricelist_item,
                     parent, false);
@@ -71,24 +65,23 @@ public class ProductPricelistAdapter extends ArrayAdapter<Product> {
         TextView discount = convertView.findViewById(R.id.discount);
         Button changePriceButton = convertView.findViewById(R.id.changeProductPrice);
         if(isOwner)
-            changePriceButton.setOnClickListener(v -> openEditPriceFragment(product));
+            changePriceButton.setOnClickListener(v -> openEditPriceFragment(aPackage));
         else
             changePriceButton.setVisibility(View.GONE);
-        if(product != null){
-            productName.setText(product.getName());
+        if(aPackage != null){
+            productName.setText(aPackage.getName());
             productSerialNumber.setText(String.valueOf(position));
-            oldPrice.setText(String.valueOf(product.getPrice()));
-            String discountText = product.getDiscount() + "% off";
+            String price = aPackage.getMinPrice() + "-" +aPackage.getMaxPrice() + " din";
+            oldPrice.setText(price);
+            String discountText = aPackage.getDiscount() + "% off";
             discount.setText(discountText);
-            String currentPrice = "Current price: "+ product.getNewPrice();
+            String currentPrice = "Current price: "+ aPackage.getPrice();
             newPrice.setText(currentPrice);
         }
         return convertView;
     }
-
-    private void openEditPriceFragment(Product product){
-        FragmentTransition.to(EditProductPriceFragment.newInstance(product), activity,
-                false, R.id.scroll_product_pricelist, "edit_product_price");
+    private void openEditPriceFragment(Package aPackage){
+        FragmentTransition.to(EditPackagePriceFragment.newInstance(aPackage), activity,
+                false, R.id.scroll_packages_pricelist, "edit_package_price");
     }
-
 }

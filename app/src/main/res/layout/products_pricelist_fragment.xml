@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Products pricelist"
+        android:id="@+id/pricelist_header"
         android:textSize="30dp">
 
     </TextView>
