@@ -28,6 +28,12 @@
             android:orderInCategory="200"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_pricelist"
+            android:title="pricelist"
+            android:icon="@drawable/pricelist"
+            android:orderInCategory="200"
+            android:visible="false"/>
+
         <item android:id="@+id/nav_event_creation"
             android:title="Create Event"
             android:icon="@drawable/ic_product"
