@@ -47,6 +47,8 @@ public class CloudStoreUtil {
     private static final String eventTypeCollection = "eventtype";
     private static final String userRoleCollection = "userrole";
 
+    private static final String myEventsCollection ="events";
+
     public interface NotificationCallback {
         void onSuccess(ArrayList<OurNotification> myItem);
         void onFailure(Exception e);
@@ -61,6 +63,34 @@ public class CloudStoreUtil {
                     ArrayList<OurNotification> itemList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         OurNotification myItem = documentSnapshot.toObject(OurNotification.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+
+    public interface EventsCallback {
+        void onSuccess(ArrayList<Event> myItem);
+        void onFailure(Exception e);
+    }
+
+    public static void getEvents(String email, EventsCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<Event> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Event myItem = documentSnapshot.toObject(Event.class);
                         itemList.add(myItem);
                     }
                     if (!itemList.isEmpty()) {

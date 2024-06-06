@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_events).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
@@ -214,6 +215,19 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
             }
+
+            if ("EventAgendaPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("eventsPage", 0);
+                return;
+            }
+
+            if ("EventGLPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("eventsPage", 0);
+                return;
+            }
+
+
+
         }
         super.onBackPressed();
     }

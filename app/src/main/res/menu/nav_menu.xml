@@ -40,6 +40,12 @@
             android:orderInCategory="200"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_events"
+            android:title="Events"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"
+            android:visible="false"/>
+
         <item android:id="@+id/nav_employees"
             android:title="employees pup v"
             android:icon="@drawable/ic_product"
