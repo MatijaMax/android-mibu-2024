@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
@@ -112,6 +113,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("employees").add(employee);
+    }
+
+    public static void insertCompanyGrade(CompanyGrade companyGrade){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("companyGrades").add(companyGrade);
     }
 
     public static void insertEventModel(EventModel eventModel){
@@ -323,6 +330,32 @@ public class CloudStoreUtil {
                     ArrayList<Employee> itemList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         Employee myItem = documentSnapshot.toObject(Employee.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface GradesListCallback {
+        void onSuccess(ArrayList<CompanyGrade> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getCompanyGradesList(String ownerId, GradesListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGrades")
+                .whereEqualTo("ownerRefId", ownerId)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<CompanyGrade> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        CompanyGrade myItem = documentSnapshot.toObject(CompanyGrade.class);
                         itemList.add(myItem);
                     }
                     if (!itemList.isEmpty()) {

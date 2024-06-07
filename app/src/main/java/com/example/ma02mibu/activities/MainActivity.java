@@ -122,12 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 //TODO
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_grading_company).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_company_profile).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 //TODO
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
