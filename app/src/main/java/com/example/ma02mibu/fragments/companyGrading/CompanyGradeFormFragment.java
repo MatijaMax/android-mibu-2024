@@ -41,7 +41,7 @@ public class CompanyGradeFormFragment extends Fragment {
     private EditText editTextComment;
     private Button buttonSubmit;
     private FirebaseAuth auth;
-    private String ownerRefId = "dsd";
+    private String ownerRefId = "fiVD01w3ajTXEZXT0FigUde4Aif1";
     private String organizerEmail;
     private FragmentCompanyGradeFormBinding binding;
 

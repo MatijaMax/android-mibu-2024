@@ -58,6 +58,12 @@
             android:orderInCategory="400"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_company_profile"
+            android:title="company profile"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="400"
+            android:visible="false"/>
+
         <item android:id="@+id/nav_admin_category_management"
             android:title="category management"
             android:icon="@drawable/ic_product"

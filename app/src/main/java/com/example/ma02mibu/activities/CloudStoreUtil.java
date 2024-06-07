@@ -343,6 +343,32 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface GradesListCallback {
+        void onSuccess(ArrayList<CompanyGrade> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getCompanyGradesList(String ownerId, GradesListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGrades")
+                .whereEqualTo("ownerRefId", ownerId)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<CompanyGrade> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        CompanyGrade myItem = documentSnapshot.toObject(CompanyGrade.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public interface EventModelsCallback {
         void onSuccess(ArrayList<EventModel> myItems);
         void onFailure(Exception e);
