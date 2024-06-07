@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.ma02mibu.model.CompanyGrade;
+import com.example.ma02mibu.model.CompanyGradeReport;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
@@ -113,6 +114,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("employees").add(employee);
+    }
+
+    public static void insertCompanyGradeReport(CompanyGradeReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("companyGradeReports").add(report);
     }
 
     public static void insertCompanyGrade(CompanyGrade companyGrade){
@@ -356,6 +363,31 @@ public class CloudStoreUtil {
                     ArrayList<CompanyGrade> itemList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         CompanyGrade myItem = documentSnapshot.toObject(CompanyGrade.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface GradesReportsListCallback {
+        void onSuccess(ArrayList<CompanyGradeReport> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getCompanyGradeReportsList(GradesReportsListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGradeReports")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<CompanyGradeReport> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        CompanyGradeReport myItem = documentSnapshot.toObject(CompanyGradeReport.class);
                         itemList.add(myItem);
                     }
                     if (!itemList.isEmpty()) {

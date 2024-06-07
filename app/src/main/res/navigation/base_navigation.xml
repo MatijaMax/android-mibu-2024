@@ -39,6 +39,12 @@
         tools:layout="@layout/fragment_employee_page" />
 
     <fragment
+        android:id="@+id/nav_grade_reports"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeReportsFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_company_grade_reports" />
+
+    <fragment
         android:id="@+id/nav_employee_personal"
         android:name="com.example.ma02mibu.fragments.employees.EmployeePersonalFragment"
         android:label="Employee"

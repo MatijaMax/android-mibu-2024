@@ -46,6 +46,12 @@
             android:orderInCategory="300"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_grade_reports"
+            android:title="company grade reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="300"
+            android:visible="false"/>
+
         <item android:id="@+id/nav_employee_personal"
             android:title="employee pup z"
             android:icon="@drawable/ic_product"

@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.companyGrading.CompanyProfileFragment">
-
+    tools:context=".fragments.companyGrading.CompanyGradeReportsFragment">
 
     <ListView
-        android:id="@+id/list_view"
+        android:id="@+id/list_view_reports"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
