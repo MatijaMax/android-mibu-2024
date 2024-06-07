@@ -45,6 +45,18 @@
         tools:layout="@layout/fragment_employee_personal" />
 
     <fragment
+        android:id="@+id/nav_grading_company"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeFormFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_company_profile"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyProfileFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_company_profile" />
+
+    <fragment
         android:id="@+id/nav_admin_category_management"
         android:name="com.example.ma02mibu.fragments.adminsManagement.CategoryManagementContainerFragment"
         android:label="Category management"
