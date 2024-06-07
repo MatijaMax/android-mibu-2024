@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.Company;
@@ -112,6 +113,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("employees").add(employee);
+    }
+
+    public static void insertCompanyGrade(CompanyGrade companyGrade){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("companyGrades").add(companyGrade);
     }
 
     public static void insertEventModel(EventModel eventModel){

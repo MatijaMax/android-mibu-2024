@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_grading_company).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
