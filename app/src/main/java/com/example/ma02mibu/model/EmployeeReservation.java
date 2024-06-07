@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import java.time.LocalDateTime;
 
 public class EmployeeReservation implements Parcelable {
-    private String employeeRefId;
+    private String employeeEmail;
     private String eventOrganizerRefId;
     private String serviceRefId;
     private LocalDateTime start;
@@ -18,8 +18,8 @@ public class EmployeeReservation implements Parcelable {
 
     public EmployeeReservation() { }
 
-    public EmployeeReservation(String employeeRefId, String eventOrganizerRefId, String serviceRefId, LocalDateTime start, LocalDateTime end, boolean isPickedUp, boolean isCanceled) {
-        this.employeeRefId = employeeRefId;
+    public EmployeeReservation(String employeeEmail, String eventOrganizerRefId, String serviceRefId, LocalDateTime start, LocalDateTime end, boolean isPickedUp, boolean isCanceled) {
+        this.employeeEmail = employeeEmail;
         this.eventOrganizerRefId = eventOrganizerRefId;
         this.serviceRefId = serviceRefId;
         this.start = start;
@@ -29,7 +29,7 @@ public class EmployeeReservation implements Parcelable {
     }
 
     protected EmployeeReservation(Parcel in) {
-        employeeRefId = in.readString();
+        employeeEmail = in.readString();
         eventOrganizerRefId = in.readString();
         serviceRefId = in.readString();
         isPickedUp = in.readByte() != 0;
@@ -48,12 +48,12 @@ public class EmployeeReservation implements Parcelable {
         }
     };
 
-    public String getEmployeeRefId() {
-        return employeeRefId;
+    public String getEmployeeEmail() {
+        return employeeEmail;
     }
 
-    public void setEmployeeRefId(String employeeRefId) {
-        this.employeeRefId = employeeRefId;
+    public void setEmployeeEmail(String employeeEmail) {
+        this.employeeEmail = employeeEmail;
     }
 
     public String getEventOrganizerRefId() {
@@ -111,7 +111,7 @@ public class EmployeeReservation implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(employeeRefId);
+        dest.writeString(employeeEmail);
         dest.writeString(eventOrganizerRefId);
         dest.writeString(serviceRefId);
         dest.writeByte((byte) (isPickedUp ? 1 : 0));
