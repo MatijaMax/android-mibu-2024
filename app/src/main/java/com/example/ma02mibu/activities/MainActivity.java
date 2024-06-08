@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
                 m.findItem(R.id.nav_grade_reports).setVisible(true);
+                m.findItem(R.id.nav_owner_request_managment).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
@@ -213,6 +214,9 @@ public class MainActivity extends AppCompatActivity {
             if ("addBudgetPage".equals(tag)) {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
+            }
+            if ("productsManagement".equals(tag)) {
+                fragmentManager.popBackStackImmediate("productsManagement", 0);
             }
         }
         super.onBackPressed();
