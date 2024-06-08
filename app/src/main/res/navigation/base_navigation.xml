@@ -57,6 +57,12 @@
         tools:layout="@layout/fragment_employee_personal" />
 
     <fragment
+        android:id="@+id/nav_reservations_organizer_view"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOrganizerOverviewFragment"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservations_owner_overview" />
+
+    <fragment
         android:id="@+id/nav_company_profile"
         android:name="com.example.ma02mibu.fragments.companyGrading.CompanyProfileFragment"
         android:label="GradingCompany"
