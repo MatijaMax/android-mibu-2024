@@ -85,6 +85,12 @@
             android:orderInCategory="600"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_company_reports"
+            android:title="Company reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="600"
+            android:visible="false"/>
+
         <item android:id="@+id/log_out"
             android:title="Log out"
             android:icon="@drawable/ic_product"

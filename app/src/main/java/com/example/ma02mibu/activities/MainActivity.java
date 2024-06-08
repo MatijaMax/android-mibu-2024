@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             if(result.getUserRole() == UserRole.USERROLE.ADMIN){
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
+                m.findItem(R.id.nav_company_reports).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
                 //TODO
                 m.findItem(R.id.nav_event_creation).setVisible(true);

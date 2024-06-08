@@ -15,6 +15,7 @@ public class ProductDAO implements Parcelable {
     private String description;
     private String category;
     private String subCategory;
+    private String ownerUuid;
     private int price;
     private int discount;
     private boolean visible;
@@ -68,6 +69,14 @@ public class ProductDAO implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
     }
 
     public String getDescription() {

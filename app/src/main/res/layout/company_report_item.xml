@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/companyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reported company:"
+                android:textColor="@android:color/holo_blue_dark"
+                android:clickable="true"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:textSize="16dp"/>
+
+            <TextView
+                android:id="@+id/reporterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User who reported:"
+                android:textColor="@android:color/holo_blue_dark"
+                android:clickable="true"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:textSize="16dp"/>
+            <TextView
+                android:id="@+id/reportDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of report:"
+                android:textSize="16dp"/>
+            <TextView
+                android:id="@+id/reportReason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reason:"
+                android:textSize="16dp"/>
+            <TextView
+                android:id="@+id/reportStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status:"
+                android:textSize="16dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/acceptReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Accept" />
+                <Button
+                    android:id="@+id/denyReport"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_height="40dp"
+                    android:text="Deny" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/denyLayout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reason for denying:"
+                    android:textSize="14dp"/>
+                <EditText
+                    android:id="@+id/denyReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:lines="1"
+                    />
+                <Button
+                    android:id="@+id/submitDenying"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Submit" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

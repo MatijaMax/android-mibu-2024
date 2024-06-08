@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,8 +14,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
+import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
+import com.example.ma02mibu.model.CompanyReport;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
 
@@ -22,9 +29,11 @@ import java.util.ArrayList;
 
 public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     private ArrayList<ProductDAO> aProducts;
-    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products){
+    private FragmentActivity activity;
+    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products, FragmentActivity activity){
         super(context, R.layout.product_card, products);
         aProducts = products;
+        this.activity = activity;
     }
     @Override
     public int getCount() {
@@ -56,6 +65,8 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         TextView category = convertView.findViewById(R.id.product_category);
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
+        Button reportBtn = convertView.findViewById(R.id.report_button);
+        reportBtn.setOnClickListener(v -> openReportForm(product));
         if(product != null){
             int image = product.getImage().get(0);
             imageView.setImageResource(image);
@@ -67,6 +78,10 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         }
 
         return convertView;
+    }
+    private void openReportForm(ProductDAO product){
+        FragmentTransition.to(ReportCompanyFragment.newInstance(product), activity,
+                false, R.id.scroll_products_list, "edit_product_price");
     }
 }
 
