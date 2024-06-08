@@ -52,8 +52,32 @@
             android:orderInCategory="300"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_grade_reports"
+            android:title="company grade reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="300"
+            android:visible="false"/>
+
         <item android:id="@+id/nav_employee_personal"
             android:title="employee pup z"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="400"
+            android:visible="false"/>
+
+        <item android:id="@+id/nav_grading_company"
+            android:title="oceni"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="400"
+            android:visible="false"/>
+
+        <item android:id="@+id/nav_reservations_organizer_view"
+            android:title="service reservations"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="400"
+            android:visible="false"/>
+
+        <item android:id="@+id/nav_company_profile"
+            android:title="company profile"
             android:icon="@drawable/ic_product"
             android:orderInCategory="400"
             android:visible="false"/>
@@ -68,6 +92,12 @@
             android:title="event type management"
             android:icon="@drawable/ic_product"
             android:orderInCategory="600"
+            android:visible="false"/>
+
+        <item android:id="@+id/nav_owner_request_managment"
+            android:title="Owner request management"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="700"
             android:visible="false"/>
 
         <item android:id="@+id/log_out"

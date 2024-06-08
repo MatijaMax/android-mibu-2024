@@ -14,6 +14,7 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.databinding.ProductsPageFragmentBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
+import com.example.ma02mibu.model.Event;
 import com.example.ma02mibu.model.EventTypeDTO;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.databinding.FragmentExploreAndFilterBinding;
@@ -27,17 +28,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ExploreAndFilter#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ExploreAndFilter extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "event";
+    private Event selectedEvent;
 
     public  ArrayList<ProductDAO> products = new ArrayList<ProductDAO>();
     private FragmentExploreAndFilterBinding binding;
@@ -47,14 +40,20 @@ public class ExploreAndFilter extends Fragment {
     private String suggestions;
     private String eventCreatorId;
 
-    // TODO: Rename and change types and number of parameters
-    public static ExploreAndFilter newInstance(String param1, String param2) {
+    public static ExploreAndFilter newInstance(Event event) {
         ExploreAndFilter fragment = new ExploreAndFilter();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, event);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            selectedEvent = getArguments().getParcelable(ARG_PARAM1);
+        }
     }
 
     @Override
@@ -104,6 +103,7 @@ public class ExploreAndFilter extends Fragment {
                                 ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
                                 if(myItem!=null){
                                     myItem.setTypeDAO(0);
+                                    myItem.setDocumentRefId(documentSnapshot.getId());
                                     //myItem.setImage(images);
                                     allProducts.add(myItem);
                                 }
@@ -120,6 +120,7 @@ public class ExploreAndFilter extends Fragment {
                         ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
                         if(myItem!=null){
                             myItem.setTypeDAO(1);
+                            myItem.setDocumentRefId(documentSnapshot.getId());
                             allProducts.add(myItem);
                         }
                     }
@@ -136,6 +137,7 @@ public class ExploreAndFilter extends Fragment {
                         ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
                         if(myItem!=null){
                             myItem.setTypeDAO(2);
+                            myItem.setDocumentRefId(documentSnapshot.getId());
                             allProducts.add(myItem);
 
                         }
