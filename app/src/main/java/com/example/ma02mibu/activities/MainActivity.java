@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_employee_reservations).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();
