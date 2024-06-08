@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.CompanyGradeReport;
+import com.example.ma02mibu.model.EmployeeReservation;
 import com.example.ma02mibu.model.OwnerRequest;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
@@ -127,6 +128,12 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("companyGrades").add(companyGrade);
+    }
+
+    public static void insertServiceReservation(EmployeeReservation employeeReservation){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("serviceReservations").add(employeeReservation);
     }
 
     public static void insertEventModel(EventModel eventModel){

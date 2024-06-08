@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class EmployeeReservation implements Parcelable {
     private String employeeEmail;
-    private String eventOrganizerRefId;
+    private String eventOrganizerEmail;
     private String serviceRefId;
     private Date start;
     private Date end;
@@ -20,9 +20,9 @@ public class EmployeeReservation implements Parcelable {
 
     public EmployeeReservation() { }
 
-    public EmployeeReservation(String employeeEmail, String eventOrganizerRefId, String serviceRefId, Date start, Date end, String packageRefId, ReservationStatus status) {
+    public EmployeeReservation(String employeeEmail, String eventOrganizerEmail, String serviceRefId, Date start, Date end, String packageRefId, ReservationStatus status) {
         this.employeeEmail = employeeEmail;
-        this.eventOrganizerRefId = eventOrganizerRefId;
+        this.eventOrganizerEmail = eventOrganizerEmail;
         this.serviceRefId = serviceRefId;
         this.start = start;
         this.end = end;
@@ -32,7 +32,7 @@ public class EmployeeReservation implements Parcelable {
 
     protected EmployeeReservation(Parcel in) {
         employeeEmail = in.readString();
-        eventOrganizerRefId = in.readString();
+        eventOrganizerEmail = in.readString();
         serviceRefId = in.readString();
         packageRefId = in.readString();
         start = new Date(in.readLong());
@@ -92,12 +92,12 @@ public class EmployeeReservation implements Parcelable {
         this.employeeEmail = employeeEmail;
     }
 
-    public String getEventOrganizerRefId() {
-        return eventOrganizerRefId;
+    public String getEventOrganizerEmail() {
+        return eventOrganizerEmail;
     }
 
-    public void setEventOrganizerRefId(String eventOrganizerRefId) {
-        this.eventOrganizerRefId = eventOrganizerRefId;
+    public void setEventOrganizerEmail(String eventOrganizerEmail) {
+        this.eventOrganizerEmail = eventOrganizerEmail;
     }
 
     public String getServiceRefId() {
@@ -117,7 +117,7 @@ public class EmployeeReservation implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(employeeEmail);
-        dest.writeString(eventOrganizerRefId);
+        dest.writeString(eventOrganizerEmail);
         dest.writeString(serviceRefId);
         dest.writeString(packageRefId);
         dest.writeLong(start.getTime());
