@@ -22,6 +22,7 @@ import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.ServiceReservationDTO;
 import com.example.ma02mibu.model.SubcategoryProposal;
 import com.example.ma02mibu.model.User;
 import com.example.ma02mibu.model.Subcategory;
@@ -167,6 +168,40 @@ public class CloudStoreUtil {
                         // Create a map with the updated fields
                         Map<String, Object> updates = new HashMap<>();
                         updates.put("status", notification.getStatus());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateStatusReservation(ServiceReservationDTO reservationDTO, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("serviceReservations")
+                .whereEqualTo("employeeEmail", reservationDTO.getEmployeeEmail())
+                .whereEqualTo("serviceRefId", reservationDTO.getServiceRefId())
+                .whereEqualTo("eventOrganizerEmail", reservationDTO.getEventOrganizerEmail())
+                .whereEqualTo("start", reservationDTO.getStart())
+                .whereEqualTo("end", reservationDTO.getEnd())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("status", reservationDTO.getStatus());
                         // Update the document
                         itemRef.update(updates)
                                 .addOnSuccessListener(aVoid -> {
