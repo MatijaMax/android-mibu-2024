@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.ma02mibu.R;
@@ -77,6 +78,7 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
 
+
         listView = view.findViewById(R.id.listView);
 
 
@@ -121,13 +123,13 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
                                             sr.setConfirmAutomatically(item.isConfirmAutomatically());
                                             System.out.println(sr.getServiceName() + "DDDDDDDDDDDD" + sr.getEmployeeFirstName());
                                             serviceReservationDTOSfinal.add(sr);
-                                            ServiceReservationListAdapter adapter = new ServiceReservationListAdapter(getActivity(), serviceReservationDTOSfinal);
+                                            ServiceReservationListAdapter adapter = new ServiceReservationListAdapter(getActivity(), serviceReservationDTOSfinal, getActivity());
                                             listView.setAdapter(adapter);
                                         }
 
                                         @Override
                                         public void onFailure(Exception e) {
-                                            // Handle the failure (e.g., show an error message)
+
                                             System.err.println("Error fetching documents: " + e.getMessage());
                                         }
                                     });

@@ -171,7 +171,10 @@ public class MainActivity extends AppCompatActivity {
             if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("packagesPage", 0);
             }
-
+            if ("ServiceResPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesResList", 0);
+                return;
+            }
             if ("newEmployeePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;

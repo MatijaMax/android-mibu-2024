@@ -13,11 +13,17 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.ServiceReservationListAdapter;
 import com.example.ma02mibu.databinding.FragmentCompanyGradeFormBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeDetailsBinding;
+import com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOrganizerOverviewFragment;
 import com.example.ma02mibu.model.CompanyGrade;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.Service;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,17 +38,13 @@ import java.util.UUID;
 public class CompanyGradeFormFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private NumberPicker numberPickerGrade;
     private EditText editTextComment;
     private Button buttonSubmit;
     private FirebaseAuth auth;
-    private String ownerRefId = "fiVD01w3ajTXEZXT0FigUde4Aif1";
+    private String ownerRefId;
+    private String employeeEmail;
     private String organizerEmail;
     private FragmentCompanyGradeFormBinding binding;
 
@@ -50,11 +52,10 @@ public class CompanyGradeFormFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static CompanyGradeFormFragment newInstance(String param1, String param2) {
+    public static CompanyGradeFormFragment newInstance(String employeeEmail) {
         CompanyGradeFormFragment fragment = new CompanyGradeFormFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, employeeEmail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,8 +64,7 @@ public class CompanyGradeFormFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            employeeEmail = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -78,12 +78,24 @@ public class CompanyGradeFormFragment extends Fragment {
         }
         binding = FragmentCompanyGradeFormBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        // Inflate the layout for this fragment
+
         numberPickerGrade = binding.numberPickerGrade;
         editTextComment = binding.editTextComment;
         buttonSubmit = binding.buttonSubmit;
 
-        // Set the minimum and maximum values for the NumberPicker
+        CloudStoreUtil.getEmployeeByEmail(employeeEmail, new CloudStoreUtil.EmployeeByEmailCallback() {
+            @Override
+            public void onSuccess(Employee item) {
+                ownerRefId = item.getOwnerRefId();
+                System.out.println(item.getOwnerRefId() + "WWWWWWWWWW");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+        });
+
         numberPickerGrade.setMinValue(1);
         numberPickerGrade.setMaxValue(5);
 
@@ -105,5 +117,8 @@ public class CompanyGradeFormFragment extends Fragment {
         CloudStoreUtil.insertCompanyGrade(companyGrade);
         String message = "Graded!";
         Toast.makeText(binding.getRoot().getContext() , message, Toast.LENGTH_SHORT).show();
+        FragmentTransition.to(ServiceReservationsOrganizerOverviewFragment.newInstance("",""), getActivity(),
+                true, R.id.scroll_services_res_list, "servicesResList");
+
     }
 }

@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/nav_reservations_organizer_view"
-        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOrganizerOverviewFragment"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOverviewPageFragment"
         android:label="Reservations"
         tools:layout="@layout/fragment_service_reservations_owner_overview" />
 
