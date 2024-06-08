@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
                 m.findItem(R.id.nav_company_profile).setVisible(true);
+                m.findItem(R.id.nav_owner_reservations).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
