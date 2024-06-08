@@ -16,6 +16,7 @@ import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
 import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeReservation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -88,6 +89,11 @@ public class CompanyProfileFragment extends Fragment {
     }
 
     private void loadGrades() {
+
+//        EmployeeReservation employeeReservation1 = new EmployeeReservation("boskokulusic97@gmail.com", "pahiva9150@mfyax.com", "225db5NItEHs8OLEFh6p", new Date(2024, 6, 9, 10, 15), new Date(2024, 6, 11, 11, 20), "8AMydRDWtCWgmDKrns7z", EmployeeReservation.ReservationStatus.New);
+//        EmployeeReservation employeeReservation2 = new EmployeeReservation("fawosi5421@nweal.com", "pahiva9150@mfyax.com", "5XOvrBWQUsVRT5YhsG7t", new Date(), new Date(2024, 6, 10, 10, 10), null, EmployeeReservation.ReservationStatus.New);
+//        CloudStoreUtil.insertServiceReservation(employeeReservation1);
+//        CloudStoreUtil.insertServiceReservation(employeeReservation2);
         CloudStoreUtil.getCompanyGradesList(ownerRefId, new CloudStoreUtil.GradesListCallback() {
             @Override
             public void onSuccess(ArrayList<CompanyGrade> itemList) {
