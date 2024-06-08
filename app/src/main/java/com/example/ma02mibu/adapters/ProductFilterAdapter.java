@@ -22,6 +22,7 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
 import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
 import com.example.ma02mibu.model.CompanyReport;
+import com.example.ma02mibu.fragments.events.BuyProductFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
 
@@ -29,11 +30,11 @@ import java.util.ArrayList;
 
 public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     private ArrayList<ProductDAO> aProducts;
-    private FragmentActivity activity;
+    private FragmentActivity currentActivity;
     public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products, FragmentActivity activity){
         super(context, R.layout.product_card, products);
         aProducts = products;
-        this.activity = activity;
+        currentActivity = activity;
     }
     @Override
     public int getCount() {
@@ -76,12 +77,25 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             subCategory.setText(product.getSubCategory());
             price.setText(String.valueOf(product.getPrice()));
         }
+        Button buyButton = convertView.findViewById(R.id.buyProduct);
+        handleBuyProductButton(buyButton, imageView, product);
 
         return convertView;
     }
     private void openReportForm(ProductDAO product){
-        FragmentTransition.to(ReportCompanyFragment.newInstance(product), activity,
+        FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,
                 false, R.id.scroll_products_list, "edit_product_price");
+    }
+    private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
+        buyButton.setOnClickListener(v -> {
+            if (!product.isAvailableToBuy()) {
+                Toast.makeText(imageView.getContext(), "Product is not available to buy!", Toast.LENGTH_SHORT).show();
+            } else if (product.getTypeDAO() == 0) {//Type is product
+                Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+            } else {
+                FragmentTransition.to(BuyProductFragment.newInstance(product), currentActivity, true, R.id.products_container, "productsManagement");
+            }
+        });
     }
 }
 

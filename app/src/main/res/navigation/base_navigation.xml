@@ -67,12 +67,36 @@
         android:name="com.example.ma02mibu.fragments.events.EventPageFragment"
         android:label="Events"
         tools:layout="@layout/fragment_event_page" />
+        
+    <fragment
+        android:id="@+id/nav_grade_reports"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeReportsFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_company_grade_reports" />
 
     <fragment
         android:id="@+id/nav_employee_personal"
         android:name="com.example.ma02mibu.fragments.employees.EmployeePersonalFragment"
         android:label="Employee"
         tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_grading_company"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeFormFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_reservations_organizer_view"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOrganizerOverviewFragment"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservations_owner_overview" />
+
+    <fragment
+        android:id="@+id/nav_company_profile"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyProfileFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_company_profile" />
 
     <fragment
         android:id="@+id/nav_admin_category_management"
@@ -97,8 +121,14 @@
         />
     <fragment
         android:id="@+id/nav_explore_and_filter"
-        android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
-        android:label="Explore and Filter"
-        tools:layout="@layout/fragment_explore_and_filter"
+        android:name="com.example.ma02mibu.fragments.events.ProductsContainerFragment"
+        android:label="@string/Products"
+        tools:layout="@layout/fragment_products_container"
+        />
+    <fragment
+        android:id="@+id/nav_owner_request_managment"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.OwnerRequestManagmentFragment"
+        android:label="Owner request management"
+        tools:layout="@layout/fragment_owner_request_managment"
         />
 </navigation>
