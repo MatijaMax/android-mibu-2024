@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
                 m.findItem(R.id.nav_grading_company).setVisible(true);
+                m.findItem(R.id.nav_reservations_organizer_view).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 m.findItem(R.id.nav_employees).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
