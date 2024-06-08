@@ -8,16 +8,26 @@ public class CompanyGrade {
     private String ownerRefId;
     private String organizersEmail;
     private Date createdDate;
+    private String uuid;
 
     public CompanyGrade() {
     }
 
-    public CompanyGrade(int grade, String comment, String ownerRefId, Date createdDate, String organizersEmail) {
+    public CompanyGrade(int grade, String comment, String ownerRefId, Date createdDate, String organizersEmail, String uuid) {
         this.grade = grade;
         this.comment = comment;
         this.ownerRefId = ownerRefId;
         this.createdDate = createdDate;
         this.organizersEmail = organizersEmail;
+        this.uuid = uuid;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getOrganizersEmail() {

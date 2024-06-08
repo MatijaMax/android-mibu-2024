@@ -28,6 +28,7 @@ import com.example.ma02mibu.model.Category;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.OwnerRequest;
 import com.example.ma02mibu.model.UserRole;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -137,6 +138,9 @@ public class SignUpPUP4Fragment extends Fragment {
     private void createAccount() {
         Log.d(TAG, "createAccount:" + owner.getEmail());
 
+        CloudStoreUtil.insertOwnerRequest(new OwnerRequest(owner, password));
+
+        //TODO remove this down
         auth.createUserWithEmailAndPassword(owner.getEmail(), password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

@@ -69,7 +69,7 @@ public class ProductsFilterFragment extends ListFragment {
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
             mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ProductFilterAdapter(getActivity(), mProducts);
+            adapter = new ProductFilterAdapter(getActivity(), mProducts, this.getActivity());
             this.mProductsBackup = new ArrayList<>(mProducts);
             adapter.notifyDataSetChanged();
             setListAdapter(adapter);
