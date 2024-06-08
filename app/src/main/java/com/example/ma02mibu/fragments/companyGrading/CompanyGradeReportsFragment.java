@@ -11,23 +11,21 @@ import android.widget.ListView;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.CompanyGradeReportsAdapter;
 import com.example.ma02mibu.adapters.CompanyGradesListAdapter;
-import com.example.ma02mibu.adapters.EmployeeListAdapter;
-import com.example.ma02mibu.databinding.FragmentEmployeeListBinding;
 import com.example.ma02mibu.model.CompanyGrade;
-import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.CompanyGradeReport;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CompanyProfileFragment#newInstance} factory method to
+ * Use the {@link CompanyGradeReportsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CompanyProfileFragment extends Fragment {
+public class CompanyGradeReportsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,17 +36,18 @@ public class CompanyProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private FirebaseAuth auth;
-    private ArrayList<CompanyGrade> companyGrades;
-    private String ownerRefId;
+    private ListView listView;
+    private CompanyGradeReportsAdapter adapter;
 
-    public CompanyProfileFragment() {
+    private FirebaseAuth auth;
+    private ArrayList<CompanyGradeReport> companyGradeReports;
+
+    public CompanyGradeReportsFragment() {
         // Required empty public constructor
     }
-    private ListView listView;
-    private CompanyGradesListAdapter adapter;
-    public static CompanyProfileFragment newInstance(String param1, String param2) {
-        CompanyProfileFragment fragment = new CompanyProfileFragment();
+
+    public static CompanyGradeReportsFragment newInstance(String param1, String param2) {
+        CompanyGradeReportsFragment fragment = new CompanyGradeReportsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,29 +69,21 @@ public class CompanyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        if(user != null){
-            ownerRefId = user.getUid();
-        }
-        View view = inflater.inflate(R.layout.fragment_company_profile, container, false);
 
-        listView = view.findViewById(R.id.list_view);
+        View view = inflater.inflate(R.layout.fragment_company_grade_reports, container, false);
 
-//        ArrayList<CompanyGrade> data = new ArrayList<>();
-//        data.add(new CompanyGrade(90, "Good job!", "12345",  new Date(), "organizer@example.com"));
-//        data.add(new CompanyGrade(80, "Could be better", "54321", new Date(), "organizer2@example.com"));
+        listView = view.findViewById(R.id.list_view_reports);
 
-
-        loadGrades();
-
+        loadGradeReports();
         return view;
     }
 
-    private void loadGrades() {
-        CloudStoreUtil.getCompanyGradesList(ownerRefId, new CloudStoreUtil.GradesListCallback() {
+    private void loadGradeReports() {
+        CloudStoreUtil.getCompanyGradeReportsList(new CloudStoreUtil.GradesReportsListCallback() {
             @Override
-            public void onSuccess(ArrayList<CompanyGrade> itemList) {
-                companyGrades = new ArrayList<>(itemList);
-                adapter = new CompanyGradesListAdapter(getActivity(), companyGrades);
+            public void onSuccess(ArrayList<CompanyGradeReport> itemList) {
+                companyGradeReports = new ArrayList<>(itemList);
+                adapter = new CompanyGradeReportsAdapter(getActivity(), companyGradeReports);
                 listView.setAdapter(adapter);
             }
 

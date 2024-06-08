@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.companyGrading.CompanyProfileFragment">
-
+    tools:context=".fragments.events.SelectEventFragment">
 
     <ListView
-        android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/selectEventList"
+        tools:listitem="@layout/event_card"/>
 
 </FrameLayout>

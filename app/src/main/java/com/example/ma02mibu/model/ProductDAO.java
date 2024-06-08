@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class ProductDAO implements Parcelable {
     private Long id;
+    private String documentRefId;
     private String name;
     private String description;
     private String category;
@@ -120,6 +121,14 @@ public class ProductDAO implements Parcelable {
 
     public ArrayList<Integer> getImage() {
         return images;
+    }
+
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 
     public int getDiscount() {

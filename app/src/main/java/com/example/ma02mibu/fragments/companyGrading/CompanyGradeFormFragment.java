@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,7 +99,8 @@ public class CompanyGradeFormFragment extends Fragment {
     private void submitForm() {
         int grade = numberPickerGrade.getValue();
         String comment = editTextComment.getText().toString().trim();
-        CompanyGrade companyGrade = new CompanyGrade(grade, comment, ownerRefId, new Date(), organizerEmail);
+        String uuid = UUID.randomUUID().toString();
+        CompanyGrade companyGrade = new CompanyGrade(grade, comment, ownerRefId, new Date(), organizerEmail, uuid);
 
         CloudStoreUtil.insertCompanyGrade(companyGrade);
         String message = "Graded!";
