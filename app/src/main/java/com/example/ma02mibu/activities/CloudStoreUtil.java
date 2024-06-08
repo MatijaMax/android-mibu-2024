@@ -409,6 +409,31 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface ServiceReservationsListCallback {
+        void onSuccess(ArrayList<EmployeeReservation> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getServieReservationsList(ServiceReservationsListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("serviceReservations")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<EmployeeReservation> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        EmployeeReservation myItem = documentSnapshot.toObject(EmployeeReservation.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public interface EventModelsCallback {
         void onSuccess(ArrayList<EventModel> myItems);
         void onFailure(Exception e);
@@ -458,6 +483,82 @@ public class CloudStoreUtil {
                 .addOnFailureListener((OnFailureListener) e -> {
                     callback.onFailure(e);
                 });
+    }
+
+    public interface EmployeeByEmailCallback {
+        void onSuccess(Employee myItem);
+        void onFailure(Exception e);
+    }
+    public static void getEmployeeByEmail(String email, EmployeeByEmailCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", email)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        Employee myItem = documentSnapshot.toObject(Employee.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface OrganizerByEmailCallback {
+        void onSuccess(EventOrganizer myItem);
+        void onFailure(Exception e);
+    }
+    public static void getOrganizerByEmail(String email, OrganizerByEmailCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("eventOrganizers")
+                .whereEqualTo("email", email)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        EventOrganizer myItem = documentSnapshot.toObject(EventOrganizer.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface ServiceByRefIdCallback {
+        void onSuccess(Service myItem);
+        void onFailure(Exception e);
+    }
+    public static void getServiceWithRefId(String refId, ServiceByRefIdCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("services").document(refId);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Service myItem = document.toObject(Service.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        // Document doesn't exist
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                } else {
+                    // Error occurred while getting document
+                    Log.d("ERROR", "Error getting document: ", task.getException());
+                }
+            }
+        });
     }
 
     public interface ServiceByUserCallback {
