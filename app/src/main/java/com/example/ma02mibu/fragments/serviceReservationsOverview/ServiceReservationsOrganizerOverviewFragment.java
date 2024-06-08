@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.ma02mibu.R;
@@ -22,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +70,7 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_service_reservations_owner_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_service_reservations_organizer_overview, container, false);
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
@@ -95,11 +92,9 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<EmployeeReservation> itemList) {
                 employeeReservations = new ArrayList<>(itemList);
-//                adapter = new CompanyGradeReportsAdapter(getActivity(), companyGradeReports);
-//                listView.setAdapter(adapter);
                 employeeReservations.removeIf(r -> !r.getEventOrganizerEmail().equals(currentUser.getEmail()));
                 System.out.println(employeeReservations.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                for (EmployeeReservation er: itemList) {
+                for (EmployeeReservation er: employeeReservations) {
                     serviceReservationDTOS.add(new ServiceReservationDTO(er));
                 }
                 for (ServiceReservationDTO sr: serviceReservationDTOS) {
@@ -129,7 +124,6 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
 
                                         @Override
                                         public void onFailure(Exception e) {
-
                                             System.err.println("Error fetching documents: " + e.getMessage());
                                         }
                                     });
@@ -137,7 +131,6 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    // Handle the failure (e.g., show an error message)
                                     System.err.println("Error fetching documents: " + e.getMessage());
                                 }
                             });
@@ -145,7 +138,6 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
 
                         @Override
                         public void onFailure(Exception e) {
-                            // Handle the failure (e.g., show an error message)
                             System.err.println("Error fetching documents: " + e.getMessage());
                         }
                     });
@@ -154,7 +146,6 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                // Handle the failure (e.g., show an error message)
                 System.err.println("Error fetching documents: " + e.getMessage());
             }
         });
