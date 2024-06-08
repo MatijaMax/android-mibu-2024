@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_pricelist_prod).setVisible(true);
                 m.findItem(R.id.nav_pricelist_serv).setVisible(true);
                 m.findItem(R.id.nav_pricelist_pack).setVisible(true);
-                m.findItem(R.id.nav_pricelist).setVisible(true);
                 m.findItem(R.id.nav_company_profile).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
@@ -235,9 +234,22 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("eventsPage", 0);
                 return;
             }
-
-
-
+            if ("edit_product_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("productsPricelist1", 0);
+                return;
+            }
+            if ("edit_service_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPricelist1", 0);
+                return;
+            }
+            if ("edit_package_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("packagesPricelist1", 0);
+                return;
+            }
+            if ("report_form".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
             if ("productsManagement".equals(tag)) {
                 fragmentManager.popBackStackImmediate("productsManagement", 0);
             }

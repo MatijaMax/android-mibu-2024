@@ -11,6 +11,13 @@
         android:label="Home page"
         tools:layout="@layout/home_fragment" />
     <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.example.ma02mibu.fragments.notifications.NotificationsPageFragment"
+        android:label="Notifications"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/notification_page_fragment" />
+    <fragment
         android:id="@+id/nav_products"
         android:name="com.example.ma02mibu.fragments.products.ProductsPageFragment"
         android:label="Products"

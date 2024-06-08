@@ -88,7 +88,7 @@ public class ProductPricelistAdapter extends ArrayAdapter<Product> {
 
     private void openEditPriceFragment(Product product){
         FragmentTransition.to(EditProductPriceFragment.newInstance(product), activity,
-                false, R.id.scroll_product_pricelist, "edit_product_price");
+                true, R.id.scroll_product_pricelist, "edit_product_price");
     }
 
 }

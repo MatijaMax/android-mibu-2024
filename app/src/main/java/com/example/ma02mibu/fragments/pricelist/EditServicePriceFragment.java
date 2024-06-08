@@ -16,8 +16,11 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.databinding.EditProductPriceFragmentBinding;
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.Service;
+
+import java.util.ArrayList;
 
 public class EditServicePriceFragment extends Fragment {
 
@@ -61,7 +64,27 @@ public class EditServicePriceFragment extends Fragment {
         mService.setPriceByHour(priceInt);
         mService.setDiscount(discountInt);
         CloudStoreUtil.updateService(mService);
+        updatePriceInPackages(mService);
         FragmentTransition.to(ServicesPricelistFragment.newInstance(), getActivity(),
                 false, R.id.scroll_services_pricelist, "falsh");
+    }
+    private void updatePriceInPackages(Service service){
+        CloudStoreUtil.selectPackages(new CloudStoreUtil.PackageCallback(){
+            @Override
+            public void onCallbackPackage(ArrayList<Package> retrievedPackages) {
+                boolean save;
+                for(Package p: retrievedPackages){
+                    save = false;
+                    for(Service s: p.getServices()){
+                        if(s.getFirestoreId().equals(service.getFirestoreId())){
+                            s.setPriceByHour(service.getPriceByHour());
+                            save = true;
+                        }
+                    }
+                    if(save)
+                        CloudStoreUtil.updatePackage(p);
+                }
+            }
+        });
     }
 }

@@ -77,7 +77,7 @@ public class MyEventListFragment extends ListFragment {
     }
 
     private void loadEvents() {
-        CloudStoreUtil.getEvents(email, new CloudStoreUtil.EventsCallback() {
+        CloudStoreUtil.getEvents(email, new CloudStoreUtil.EventsCallback1() {
             @Override
             public void onSuccess(ArrayList<Event> itemList) {
                 // Handle the retrieved list of items (e.g., display them in UI)

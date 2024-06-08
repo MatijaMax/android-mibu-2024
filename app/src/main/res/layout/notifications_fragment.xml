@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/new_product_page"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="2dp"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Notifications"
+        android:textAlignment="viewStart"
+        android:textSize="24sp"/>
+
+    <RadioGroup
+        android:id="@+id/not_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="All" />
+
+        <RadioButton
+            android:layout_width="108dp"
+            android:layout_height="wrap_content"
+            android:text="Unread" />
+
+        <RadioButton
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:text="Read" />
+    </RadioGroup>
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/notification_item"/>
+</LinearLayout>

@@ -11,7 +11,6 @@ import com.example.ma02mibu.model.EmployeeReservation;
 import com.example.ma02mibu.model.OwnerRequest;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
-import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
 
 import com.example.ma02mibu.model.Event;
@@ -83,12 +82,12 @@ public class CloudStoreUtil {
     }
 
 
-    public interface EventsCallback {
+    public interface EventsCallback1 {
         void onSuccess(ArrayList<Event> myItem);
         void onFailure(Exception e);
     }
 
-    public static void getEvents(String email, EventsCallback callback) {
+    public static void getEvents(String email, EventsCallback1 callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events")
                 .whereEqualTo("email", email)

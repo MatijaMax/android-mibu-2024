@@ -17,8 +17,13 @@ import androidx.fragment.app.Fragment;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.PackagesPricelistAdapter;
 import com.example.ma02mibu.databinding.EditProductPriceFragmentBinding;
+import com.example.ma02mibu.model.Owner;
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
+
+import java.util.ArrayList;
 
 public class EditProductPriceFragment extends Fragment {
     private EditProductPriceFragmentBinding binding;
@@ -61,7 +66,27 @@ public class EditProductPriceFragment extends Fragment {
         mProduct.setPrice(priceInt);
         mProduct.setDiscount(discountInt);
         CloudStoreUtil.updateProduct(mProduct);
+        updatePriceInPackages(mProduct);
         FragmentTransition.to(ProductsPricelistFragment.newInstance(), getActivity(),
                 false, R.id.scroll_product_pricelist, "falsh");
+    }
+    private void updatePriceInPackages(Product product){
+        CloudStoreUtil.selectPackages(new CloudStoreUtil.PackageCallback(){
+            @Override
+            public void onCallbackPackage(ArrayList<Package> retrievedPackages) {
+                boolean save;
+                for(Package p: retrievedPackages){
+                    save = false;
+                    for(Product prod: p.getProducts()){
+                        if(prod.getFirestoreId().equals(product.getFirestoreId())){
+                            prod.setPrice(product.getPrice());
+                            save = true;
+                        }
+                    }
+                    if(save)
+                        CloudStoreUtil.updatePackage(p);
+                }
+            }
+        });
     }
 }

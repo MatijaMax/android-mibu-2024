@@ -81,6 +81,6 @@ public class ServicesPricelistAdapter extends ArrayAdapter<Service> {
     }
     private void openEditPriceFragment(Service service){
         FragmentTransition.to(EditServicePriceFragment.newInstance(service), activity,
-                false, R.id.scroll_services_pricelist, "edit_service_price");
+                true, R.id.scroll_services_pricelist, "edit_service_price");
     }
 }

@@ -84,7 +84,7 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     }
     private void openReportForm(ProductDAO product){
         FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,
-                false, R.id.scroll_products_list, "edit_product_price");
+                true, R.id.scroll_products_list, "report_form");
     }
     private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
         buyButton.setOnClickListener(v -> {
