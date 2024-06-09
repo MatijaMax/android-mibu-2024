@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_pricelist_serv).setVisible(true);
                 m.findItem(R.id.nav_pricelist_pack).setVisible(true);
                 m.findItem(R.id.nav_company_profile).setVisible(true);
+                m.findItem(R.id.nav_owner_reservations).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
@@ -179,7 +180,10 @@ public class MainActivity extends AppCompatActivity {
             if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("packagesPage", 0);
             }
-
+            if ("ServiceResPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesResList", 0);
+                return;
+            }
             if ("newEmployeePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;

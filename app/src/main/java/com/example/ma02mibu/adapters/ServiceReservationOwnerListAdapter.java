@@ -11,27 +11,23 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.model.EmployeeReservation;
+import com.example.ma02mibu.model.ServiceReservationDTO;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-
-import com.example.ma02mibu.FragmentTransition;
-import com.example.ma02mibu.R;
-
-import com.example.ma02mibu.activities.CloudStoreUtil;
-import com.example.ma02mibu.fragments.companyGrading.CompanyGradeFormFragment;
-
-import com.example.ma02mibu.model.EmployeeReservation;
-import com.example.ma02mibu.model.ServiceReservationDTO;
 import java.util.Locale;
 
-public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservationDTO> {
+public class ServiceReservationOwnerListAdapter extends ArrayAdapter<ServiceReservationDTO> {
     private List<ServiceReservationDTO> reservations;
     private FragmentActivity currFragActivity;
 
-    public ServiceReservationListAdapter(Context context, List<ServiceReservationDTO> reservations, FragmentActivity fragmentActivity) {
+    public ServiceReservationOwnerListAdapter(Context context, List<ServiceReservationDTO> reservations, FragmentActivity fragmentActivity) {
         super(context, 0, reservations);
         this.reservations = reservations;
         currFragActivity = fragmentActivity;
@@ -41,8 +37,9 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
     public View getView(int position, View convertView, ViewGroup parent) {
         ServiceReservationDTO reservation = getItem(position);
 
+
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.service_reservation_item_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.service_reservation_item_owner_view, parent, false);
         }
 
 
@@ -51,46 +48,27 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView);
 
-        Button gradeButton = convertView.findViewById(R.id.buttonGrade);
-        handleGradeButtonClick(gradeButton, reservation);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String startDate = dateFormat.format(reservation.getStart());
+        String endDate = dateFormat.format(reservation.getEnd());
 
-        if (reservation.getStatus() == EmployeeReservation.ReservationStatus.Finished || reservation.getStatus() == EmployeeReservation.ReservationStatus.CanceledByPUP) {
-            gradeButton.setVisibility(View.VISIBLE);
-        } else {
-            gradeButton.setVisibility(View.GONE);
-        }
+        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName() + "\n" + reservation.getEmployeeEmail());
+        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName() + "\n" + reservation.getEventOrganizerEmail());
+        serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
+        cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
+        statusTextView.setText("Status: " + reservation.getStatus().toString());
+
 
         if (reservation.getStatus() == EmployeeReservation.ReservationStatus.New || reservation.getStatus() == EmployeeReservation.ReservationStatus.Accepted) {
             cancelButton.setVisibility(View.VISIBLE);
         } else {
             cancelButton.setVisibility(View.GONE);
         }
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String startDate = dateFormat.format(reservation.getStart());
-        String endDate = dateFormat.format(reservation.getEnd());
-
-        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName());
-        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName());
-        serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
-        cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
-        statusTextView.setText("Status: " + reservation.getStatus().toString());
-
-
         return convertView;
-    }
-
-    private void handleGradeButtonClick(Button detailsButton, ServiceReservationDTO reservation){
-        detailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransition.to(CompanyGradeFormFragment.newInstance(reservation.getEmployeeEmail()), currFragActivity,
-                        true, R.id.scroll_services_res_list, "ServiceResPage");
-            }
-        });
     }
 
     private void handleCancelButtonClick(Button detailsButton, ServiceReservationDTO reservation, TextView statusTextView){
@@ -110,13 +88,11 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
                     Toast.makeText(v.getContext() , "Cancellation deadline passed!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByOD);
+                reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByPUP);
                 CloudStoreUtil.updateStatusReservation(reservation, new CloudStoreUtil.UpdateReadCallback() {
                     @Override
                     public void onSuccess() {
-
                         Toast.makeText(v.getContext() , "Canceled", Toast.LENGTH_SHORT).show();
-                        System.out.println("Item updated!");
                     }
                     @Override
                     public void onFailure(Exception e) {
