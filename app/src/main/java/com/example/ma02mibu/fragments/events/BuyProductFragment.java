@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +13,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.adapters.EmployeePickupListAdapter;
 import com.example.ma02mibu.adapters.EmployeeTimeTableAdapter;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.EmployeeReservation;
 import com.example.ma02mibu.model.EventModel;
 import com.example.ma02mibu.model.ProductDAO;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.OurNotification;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class BuyProductFragment extends Fragment {
@@ -183,9 +188,27 @@ public class BuyProductFragment extends Fragment {
             return;
         }
 
-        //TODO create reservation in database
+        Date start = Date.from(selectedDate.atTime(fromHour, fromMinute).atZone(ZoneId.systemDefault()).toInstant());
+        Date end = Date.from(selectedDate.atTime(toHour, toMinute).atZone(ZoneId.systemDefault()).toInstant());
+        EmployeeReservation reservation = new EmployeeReservation(selectedEmployee.getEmail(),
+                                                                    FirebaseAuth.getInstance().getCurrentUser().getEmail(),
+                                                                    service.getFirestoreId(),
+                                                                    start,
+                                                                    end,
+                                                                    null,
+                                                                    EmployeeReservation.ReservationStatus.New);
+
+        CloudStoreUtil.insertServiceReservation(reservation);
+
+        OurNotification employeeNotification = new OurNotification(selectedEmployee.getEmail(),
+                                                                    "New service reservation",
+                                                                    FirebaseAuth.getInstance().getCurrentUser().getEmail() + " created service reservation",
+                                                                    "notRead");
+        CloudStoreUtil.insertNotification(employeeNotification);
 
         Toast.makeText(getContext(), "Nice, sve je ok", Toast.LENGTH_SHORT).show();
+
+        FragmentTransition.to(SelectEventFragment.newInstance(), getActivity(), true, R.id.products_container, "productsManagement");
     }
 
     private boolean isBefore(int firstHour, int firstMinute, int secondHour, int secondMinute, boolean equal){
