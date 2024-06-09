@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 
 public class Owner implements Parcelable {
@@ -17,7 +19,8 @@ public class Owner implements Parcelable {
     private Company myCompany;
     private ArrayList<String> categories;
     private ArrayList<String> eventTypes;
-
+    private boolean blocked;
+    private String documentRefId;
     public Owner() {
     }
 
@@ -46,6 +49,7 @@ public class Owner implements Parcelable {
     }
 
     protected Owner(Parcel in) {
+        documentRefId = in.readString();
         email = in.readString();
         name = in.readString();
         surname = in.readString();
@@ -74,6 +78,7 @@ public class Owner implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(documentRefId);
         dest.writeString(email);
         dest.writeString(name);
         dest.writeString(surname);
@@ -153,5 +158,20 @@ public class Owner implements Parcelable {
 
     public void setEventTypes(ArrayList<String> eventTypes) {
         this.eventTypes = eventTypes;
+    }
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
+    }
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 }

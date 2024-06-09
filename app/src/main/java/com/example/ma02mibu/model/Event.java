@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Event implements Parcelable {
     private Long id;
@@ -20,6 +22,11 @@ public class Event implements Parcelable {
 
     private String email;
 
+    private List<Guest> guests;
+
+    private List<AgendaItem> agenda;
+
+
 
     protected Event(Parcel in) {
         id = in.readLong();
@@ -30,6 +37,10 @@ public class Event implements Parcelable {
         location = in.readString();
         privacy = in.readBoolean();
         date = in.readString();
+        guests = new ArrayList<>();
+        in.readList(guests, Guest.class.getClassLoader());
+        agenda = new ArrayList<>();
+        in.readList(agenda, AgendaItem.class.getClassLoader());
     }
 
     public Event(Long id, String type, String name, String description, int participantNumber, String location, Boolean privacy, String date, String email) {
@@ -42,6 +53,20 @@ public class Event implements Parcelable {
         this.date = date;
         this.type = type;
         this.email = email;
+    }
+
+    public Event(Long id, String type, String name, String description, int participantNumber, String location, Boolean privacy, String date, String email, List<Guest> guests, List<AgendaItem> agendaItems ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.participantNumber = participantNumber;
+        this.location = location;
+        this.privacy = privacy;
+        this.date = date;
+        this.type = type;
+        this.email = email;
+        this.guests = guests;
+        this.agenda = agendaItems;
     }
 
     public Event(){
@@ -63,6 +88,8 @@ public class Event implements Parcelable {
         dest.writeString(location);
         dest.writeBoolean(privacy);
         dest.writeString(date);
+        dest.writeList(guests);
+        dest.writeList(agenda);
     }
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
@@ -146,6 +173,22 @@ public class Event implements Parcelable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Guest> getGuests() {
+        return guests;
+    }
+
+    public void setGuests(List<Guest> guests) {
+        this.guests = guests;
+    }
+
+    public List<AgendaItem> getAgenda() {
+        return agenda;
+    }
+
+    public void setAgenda(List<AgendaItem> agendaItems) {
+        this.agenda = agendaItems;
     }
 }
 
