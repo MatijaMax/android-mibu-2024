@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,8 @@ import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.companyGrading.CompanyGradeFormFragment;
 
 import com.example.ma02mibu.model.EmployeeReservation;
+import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.ServiceReservationDTO;
 import java.util.Locale;
 
@@ -51,6 +55,7 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+        TextView packageTextView = convertView.findViewById(R.id.packageId);
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView);
 
@@ -73,11 +78,12 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
         String startDate = dateFormat.format(reservation.getStart());
         String endDate = dateFormat.format(reservation.getEnd());
 
-        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName());
-        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName());
+        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName() + "\n" + reservation.getEmployeeEmail());
+        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName() + "\n" + reservation.getEventOrganizerEmail());
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());
+        packageTextView.setText("Package: " + reservation.getPackageRefId());
 
 
         return convertView;
@@ -110,6 +116,16 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
                     Toast.makeText(v.getContext() , "Cancellation deadline passed!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(reservation.getStatus() == EmployeeReservation.ReservationStatus.Accepted){
+                    Date startDate = reservation.getStart();
+                    LocalDateTime localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    Date endDate = reservation.getEnd();
+                    LocalDateTime localEndDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    EventModel eventModel = new EventModel(reservation.getServiceName(), localStartDate.format(dateFormatter).toString(), localStartDate.format(timeFormatter).toString(), localEndDate.format(timeFormatter).toString(), "reserved", reservation.getEmployeeEmail());
+                    CloudStoreUtil.deleteEventModel(eventModel);
+                }
                 reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByOD);
                 CloudStoreUtil.updateStatusReservation(reservation, new CloudStoreUtil.UpdateReadCallback() {
                     @Override
@@ -123,6 +139,8 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
                         System.err.println("Error updating item: " + e.getMessage());
                     }
                 });
+                OurNotification notification = new OurNotification(reservation.getEmployeeEmail(), "Reservation canceled","Canceled reservation for " + reservation.getServiceName() + " by " + reservation.getEventOrganizerEmail(), "notRead");
+                CloudStoreUtil.insertNotification(notification);
                 statusTextView.setText("Status: " + reservation.getStatus().toString());
                 detailsButton.setVisibility(View.GONE);
             }

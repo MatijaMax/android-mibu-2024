@@ -14,11 +14,15 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.model.EmployeeReservation;
+import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.ServiceReservationDTO;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +51,7 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+        TextView packageTextView = convertView.findViewById(R.id.packageId);
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         Button acceptButton = convertView.findViewById(R.id.acceptButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView, acceptButton);
@@ -73,6 +78,7 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());
+        packageTextView.setText("Package: " + reservation.getPackageRefId());
 
 
         return convertView;
@@ -95,6 +101,14 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
                         System.err.println("Error updating item: " + e.getMessage());
                     }
                 });
+                Date startDate = reservation.getStart();
+                LocalDateTime localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                Date endDate = reservation.getEnd();
+                LocalDateTime localEndDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                EventModel eventModel = new EventModel(reservation.getServiceName(), localStartDate.format(dateFormatter).toString(), localStartDate.format(timeFormatter).toString(), localEndDate.format(timeFormatter).toString(), "reserved", reservation.getEmployeeEmail());
+                CloudStoreUtil.insertEventModel(eventModel);
                 statusTextView.setText("Status: " + reservation.getStatus().toString());
                 detailsButton.setVisibility(View.GONE);
                 cancelButton.setVisibility(View.GONE);
@@ -119,6 +133,16 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
                     Toast.makeText(v.getContext() , "Cancellation deadline passed!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(reservation.getStatus() == EmployeeReservation.ReservationStatus.Accepted){
+                    Date startDate = reservation.getStart();
+                    LocalDateTime localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    Date endDate = reservation.getEnd();
+                    LocalDateTime localEndDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    EventModel eventModel = new EventModel(reservation.getServiceName(), localStartDate.format(dateFormatter).toString(), localStartDate.format(timeFormatter).toString(), localEndDate.format(timeFormatter).toString(), "reserved", reservation.getEmployeeEmail());
+                    CloudStoreUtil.deleteEventModel(eventModel);
+                }
                 reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByPUP);
                 CloudStoreUtil.updateStatusReservation(reservation, new CloudStoreUtil.UpdateReadCallback() {
                     @Override
@@ -132,6 +156,8 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
                         System.err.println("Error updating item: " + e.getMessage());
                     }
                 });
+                OurNotification notification = new OurNotification(reservation.getEventOrganizerEmail(), "Reservation canceled","Canceled reservation for " + reservation.getServiceName() + " by " + reservation.getEmployeeEmail(), "notRead");
+                CloudStoreUtil.insertNotification(notification);
                 statusTextView.setText("Status: " + reservation.getStatus().toString());
                 detailsButton.setVisibility(View.GONE);
                 acceptButton.setVisibility(View.GONE);

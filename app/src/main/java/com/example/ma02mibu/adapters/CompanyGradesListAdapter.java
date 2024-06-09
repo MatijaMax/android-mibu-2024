@@ -87,7 +87,7 @@ public class CompanyGradesListAdapter extends ArrayAdapter<CompanyGrade> {
                 }
             });
 
-            OurNotification notification = new OurNotification("vejihot961@mfyax.com", "Rejected company grade","Reason: " + companyGradeReport.getReason(), "notRead");
+            OurNotification notification = new OurNotification("vejihot961@mfyax.com", "Reported company grade","Reason: " + companyGradeReport.getReason(), "notRead");
             CloudStoreUtil.insertNotification(notification);
         });
 
