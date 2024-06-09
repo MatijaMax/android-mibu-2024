@@ -64,6 +64,7 @@ public class CompanyGradeReportsAdapter extends ArrayAdapter<CompanyGradeReport>
         if(report.getReportStatus() != CompanyGradeReport.REPORTSTATUS.REPORTED){
             holder.acceptButton.setVisibility(View.GONE);
             holder.rejectButton.setVisibility(View.GONE);
+            holder.rejectReasonEditView.setVisibility(View.GONE);
         }
 
         holder.gradeTextView.setText(String.valueOf(report.getGrade()));
