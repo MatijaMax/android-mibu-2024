@@ -6,34 +6,39 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class EmployeeReservation implements Parcelable {
     private String employeeEmail;
-    private String eventOrganizerRefId;
+    private String eventOrganizerEmail;
     private String serviceRefId;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private boolean isPickedUp;
-    private boolean isCanceled;
+    private Date start;
+    private Date end;
+    private String packageRefId;
+    private ReservationStatus status;
+    public enum ReservationStatus {New, CanceledByPUP, CanceledByOD, CanceledByAdmin ,Accepted, Finished};
 
     public EmployeeReservation() { }
 
-    public EmployeeReservation(String employeeEmail, String eventOrganizerRefId, String serviceRefId, LocalDateTime start, LocalDateTime end, boolean isPickedUp, boolean isCanceled) {
+    public EmployeeReservation(String employeeEmail, String eventOrganizerEmail, String serviceRefId, Date start, Date end, String packageRefId, ReservationStatus status) {
         this.employeeEmail = employeeEmail;
-        this.eventOrganizerRefId = eventOrganizerRefId;
+        this.eventOrganizerEmail = eventOrganizerEmail;
         this.serviceRefId = serviceRefId;
         this.start = start;
         this.end = end;
-        this.isPickedUp = isPickedUp;
-        this.isCanceled = isCanceled;
+        this.packageRefId = packageRefId;
+        this.status = status;
     }
 
     protected EmployeeReservation(Parcel in) {
         employeeEmail = in.readString();
-        eventOrganizerRefId = in.readString();
+        eventOrganizerEmail = in.readString();
         serviceRefId = in.readString();
-        isPickedUp = in.readByte() != 0;
-        isCanceled = in.readByte() != 0;
+        packageRefId = in.readString();
+        start = new Date(in.readLong());
+        end = new Date(in.readLong());
+        status = ReservationStatus.values()[in.readInt()];
     }
 
     public static final Creator<EmployeeReservation> CREATOR = new Creator<EmployeeReservation>() {
@@ -48,6 +53,38 @@ public class EmployeeReservation implements Parcelable {
         }
     };
 
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public String getPackageRefId() {
+        return packageRefId;
+    }
+
+    public void setPackageRefId(String packageRefId) {
+        this.packageRefId = packageRefId;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
     public String getEmployeeEmail() {
         return employeeEmail;
     }
@@ -56,12 +93,21 @@ public class EmployeeReservation implements Parcelable {
         this.employeeEmail = employeeEmail;
     }
 
-    public String getEventOrganizerRefId() {
-        return eventOrganizerRefId;
+    public String getEventOrganizerEmail() {
+        return eventOrganizerEmail;
     }
 
-    public void setEventOrganizerRefId(String eventOrganizerRefId) {
-        this.eventOrganizerRefId = eventOrganizerRefId;
+    public boolean isOwnersRes(ArrayList<Employee> employees){
+        for(Employee e : employees){
+            if(e.getEmail().equals(getEmployeeEmail())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setEventOrganizerEmail(String eventOrganizerEmail) {
+        this.eventOrganizerEmail = eventOrganizerEmail;
     }
 
     public String getServiceRefId() {
@@ -72,37 +118,6 @@ public class EmployeeReservation implements Parcelable {
         this.serviceRefId = serviceRefId;
     }
 
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public boolean isPickedUp() {
-        return isPickedUp;
-    }
-
-    public void setPickedUp(boolean pickedUp) {
-        isPickedUp = pickedUp;
-    }
-
-    public boolean isCanceled() {
-        return isCanceled;
-    }
-
-    public void setCanceled(boolean canceled) {
-        isCanceled = canceled;
-    }
 
     @Override
     public int describeContents() {
@@ -112,9 +127,11 @@ public class EmployeeReservation implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(employeeEmail);
-        dest.writeString(eventOrganizerRefId);
+        dest.writeString(eventOrganizerEmail);
         dest.writeString(serviceRefId);
-        dest.writeByte((byte) (isPickedUp ? 1 : 0));
-        dest.writeByte((byte) (isCanceled ? 1 : 0));
+        dest.writeString(packageRefId);
+        dest.writeLong(start.getTime());
+        dest.writeLong(end.getTime());
+        dest.writeInt(status.ordinal());
     }
 }

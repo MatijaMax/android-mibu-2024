@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -23,10 +25,12 @@ public class Employee implements Parcelable {
     private int image;
 
     private String ownerRefId;
+    private String documentRefId;
     private String userUID;
     private ArrayList<WorkSchedule> workSchedules;
 
     private int isActive;
+    private boolean blocked;
 
     public Employee() {
         workSchedules = new ArrayList<>();
@@ -225,5 +229,21 @@ public class Employee implements Parcelable {
 
     public void setIsActive(int isActive) {
         this.isActive = isActive;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 }

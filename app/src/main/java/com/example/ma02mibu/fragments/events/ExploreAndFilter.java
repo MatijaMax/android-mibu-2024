@@ -78,8 +78,6 @@ public class ExploreAndFilter extends Fragment {
             eventCreatorId = user.getEmail();
 
         }
-
-
         binding = FragmentExploreAndFilterBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         auth = FirebaseAuth.getInstance();

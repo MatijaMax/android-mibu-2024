@@ -18,6 +18,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
+import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
+import com.example.ma02mibu.model.CompanyReport;
 import com.example.ma02mibu.fragments.events.BuyProductFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
@@ -62,6 +66,8 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         TextView category = convertView.findViewById(R.id.product_category);
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
+        Button reportBtn = convertView.findViewById(R.id.report_button);
+        reportBtn.setOnClickListener(v -> openReportForm(product));
         if(product != null){
             int image = product.getImage().get(0);
             imageView.setImageResource(image);
@@ -76,7 +82,10 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
 
         return convertView;
     }
-
+    private void openReportForm(ProductDAO product){
+        FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,
+                true, R.id.scroll_products_list, "report_form");
+    }
     private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
         buyButton.setOnClickListener(v -> {
             if (!product.isAvailableToBuy()) {

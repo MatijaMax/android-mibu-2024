@@ -118,20 +118,35 @@ public class MainActivity extends AppCompatActivity {
             if(result.getUserRole() == UserRole.USERROLE.ADMIN){
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
+                m.findItem(R.id.nav_company_reports).setVisible(true);
+                m.findItem(R.id.nav_od_reports).setVisible(true);
+                m.findItem(R.id.nav_grade_reports).setVisible(true);
                 m.findItem(R.id.nav_owner_request_managment).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_events).setVisible(true);
+                m.findItem(R.id.nav_grading_company).setVisible(true);
+                m.findItem(R.id.nav_reservations_organizer_view).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 m.findItem(R.id.nav_employees).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_pricelist_prod).setVisible(true);
+                m.findItem(R.id.nav_pricelist_serv).setVisible(true);
+                m.findItem(R.id.nav_pricelist_pack).setVisible(true);
+                m.findItem(R.id.nav_company_profile).setVisible(true);
+                m.findItem(R.id.nav_owner_reservations).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_employee_reservations).setVisible(true);
+                m.findItem(R.id.nav_pricelist_prod).setVisible(true);
+                m.findItem(R.id.nav_pricelist_serv).setVisible(true);
+                m.findItem(R.id.nav_pricelist_pack).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();
@@ -167,7 +182,10 @@ public class MainActivity extends AppCompatActivity {
             if ("newPackagePage".equals(tag) || "chooseProductsPage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("packagesPage", 0);
             }
-
+            if ("ServiceResPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesResList", 0);
+                return;
+            }
             if ("newEmployeePage".equals(tag)) {
                 fragmentManager.popBackStackImmediate("employeesPage", 0);
                 return;
@@ -212,8 +230,43 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStack("createEventPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return;
             }
-            if ("productsManagement".equals(tag)) {
-                fragmentManager.popBackStackImmediate("productsManagement", 0);
+
+            if ("EventAgendaPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("eventsPage", 0);
+                return;
+            }
+
+            if ("EventGLPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("eventsPage", 0);
+                return;
+            }
+            if ("edit_product_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("productsPricelist1", 0);
+                return;
+            }
+            if ("edit_service_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesPricelist1", 0);
+                return;
+            }
+            if ("edit_package_price".equals(tag)) {
+                fragmentManager.popBackStackImmediate("packagesPricelist1", 0);
+                return;
+            }
+            if ("report_form".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+            if ("eventOrganizerProfile".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesResOwnerList", 0);
+                return;
+            }
+            if ("profilePageOwner".equals(tag)) {
+                fragmentManager.popBackStackImmediate("od_reports", 0);
+                return;
+            }
+            if ("profilePageOrganizer".equals(tag)) {
+                fragmentManager.popBackStackImmediate("od_reports", 0);
+                return;
             }
         }
         super.onBackPressed();

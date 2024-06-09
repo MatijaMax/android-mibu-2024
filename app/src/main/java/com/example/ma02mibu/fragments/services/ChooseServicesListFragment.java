@@ -88,6 +88,7 @@ public class ChooseServicesListFragment extends ListFragment {
                 }
                 mServices.removeIf(s -> !s.getOwnerUuid().equals(userId));
                 mServices.removeIf(p -> !p.getCategory().equals(category));
+                mServices.removeIf(s -> s.isPending());
                 adapter = new ServiceListAdapter(getActivity(), mServices, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }
