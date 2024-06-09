@@ -138,28 +138,30 @@ public class SignUpPUP4Fragment extends Fragment {
     private void createAccount() {
         Log.d(TAG, "createAccount:" + owner.getEmail());
 
+        owner.setEventTypes(selectedEventTypes);
+        owner.setCategories(selectedCategories);
         CloudStoreUtil.insertOwnerRequest(new OwnerRequest(owner, password));
 
-        //TODO remove this down
-        auth.createUserWithEmailAndPassword(owner.getEmail(), password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
-                        if(user != null){
-                            owner.setUserUID(user.getUid());
-                            owner.setEventTypes(selectedEventTypes);
-                            owner.setCategories(selectedCategories);
-                            createOwner(owner);
-                            createUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.OWNER));
-                            sendEmailVerification(user);
-                        }
-
-                    } else {
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(getContext(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        //TODO remove this down
+//        auth.createUserWithEmailAndPassword(owner.getEmail(), password)
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        FirebaseUser user = task.getResult().getUser();
+//                        if(user != null){
+//                            owner.setUserUID(user.getUid());
+//                            owner.setEventTypes(selectedEventTypes);
+//                            owner.setCategories(selectedCategories);
+//                            createOwner(owner);
+//                            createUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.OWNER));
+//                            sendEmailVerification(user);
+//                        }
+//
+//                    } else {
+//                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                        Toast.makeText(getContext(), "Authentication failed.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
 
     private void createUserRole(UserRole userRole) {

@@ -41,4 +41,28 @@
             app:layout_constraintTop_toBottomOf="@id/companyName"
             app:layout_constraintStart_toEndOf="@id/companyName"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rejectButton"
+            android:text="Reject"
+            app:layout_constraintTop_toBottomOf="@id/companyEmail"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/AcceptButton"
+            android:text="Accept"
+            app:layout_constraintTop_toBottomOf="@id/companyEmail"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ReasonEditText"
+            app:layout_constraintLeft_toRightOf="@id/rejectButton"
+            app:layout_constraintTop_toBottomOf="@id/companyEmail"
+            android:hint="Reason for rejection"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

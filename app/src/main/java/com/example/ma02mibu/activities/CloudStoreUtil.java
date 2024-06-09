@@ -1,6 +1,9 @@
 package com.example.ma02mibu.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -33,6 +36,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,6 +60,29 @@ public class CloudStoreUtil {
     private static final String ownerRequestCollection = "ownerrequest";
 
     private static final String myEventsCollection ="events";
+
+    public static void acceptOwnerRequest(OwnerRequest request) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(request.getOwner().getEmail(), request.getPassword()).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = task.getResult().getUser();
+                if(user != null){
+                    request.getOwner().setUserUID(user.getUid());
+                    CloudStoreUtil.insertOwner(request.getOwner());
+                    CloudStoreUtil.insertUserRole(new UserRole(user.getEmail(), UserRole.USERROLE.OWNER));
+                    user.sendEmailVerification()
+                            .addOnCompleteListener(task1 -> {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "sendEmailVerification");
+                                } else {
+                                    Log.e(TAG, "sendEmailVerification", task.getException());
+                                }
+                            });
+                }
+            } else {
+                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+            }
+        });
+    }
 
     public interface NotificationCallback {
         void onSuccess(ArrayList<OurNotification> myItem);
@@ -1652,6 +1680,7 @@ public class CloudStoreUtil {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d("REZ_DB", document.getId() + " => " + document.getData());
                             OwnerRequest temp = document.toObject(OwnerRequest.class);
+                            temp.setDocumentRefId(document.getId());
                             owners.add(temp);
                             break;
                         }
@@ -1666,7 +1695,7 @@ public class CloudStoreUtil {
                 });
     }
 
-    private static void privateDeleteOwnerRequest(OwnerRequest ownerRequest){
+    private static void privateDeleteOwnerRequest(OwnerRequest ownerRequest, String reason){
         if(ownerRequest.getDocumentRefId() == null){
             Log.w("REZ_DB", "Error document reference id not provided.");
             return;
@@ -1674,17 +1703,14 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(categoryCollection).document(ownerRequest.getDocumentRefId()).delete()
-                .addOnSuccessListener(task -> Log.d("REZ_DB", "owner request deleted: " + ownerRequest.getDocumentRefId()))
+                .addOnSuccessListener(task -> {
+                    Log.d("REZ_DB", "owner request deleted: " + ownerRequest.getDocumentRefId());
+                    new EmailSender(ownerRequest.getOwner().getEmail(), reason).execute();
+                })
                 .addOnFailureListener(e -> Log.w("REZ_DB", "Error deleting owner request: " + ownerRequest.getDocumentRefId(), e));
     }
-    public static void deleteOwnerRequest(OwnerRequest ownerRequest){
-        privateDeleteOwnerRequest(ownerRequest);
-    }
-
-    public static void activate(OwnerRequest ownerRequest){
-        privateDeleteOwnerRequest(ownerRequest);
-
-        insertOwner(ownerRequest.getOwner());
+    public static void deleteOwnerRequest(OwnerRequest ownerRequest, String reason){
+        privateDeleteOwnerRequest(ownerRequest, reason);
     }
 
 
