@@ -51,6 +51,7 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+        TextView packageTextView = convertView.findViewById(R.id.packageId);
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView);
 
@@ -73,11 +74,12 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
         String startDate = dateFormat.format(reservation.getStart());
         String endDate = dateFormat.format(reservation.getEnd());
 
-        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName());
-        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName());
+        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName() + "\n" + reservation.getEmployeeEmail());
+        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName() + "\n" + reservation.getEventOrganizerEmail());
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());
+        packageTextView.setText("Package: " + reservation.getPackageRefId());
 
 
         return convertView;

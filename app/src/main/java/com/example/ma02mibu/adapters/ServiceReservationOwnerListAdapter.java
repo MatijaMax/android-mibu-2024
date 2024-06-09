@@ -52,6 +52,7 @@ public class ServiceReservationOwnerListAdapter extends ArrayAdapter<ServiceRese
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+        TextView packageTextView = convertView.findViewById(R.id.packageId);
         eventOrganizerNameTextView.setOnClickListener(v -> openOrganizerProfile(reservation));
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView);
@@ -65,6 +66,7 @@ public class ServiceReservationOwnerListAdapter extends ArrayAdapter<ServiceRese
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());
+        packageTextView.setText("Package: " + reservation.getPackageRefId());
 
 
         if (reservation.getStatus() == EmployeeReservation.ReservationStatus.New || reservation.getStatus() == EmployeeReservation.ReservationStatus.Accepted) {

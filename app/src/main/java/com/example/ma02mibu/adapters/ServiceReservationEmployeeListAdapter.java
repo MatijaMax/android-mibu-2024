@@ -47,6 +47,7 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
+        TextView packageTextView = convertView.findViewById(R.id.packageId);
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         Button acceptButton = convertView.findViewById(R.id.acceptButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView, acceptButton);
@@ -73,6 +74,7 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());
+        packageTextView.setText("Package: " + reservation.getPackageRefId());
 
 
         return convertView;

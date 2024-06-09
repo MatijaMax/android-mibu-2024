@@ -7,7 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
@@ -21,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +45,7 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
+    private String selectTag;
     private ListView listView;
     private ArrayList<EmployeeReservation> employeeReservations;
     private ArrayList<ServiceReservationDTO> serviceReservationDTOS;
@@ -75,6 +81,44 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
 
+
+        Spinner spinner = view.findViewById(R.id.spinner_options);
+
+        List<String> options = new ArrayList<>();
+        options.add("All");
+        options.add("New");
+        options.add("CanceledByPUP");
+        options.add("CanceledByOD");
+        options.add("CanceledByAdmin");
+        options.add("Accepted");
+        options.add("Finished");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, options);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectTag = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+
+        Button btnFilter = view.findViewById(R.id.btnSearch);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadReservations();
+            }
+        });
 
         listView = view.findViewById(R.id.listView);
 
@@ -118,6 +162,9 @@ public class ServiceReservationsOrganizerOverviewFragment extends Fragment {
                                             sr.setConfirmAutomatically(item.isConfirmAutomatically());
                                             System.out.println(sr.getServiceName() + "DDDDDDDDDDDD" + sr.getEmployeeFirstName());
                                             serviceReservationDTOSfinal.add(sr);
+                                            if(!selectTag.equals("All")){
+                                                serviceReservationDTOSfinal.removeIf(sr -> !(sr.getStatus().toString().equals(selectTag)));
+                                            }
                                             ServiceReservationListAdapter adapter = new ServiceReservationListAdapter(getActivity(), serviceReservationDTOSfinal, getActivity());
                                             listView.setAdapter(adapter);
                                         }
