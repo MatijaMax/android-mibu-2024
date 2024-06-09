@@ -286,6 +286,30 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface SingleServiceCallback{
+        void onCallback(Service service);
+    }
+
+    public static void selectService(String documentRefId, final SingleServiceCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference serviceRef = db.collection("services").document(documentRefId);
+
+        serviceRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Service service = documentSnapshot.toObject(Service.class);
+                if (service != null) {
+                    service.setFirestoreId(documentRefId);
+                    callback.onCallback(service);
+                } else {
+                    Log.w("REZ_DB", "Error service data is missing.");
+                }
+            } else {
+                Log.w("REZ_DB", "Error document with id " + documentRefId + " does not exists in collection services.");
+            }
+        });
+    }
+
     public static void insertService(Service service, boolean saveNewSubCategory, SubcategoryProposal subCategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")
@@ -363,6 +387,29 @@ public class CloudStoreUtil {
                     callback.onFailure(e);
                 });
     }
+    public static void getEventModels(String email, String date, EventModelsCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("eventModels")
+                .whereEqualTo("email", email)
+                .whereEqualTo("date", date)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<EventModel> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        EventModel myItem = documentSnapshot.toObject(EventModel.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        Log.d("Greska", "Ne postoji: " + email + " za datum " + date);
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFailure(e);
+                });
+    }
 
 
     public interface OwnerCallback {
@@ -425,6 +472,26 @@ public class CloudStoreUtil {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("employees")
                 .whereEqualTo("userUID", employeeId)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        Employee myItem = documentSnapshot.toObject(Employee.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void getEmployeeByEmail(String email, EmployeeCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", email)
                 .limit(1)
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {

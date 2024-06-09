@@ -1,20 +1,59 @@
 package com.example.ma02mibu.fragments.events;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ma02mibu.R;
+import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.EmployeePickupListAdapter;
+import com.example.ma02mibu.adapters.EmployeeTimeTableAdapter;
+import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeInService;
+import com.example.ma02mibu.model.EventModel;
 import com.example.ma02mibu.model.ProductDAO;
+import com.example.ma02mibu.model.Service;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
 public class BuyProductFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "product";
+    private Service service;
     private ProductDAO product;
+
+    private EmployeePickupListAdapter adapter;
+    private EmployeeTimeTableAdapter timeTableAdapter;
+
+    private ArrayList<EmployeeInService> employees;
+
+    private ListView employeeListView;
+    private ListView timeTableListView;
+    private TextView selectedDateTextView;
+    private TextView workingTime;
+
+    private EditText fromEditText;
+    private EditText toEditText;
+
+
+    private EmployeeInService selectedEmployee;
+    private Employee employee;
+    private LocalDate selectedDate;
+
 
     public BuyProductFragment() { }
 
@@ -37,7 +76,225 @@ public class BuyProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_buy_product, container, false);
 
-        return inflater.inflate(R.layout.fragment_buy_product, container, false);
+        workingTime = view.findViewById(R.id.workingTimeTextView);
+        selectedDateTextView = view.findViewById(R.id.selectedDateTextView);
+        timeTableListView = view.findViewById(R.id.timetableListView);
+
+        fromEditText = view.findViewById(R.id.fromEditText);
+        toEditText = view.findViewById(R.id.toEditText);
+
+        view.findViewById(R.id.finishButton).setOnClickListener(v -> {
+            handleFinishClick();
+        });
+
+        view.findViewById(R.id.selectDate).setOnClickListener(this::showDatePicker);
+
+        employeeListView = view.findViewById(R.id.selectEmployeeList);
+        employeeListView.setOnItemClickListener((parent, view1, position, id) -> {
+            selectedEmployee = adapter.getItem(position);
+            getEmployee();
+
+            updateTimeTable();
+        });
+
+        getService();
+
+        return view;
     }
+
+    private void handleFinishClick() {
+        if(workingTime.getText().equals("not working")){
+            Toast.makeText(getContext(), "Employee is not working this day", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(fromEditText.getText().toString().isEmpty() || toEditText.getText().toString().isEmpty()){
+            Toast.makeText(getContext(), "Please insert from and to hour and minute values", Toast.LENGTH_SHORT).show();
+        }
+
+        //Checking if to time is before from time
+        int[] temp;
+        temp = extraxtHM(String.valueOf(fromEditText.getText()));
+        int fromHour, fromMinute;
+        fromHour = temp[0];
+        fromMinute = temp[1];
+        temp = extraxtHM(String.valueOf(toEditText.getText()));
+        int toHour, toMinute;
+        toHour = temp[0];
+        toMinute = temp[1];
+
+        if(!isBefore(fromHour, fromMinute, toHour, toMinute, false)){
+            Toast.makeText(getContext(), "To time must be greater than from time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //Checking if employee is free
+        for(int i = 0; i < timeTableAdapter.getCount(); i++){
+            String time = timeTableAdapter.getItem(i);
+            String[] temp2 = time.split("-");
+            int occupiedFromHour, occupiedFromMinute;
+            int[] temp3 = extraxtHM(temp2[0]);
+            occupiedFromHour = temp3[0];
+            occupiedFromMinute = temp3[1];
+
+            int occupiedToHour, occupiedToMinute;
+            temp3 = extraxtHM(temp2[1]);
+            occupiedToHour = temp3[0];
+            occupiedToMinute = temp3[1];
+
+            if(isInside(fromHour, fromMinute, occupiedFromHour, occupiedFromMinute, occupiedToHour, occupiedToMinute) ||
+                    isInside(toHour, toMinute, occupiedFromHour, occupiedFromMinute, occupiedToHour, occupiedToMinute) ||
+                        isInside(occupiedFromHour, occupiedFromMinute, fromHour, fromMinute, toHour, toMinute) ||
+                            isInside(occupiedToHour, occupiedToMinute, fromHour, fromMinute, toHour, toMinute)){
+                Toast.makeText(getContext(), "Employee is occupied in that time frame, please look at the table", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        //Checking employee working time
+        String[] temp2 = workingTime.getText().toString().split("-");
+        temp = extraxtHM(temp2[0]);
+        int workingFromHours, workingFromMinutes;
+        int[] temp3 = extraxtHM(temp2[0]);
+        workingFromHours = temp3[0];
+        workingFromMinutes = temp3[1];
+        int workingToHours, workingToMinutes;
+        temp3 = extraxtHM(temp2[1]);
+        workingToHours = temp3[0];
+        workingToMinutes = temp3[1];
+
+        if(!isInside(fromHour, fromMinute, workingFromHours, workingFromMinutes, workingToHours, workingToMinutes) ||
+            !isInside(toHour, toMinute, workingFromHours, workingFromMinutes, workingToHours, workingToMinutes)){
+            Toast.makeText(getContext(), "Employee is not working in this time frame", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //Checking minimum and maximum duration
+        int durationHours, durationMinutes;
+        durationHours = toHour - fromHour;
+        durationMinutes = toMinute - fromMinute;
+        if (durationMinutes < 0) {
+            durationMinutes += 60;
+            durationHours -= 1;
+        }
+        if(!isInside(durationHours, durationMinutes, service.getMinHourDuration(), service.getMinMinutesDuration(), service.getMaxHourDuration(), service.getMaxMinutesDuration())){
+            Toast.makeText(getContext(), "Duration must be " + service.getMinHourDuration() + ":" + service.getMinMinutesDuration() + "-" + service.getMaxHourDuration() + ":" + service.getMaxMinutesDuration(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //TODO create reservation in database
+
+        Toast.makeText(getContext(), "Nice, sve je ok", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isBefore(int firstHour, int firstMinute, int secondHour, int secondMinute, boolean equal){
+        //firstHour:firstMinute is before secondHour:secondMinute
+        //is before (or equal if equal = true)
+        return firstHour < secondHour || (firstHour == secondHour && (firstMinute < secondMinute || (firstMinute == secondMinute && equal)));
+    }
+
+    private boolean isInside(int targetHour, int targetMinute, int firstHour, int firstMinute, int secondHour, int secondMinute){
+        return isBefore(firstHour, firstMinute, targetHour, targetMinute, true) && isBefore(targetHour, targetMinute, secondHour, secondMinute, true);
+    }
+
+    private void getService() {
+        CloudStoreUtil.selectService(product.getDocumentRefId(), result -> {
+            service = result;
+            employees = service.getPersons();
+            adapter = new EmployeePickupListAdapter(getContext(), employees, getActivity());
+            employeeListView.setAdapter(adapter);
+        });
+    }
+
+    private void showDatePicker(View parentV) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                (view, year1, month1, dayOfMonth1) -> {
+                    Calendar selectedCalendar = Calendar.getInstance();
+                    selectedCalendar.set(year1, month1, dayOfMonth1);
+
+                    if(LocalDate.of(year1, month1+1, dayOfMonth1).isAfter(LocalDate.now())){
+                        selectedDate = LocalDate.of(year1, month1+1, dayOfMonth1);
+                        selectedDateTextView.setText(dayOfMonth1 + "-" + (month1 + 1) + "-" + year1);
+                    }else {
+                        Toast.makeText(getContext(), "Select date that is in the future", Toast.LENGTH_SHORT).show();
+                    }
+
+                    updateTimeTable();
+                },
+                year,
+                month,
+                dayOfMonth
+        );
+
+        datePickerDialog.show();
+    }
+
+    private void updateTimeTable(){
+        if(selectedDate == null || selectedEmployee == null || employee == null || employee.getWorkSchedules() == null){return;}
+
+        workingTime.setText(employee.getWorkSchedules().get(0).ScheduleForDay(selectedDate.getDayOfWeek()));
+
+        if(Objects.equals(employee.getWorkSchedules().get(0).ScheduleForDay(selectedDate.getDayOfWeek()), "not working")){
+            return;
+        }
+
+        String day = String.valueOf(selectedDate.getDayOfMonth());
+        if(day.length() < 2){
+            day = "0" + day;
+        }
+
+        String month = String.valueOf(selectedDate.getMonthValue());
+        if(month.length() < 2){
+            month = "0" + month;
+        }
+
+        String year = String.valueOf(selectedDate.getYear());
+        CloudStoreUtil.getEventModels(selectedEmployee.getEmail(), day+"-"+month+"-"+year , new CloudStoreUtil.EventModelsCallback() {
+            @Override
+            public void onSuccess(ArrayList<EventModel> myItems) {
+                timeTableAdapter = new EmployeeTimeTableAdapter(getContext(), myItems.stream().map(eventModel -> eventModel.getFromTime() + "-" + eventModel.getToTime()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll));
+                timeTableListView.setAdapter(timeTableAdapter);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                timeTableAdapter = new EmployeeTimeTableAdapter(getContext(), new ArrayList<>());
+                timeTableListView.setAdapter(timeTableAdapter);
+//                Toast.makeText(getContext(), "Error getting employee timetable", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getEmployee() {
+        CloudStoreUtil.getEmployeeByEmail(selectedEmployee.getEmail(), new CloudStoreUtil.EmployeeCallback() {
+            @Override
+            public void onSuccess(Employee myItem) {
+                employee = myItem;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), "Error getting employee", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private int[] extraxtHM(String hoursEntry){
+        int endH, endM;
+        String[] endHM = hoursEntry.split(":");
+        if(endHM.length == 2){
+            endH = Integer.parseInt(endHM[0].trim());
+            endM = Integer.parseInt(endHM[1].trim());
+        }else{
+            return new int[]{};
+        }
+        return new int[]{endH, endM};
+    }
+
 }
