@@ -1,23 +1,22 @@
 package com.example.ma02mibu.fragments.notifications;
 
+import android.content.Context;
+import android.hardware.SensorManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
-import com.example.ma02mibu.FragmentTransition;
-import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
-import com.example.ma02mibu.adapters.ProductListAdapter;
 import com.example.ma02mibu.adapters.authentication.NotificationsListAdapter;
 import com.example.ma02mibu.databinding.NotificationsFragmentBinding;
 import com.example.ma02mibu.model.OurNotification;
@@ -26,13 +25,22 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
-public class NotificationsListFragment extends ListFragment {
-
+public class NotificationsListFragment extends ListFragment implements SensorEventListener {
+//dobra komb je bilo 250-70 sa 600 ms
+    private static final int SHAKE_THRESHOLD = 155;
     private NotificationsFragmentBinding binding;
     private String userId;
     private FirebaseAuth auth;
-    private NotificationsListAdapter adapter;
+    private NotificationsListAdapter adapterAll;
+    private NotificationsListAdapter adapterUnread;
+    private NotificationsListAdapter adapterRead;
+    private SensorManager sensorManager;
+    private int currentBoxChecked = 1;
     private ArrayList<OurNotification> allNotifications;
+    private long lastUpdate;
+    private float last_x;
+    private float last_y;
+    private float last_z;
     private ArrayList<OurNotification> readNotifications = new ArrayList<>();
     private ArrayList<OurNotification> unreadNotifications = new ArrayList<>();
 
@@ -52,8 +60,8 @@ public class NotificationsListFragment extends ListFragment {
         CloudStoreUtil.getNotifications(user.getEmail(), new CloudStoreUtil.NotificationCallback() {
             @Override
             public void onSuccess(ArrayList<OurNotification> myItems) {
-                adapter = new NotificationsListAdapter(getActivity(), myItems);
-                setListAdapter(adapter);
+                adapterAll = new NotificationsListAdapter(getActivity(), myItems);
+                setListAdapter(adapterAll);
                 allNotifications = myItems;
                 for(OurNotification notification: allNotifications){
                     if(notification.getStatus().equals("notRead")){
@@ -62,6 +70,9 @@ public class NotificationsListFragment extends ListFragment {
                         readNotifications.add(notification);
                     }
                 }
+                adapterAll = new NotificationsListAdapter(getActivity(), myItems);
+                adapterRead = new NotificationsListAdapter(getActivity(), readNotifications);
+                adapterUnread = new NotificationsListAdapter(getActivity(), unreadNotifications);
             }
             @Override
             public void onFailure(Exception e) {
@@ -76,19 +87,21 @@ public class NotificationsListFragment extends ListFragment {
         binding = NotificationsFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         RadioGroup rGroup = binding.notRadioGroup;
+
+        binding.checkBoxAll.setChecked(true);
         rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             public void onCheckedChanged(RadioGroup group, int checkedId)
             {
-                if (checkedId == 1){
-                    adapter = new NotificationsListAdapter(getActivity(), allNotifications);
-                    setListAdapter(adapter);
-                } else if (checkedId == 3) {
-                    adapter = new NotificationsListAdapter(getActivity(), readNotifications);
-                    setListAdapter(adapter);
+                if (binding.checkBoxAll.isChecked()){
+                    setListAdapter(adapterAll);
+                    currentBoxChecked = 1;
+                } else if (binding.checkBoxRead.isChecked()) {
+                    setListAdapter(adapterRead);
+                    currentBoxChecked = 3;
                 }else {
-                    adapter = new NotificationsListAdapter(getActivity(), unreadNotifications);
-                    setListAdapter(adapter);
+                    setListAdapter(adapterUnread);
+                    currentBoxChecked = 2;
                 }
             }
         });
@@ -96,8 +109,68 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > 1000) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                float[] values = event.values;
+                float x = values[0];
+                float y = values[1];
+                float z = values[2];
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                Log.i("Shake speed", "Speed: " +speed);
+                if(speed > SHAKE_THRESHOLD){
+                    if(currentBoxChecked < 3)
+                        currentBoxChecked++;
+                    else
+                        currentBoxChecked = 1;
+                    if(currentBoxChecked == 1){
+                        binding.checkBoxAll.setChecked(true);
+                        binding.checkBoxNotRead.setChecked(false);
+                        binding.checkBoxRead.setChecked(false);
+                        setListAdapter(adapterAll);
+                    }
+                    else if(currentBoxChecked == 2){
+                        binding.checkBoxAll.setChecked(false);
+                        binding.checkBoxNotRead.setChecked(true);
+                        binding.checkBoxRead.setChecked(false);
+                        setListAdapter(adapterUnread);
+                    }
+                    else{
+                        binding.checkBoxAll.setChecked(false);
+                        binding.checkBoxNotRead.setChecked(false);
+                        binding.checkBoxRead.setChecked(true);
+                        setListAdapter(adapterRead);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            Log.i("REZ_ACCELEROMETER", String.valueOf(accuracy));
+        }
     }
 }
