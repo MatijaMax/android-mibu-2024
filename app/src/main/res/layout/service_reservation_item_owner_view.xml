@@ -19,10 +19,6 @@
         android:id="@+id/eventOrganizerNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_blue_dark"
-        android:clickable="true"
-        android:autoLink="web"
-        android:linksClickable="true"
         />
 
     <!-- Service Information -->
@@ -45,6 +41,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="italic"/>
+
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/packageId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <!-- Cancel Button -->
     <Button
