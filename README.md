@@ -11,5 +11,11 @@
 - [Ivan Partalo](https://github.com/IvanPartalo) RA126/2020
 - [Matija Maksimovic](https://github.com/MatijaMax) RA132/2020
 
-## Project status
-- In development.
+## How to use
+- To use this project, follow these steps:
+
+ 1. Open the project in Android Studio.
+
+ 2. Run the project on an Android device or emulator.
+
+ 3. Explore our app
