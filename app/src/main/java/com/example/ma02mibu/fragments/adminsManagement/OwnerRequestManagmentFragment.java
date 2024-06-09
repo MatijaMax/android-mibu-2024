@@ -23,6 +23,8 @@ import com.example.ma02mibu.model.OwnerRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.function.Function;
 
 public class OwnerRequestManagmentFragment extends Fragment {
 
@@ -30,6 +32,8 @@ public class OwnerRequestManagmentFragment extends Fragment {
     private OwnerRequestListAdapter adapter;
     private ArrayList<OwnerRequest> requests;
     private ArrayList<OwnerRequest> backupRequests;
+    private Function<T, U> getOwner;
+
     public OwnerRequestManagmentFragment() { }
 
     public static OwnerRequestManagmentFragment newInstance() {
@@ -82,6 +86,24 @@ public class OwnerRequestManagmentFragment extends Fragment {
             Button resetBtn = bottomSheetDialog.findViewById(R.id.resetButton);
             resetBtn.setOnClickListener(f -> {
                 resetRequests();
+                bottomSheetDialog.dismiss();
+            });
+            bottomSheetDialog.findViewById(R.id.sortByDateButton).setOnClickListener(v1 -> {
+                requests.sort(Comparator.comparing(OwnerRequest::getCreated));
+                adapter = new OwnerRequestListAdapter(getContext(), requests);
+                ownerRequestListView.setAdapter(adapter);
+                bottomSheetDialog.dismiss();
+            });
+            bottomSheetDialog.findViewById(R.id.sortByTypeButton).setOnClickListener(v1 -> {
+                requests.sort((o1, o2) -> o1.getOwner().getEventTypes().get(0).compareTo(o2.getOwner().getEventTypes().get(0)));
+                adapter = new OwnerRequestListAdapter(getContext(), requests);
+                ownerRequestListView.setAdapter(adapter);
+                bottomSheetDialog.dismiss();
+            });
+            bottomSheetDialog.findViewById(R.id.sortByCategoryButton).setOnClickListener(v1 -> {
+                requests.sort((o1, o2) -> o1.getOwner().getCategories().get(0).compareTo(o2.getOwner().getCategories().get(0)));
+                adapter = new OwnerRequestListAdapter(getContext(), requests);
+                ownerRequestListView.setAdapter(adapter);
                 bottomSheetDialog.dismiss();
             });
             bottomSheetDialog.show();
