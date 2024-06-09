@@ -43,7 +43,6 @@ public class SelectEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_select_event, container, false);
-
         eventListView = view.findViewById(R.id.selectEventList);
         getEvents();
         eventListView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -56,6 +55,7 @@ public class SelectEventFragment extends Fragment {
     private void getEvents() {
         CloudStoreUtil.selectEventsFrom(auth.getCurrentUser().getEmail(), result -> {
             events = result;
+            events.add(new Event(1L,"y", "turica", "x", 3, "x", true, "x", "test"));
             adapter = new EventListInfoAdapter(getActivity(), result);
             eventListView.setAdapter(adapter);
         });

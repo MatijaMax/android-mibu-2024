@@ -23,6 +23,7 @@ import com.example.ma02mibu.model.EventType;
 import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
+import com.example.ma02mibu.model.ProductDAO;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.ServiceReservationDTO;
 import com.example.ma02mibu.model.SubcategoryProposal;
@@ -86,6 +87,11 @@ public class CloudStoreUtil {
 
     public interface EventsCallback1 {
         void onSuccess(ArrayList<Event> myItem);
+        void onFailure(Exception e);
+    }
+
+    public interface FavouritesCallback {
+        void onSuccess(ArrayList<ProductDAO> myItem);
         void onFailure(Exception e);
     }
 
@@ -638,6 +644,11 @@ public class CloudStoreUtil {
         void onSuccess(Owner myItem);
         void onFailure(Exception e);
     }
+
+    public interface OrganizerCallback {
+        void onSuccess(EventOrganizer myItem);
+        void onFailure(Exception e);
+    }
     public static void getOwner(String ownerId, OwnerCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("owners")
@@ -1116,6 +1127,76 @@ public class CloudStoreUtil {
         return eventId;
     }
 
+    public static String insertFavNew(ProductDAO item) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference favourites = db.collection("favourites").document();
+
+        String favId = favourites.getId();
+        favourites.set(item)
+                .addOnSuccessListener(aVoid -> {
+                })
+                .addOnFailureListener(e -> {
+                });
+        return favId;
+    }
+
+    public static void getFavourites(String email, FavouritesCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("favourites")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<ProductDAO> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateFav(ProductDAO product) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Query to find the document based on the name and email fields
+        db.collection("favourites")
+                .whereEqualTo("name", product.getName())
+                .whereEqualTo("email", product.getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            // Assuming there is only one document with these values
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            DocumentReference docRef = document.getReference();
+
+                            // Update the document
+                            docRef.update("email", "disabled")
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Handle success
+                                        Log.d("updateFav", "Document successfully updated!");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Handle failure
+                                        Log.w("updateFav", "Error updating document", e);
+                                    });
+                        } else {
+                            Log.d("updateFav", "No documents found with the specified values.");
+                        }
+                    } else {
+                        Log.w("updateFav", "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+    
     public interface EventsCallback {
         void onCallback(ArrayList<Event> events);
     }
