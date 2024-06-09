@@ -567,6 +567,36 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface OwnerByRefIdCallback {
+        void onSuccess(Owner myItem);
+        void onFailure(Exception e);
+    }
+
+    public static void getOwnerByRefId(String refId, OwnerByRefIdCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.document("owners/" + refId);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Owner myItem = document.toObject(Owner.class);
+                        callback.onSuccess(myItem);
+
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                } else {
+                    callback.onFailure(new Exception("No documents found"));
+                }
+            }
+        }).addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
     public interface GradesListCallback {
         void onSuccess(ArrayList<CompanyGrade> myItems);
         void onFailure(Exception e);

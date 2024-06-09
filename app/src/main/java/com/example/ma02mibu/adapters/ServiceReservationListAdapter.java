@@ -116,6 +116,16 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
                     Toast.makeText(v.getContext() , "Cancellation deadline passed!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(reservation.getStatus() == EmployeeReservation.ReservationStatus.Accepted){
+                    Date startDate = reservation.getStart();
+                    LocalDateTime localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    Date endDate = reservation.getEnd();
+                    LocalDateTime localEndDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    EventModel eventModel = new EventModel(reservation.getServiceName(), localStartDate.format(dateFormatter).toString(), localStartDate.format(timeFormatter).toString(), localEndDate.format(timeFormatter).toString(), "reserved", reservation.getEmployeeEmail());
+                    CloudStoreUtil.deleteEventModel(eventModel);
+                }
                 reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByOD);
                 CloudStoreUtil.updateStatusReservation(reservation, new CloudStoreUtil.UpdateReadCallback() {
                     @Override
@@ -129,14 +139,6 @@ public class ServiceReservationListAdapter extends ArrayAdapter<ServiceReservati
                         System.err.println("Error updating item: " + e.getMessage());
                     }
                 });
-                Date startDate = reservation.getStart();
-                LocalDateTime localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                Date endDate = reservation.getEnd();
-                LocalDateTime localEndDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-                EventModel eventModel = new EventModel(reservation.getServiceName(), localStartDate.format(dateFormatter).toString(), localStartDate.format(timeFormatter).toString(), localEndDate.format(timeFormatter).toString(), "reserved", reservation.getEmployeeEmail());
-                CloudStoreUtil.deleteEventModel(eventModel);
                 OurNotification notification = new OurNotification(reservation.getEmployeeEmail(), "Reservation canceled","Canceled reservation for " + reservation.getServiceName() + " by " + reservation.getEventOrganizerEmail(), "notRead");
                 CloudStoreUtil.insertNotification(notification);
                 statusTextView.setText("Status: " + reservation.getStatus().toString());

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.adapters.EmployeeListAdapter;
 import com.example.ma02mibu.adapters.ServiceReservationListAdapter;
 import com.example.ma02mibu.databinding.FragmentCompanyGradeFormBinding;
 import com.example.ma02mibu.databinding.FragmentEmployeeDetailsBinding;
@@ -23,10 +24,13 @@ import com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReserva
 import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.OurNotification;
+import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Service;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -45,6 +49,7 @@ public class CompanyGradeFormFragment extends Fragment {
     private FirebaseAuth auth;
     private String ownerRefId;
     private String employeeEmail;
+    private String ownerEmail;
     private String organizerEmail;
     private FragmentCompanyGradeFormBinding binding;
 
@@ -76,6 +81,7 @@ public class CompanyGradeFormFragment extends Fragment {
         if(user != null){
             organizerEmail = user.getEmail();
         }
+
         binding = FragmentCompanyGradeFormBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
@@ -116,9 +122,22 @@ public class CompanyGradeFormFragment extends Fragment {
 
         CloudStoreUtil.insertCompanyGrade(companyGrade);
         String message = "Graded!";
-        Toast.makeText(binding.getRoot().getContext() , message, Toast.LENGTH_SHORT).show();
+        CloudStoreUtil.getOwner(ownerRefId, new CloudStoreUtil.OwnerCallback() {
+            @Override
+            public void onSuccess(Owner item) {
+                ownerEmail = item.getEmail();
+                Toast.makeText(binding.getRoot().getContext() , message, Toast.LENGTH_SHORT).show();
+                OurNotification notification = new OurNotification(ownerEmail, "Graded your company","User: " + organizerEmail, "notRead");
+                CloudStoreUtil.insertNotification(notification);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                // Handle the failure (e.g., show an error message)
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+        });
+
         FragmentTransition.to(ServiceReservationsOrganizerOverviewFragment.newInstance("",""), getActivity(),
                 true, R.id.scroll_services_res_list, "servicesResList");
-
     }
 }
