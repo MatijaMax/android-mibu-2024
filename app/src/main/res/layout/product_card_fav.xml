@@ -82,7 +82,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonFavMax"
         android:layout_width="81dp"
         android:layout_height="87dp"
         android:layout_marginBottom="248dp"
@@ -94,7 +94,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonInfo"
+        android:id="@+id/buttonInfoMax"
         android:layout_width="65dp"
         android:layout_height="71dp"
         android:layout_marginBottom="176dp"

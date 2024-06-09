@@ -114,27 +114,34 @@ public class MainActivity extends AppCompatActivity {
             if(result == null) {
                 return;
             }
-
+            m.findItem(R.id.nav_user_profile).setVisible(true);
             if(result.getUserRole() == UserRole.USERROLE.ADMIN){
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
                 //TODO
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
                 m.findItem(R.id.nav_events).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
                 //TODO
                 m.findItem(R.id.nav_employees).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
                 //TODO
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
             }
             m.findItem(R.id.log_out).setOnMenuItemClickListener(item -> {
                 auth.signOut();
@@ -225,6 +232,42 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("eventsPage", 0);
                 return;
             }
+
+            if ("FavInfoPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("FavInfoPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                return;
+            }
+
+            if ("MaxInfoPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+
+            if ("INFOMAX".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+
+            if ("MAXEAF".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
+            if ("MAXEAF".equals(tag)) {
+                fragmentManager.popBackStackImmediate("MaxInfoPage", 0);
+                return;
+            }
+
+            if ("CHAT".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
+            if ("COMPANY".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
 
 
 

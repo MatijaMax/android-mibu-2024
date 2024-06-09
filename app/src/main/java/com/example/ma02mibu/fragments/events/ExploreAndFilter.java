@@ -86,7 +86,7 @@ public class ExploreAndFilter extends Fragment {
         prepareProductList(products, () -> {
             // Callback when prepareProductList completes
             FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
-                    true, R.id.scroll_products_list, "filterAllPage");
+                    true, R.id.scroll_products_list2, "filterAllPage");
         });
         return root;
     }
@@ -95,6 +95,8 @@ public class ExploreAndFilter extends Fragment {
         ArrayList<Integer> images = new ArrayList<>();
         images.add(R.drawable.product1);
         ArrayList<ProductDAO> allProducts = new ArrayList<>();
+        ArrayList<ProductDAO> allProductsServices= new ArrayList<>();
+        ArrayList<ProductDAO> allProductsPackages = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("services")
@@ -105,7 +107,7 @@ public class ExploreAndFilter extends Fragment {
                                 if(myItem!=null){
                                     myItem.setTypeDAO(0);
                                     //myItem.setImage(images);
-                                    allProducts.add(myItem);
+                                    allProductsServices.add(myItem);
                                 }
                             }
 
@@ -136,12 +138,24 @@ public class ExploreAndFilter extends Fragment {
                         ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
                         if(myItem!=null){
                             myItem.setTypeDAO(2);
-                            allProducts.add(myItem);
+                            allProductsPackages.add(myItem);
 
                         }
                     }
-                    this.products = allProducts;
-                    products.addAll(allProducts);
+
+                    for(ProductDAO pp: allProductsServices){
+                        this.products.add(pp);
+                    }
+
+                    for(ProductDAO pp: allProducts){
+                        this.products.add(pp);
+                    }
+
+                    for(ProductDAO pp: allProductsPackages){
+                        this.products.add(pp);
+                    }
+                   // this.products = allProducts;
+                   // products.addAll(allProducts);
                     for (ProductDAO product : this.products) {
                         Log.d("ProductX", product.toString());
                         product.setImage(images);

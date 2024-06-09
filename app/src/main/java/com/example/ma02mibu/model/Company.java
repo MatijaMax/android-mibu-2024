@@ -17,7 +17,8 @@ public class Company implements Parcelable {
     private ArrayList<Employee> employees;
     private WorkSchedule workSchedule;
 
-    public Company() { }
+    public Company() {
+    }
 
     public Company(String email, String name, String address, String phoneNumber, String description) {
         this.email = email;
@@ -65,9 +66,7 @@ public class Company implements Parcelable {
         dest.writeParcelable(workSchedule, flags);
     }
 
-    public WorkSchedule getWorkSchedule() {
-        return workSchedule;
-    }
+
 
     public void setWorkSchedule(WorkSchedule workSchedule) {
         this.workSchedule = workSchedule;
@@ -95,5 +94,41 @@ public class Company implements Parcelable {
 
     public void setEmployees(ArrayList<Employee> employees) {
         this.employees = employees;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public WorkSchedule getWorkSchedule() {
+        return workSchedule;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
