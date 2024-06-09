@@ -17,7 +17,7 @@ import java.util.Properties;
 
 public class EmailSender extends AsyncTask<Void, Void, Void> {
     private static final String EMAIL = "pswteamone@gmail.com";
-    private static final String PASSWORD = "pswmnogojakalozinka";
+    private static final String PASSWORD = "odtl cmuk abgu rtwc";
     private String recipientEmail;
     private String rejectReason;
 
@@ -33,6 +33,7 @@ public class EmailSender extends AsyncTask<Void, Void, Void> {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override

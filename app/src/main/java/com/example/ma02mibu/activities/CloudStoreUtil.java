@@ -1682,7 +1682,6 @@ public class CloudStoreUtil {
                             OwnerRequest temp = document.toObject(OwnerRequest.class);
                             temp.setDocumentRefId(document.getId());
                             owners.add(temp);
-                            break;
                         }
                         callback.onCallback(owners);
                     } else {
@@ -1702,7 +1701,7 @@ public class CloudStoreUtil {
         }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection(categoryCollection).document(ownerRequest.getDocumentRefId()).delete()
+        db.collection(ownerRequestCollection).document(ownerRequest.getDocumentRefId()).delete()
                 .addOnSuccessListener(task -> {
                     Log.d("REZ_DB", "owner request deleted: " + ownerRequest.getDocumentRefId());
                     new EmailSender(ownerRequest.getOwner().getEmail(), reason).execute();
