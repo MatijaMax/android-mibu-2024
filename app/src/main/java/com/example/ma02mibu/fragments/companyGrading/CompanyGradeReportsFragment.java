@@ -89,7 +89,6 @@ public class CompanyGradeReportsFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                // Handle the failure (e.g., show an error message)
                 System.err.println("Error fetching documents: " + e.getMessage());
             }
         });

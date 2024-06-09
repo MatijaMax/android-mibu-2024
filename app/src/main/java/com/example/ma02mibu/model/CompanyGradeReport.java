@@ -9,17 +9,17 @@ public class CompanyGradeReport {
     private String reason;
     private String ownersEmail;
     private Date reportedDate;
-    private REPORTSTATUS reportstatus;
+    private REPORTSTATUS reportStatus;
     public enum REPORTSTATUS { REPORTED, ACCEPTED, REJECTED }
 
     public CompanyGradeReport() {
     }
 
-    public CompanyGradeReport(String companyGradeUID, String reason, Date reportedDate, REPORTSTATUS reportstatus, int grade, String comment, String ownersEmail) {
+    public CompanyGradeReport(String companyGradeUID, String reason, Date reportedDate, REPORTSTATUS reportStatus, int grade, String comment, String ownersEmail) {
         CompanyGradeUID = companyGradeUID;
         this.reason = reason;
         this.reportedDate = reportedDate;
-        this.reportstatus = reportstatus;
+        this.reportStatus = reportStatus;
         this.grade = grade;
         this.comment = comment;
         this.ownersEmail = ownersEmail;
@@ -73,11 +73,11 @@ public class CompanyGradeReport {
         this.reportedDate = reportedDate;
     }
 
-    public REPORTSTATUS getReportstatus() {
-        return reportstatus;
+    public REPORTSTATUS getReportStatus() {
+        return reportStatus;
     }
 
-    public void setReportstatus(REPORTSTATUS reportstatus) {
-        this.reportstatus = reportstatus;
+    public void setReportStatus(REPORTSTATUS reportStatus) {
+        this.reportStatus = reportStatus;
     }
 }
