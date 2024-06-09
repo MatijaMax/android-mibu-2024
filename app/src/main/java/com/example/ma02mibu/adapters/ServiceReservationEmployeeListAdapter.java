@@ -68,8 +68,8 @@ public class ServiceReservationEmployeeListAdapter extends ArrayAdapter<ServiceR
         String startDate = dateFormat.format(reservation.getStart());
         String endDate = dateFormat.format(reservation.getEnd());
 
-        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName());
-        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName());
+        employeeNameTextView.setText("Employee: " + reservation.getEmployeeFirstName() + " " + reservation.getEmployeeLastName() + "\n" + reservation.getEmployeeEmail());
+        eventOrganizerNameTextView.setText("Organizer: " + reservation.getEventOrganizerFirstName() + " " + reservation.getEventOrganizerLastName()  + "\n" + reservation.getEventOrganizerEmail());
         serviceInfoTextView.setText("Service: " + reservation.getServiceName() + " - " + startDate + " to " + endDate);
         cancelationDeadlineTextView.setText("Cancelation deadline: " + reservation.getCancellationDeadline().getNumber() + " " + reservation.getCancellationDeadline().getDateFormat());
         statusTextView.setText("Status: " + reservation.getStatus().toString());

@@ -7,7 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
@@ -22,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ServiceReservationEmployeeOverviewFragment extends Fragment {
@@ -35,6 +42,8 @@ public class ServiceReservationEmployeeOverviewFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
     private ListView listView;
+    private EditText searchData;
+    private String selectTag;
     private ArrayList<EmployeeReservation> employeeReservations;
     private ArrayList<ServiceReservationDTO> serviceReservationDTOS;
     private ArrayList<ServiceReservationDTO> serviceReservationDTOSfinal;
@@ -70,6 +79,45 @@ public class ServiceReservationEmployeeOverviewFragment extends Fragment {
         currentUser = auth.getCurrentUser();
 
 
+        Spinner spinner = view.findViewById(R.id.spinner_options);
+
+        List<String> options = new ArrayList<>();
+        options.add("All");
+        options.add("New");
+        options.add("CanceledByPUP");
+        options.add("CanceledByOD");
+        options.add("CanceledByAdmin");
+        options.add("Accepted");
+        options.add("Finished");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, options);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectTag = (String) parent.getItemAtPosition(position);
+//                Toast.makeText(view.getContext(), "Selected: " + selectedOption, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        searchData = view.findViewById(R.id.textSearch);
+        Button btnFilter = view.findViewById(R.id.btnSearch);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadReservations();
+            }
+        });
+
         listView = view.findViewById(R.id.listViewEmployeeReservations);
 
 
@@ -87,7 +135,6 @@ public class ServiceReservationEmployeeOverviewFragment extends Fragment {
             public void onSuccess(ArrayList<EmployeeReservation> itemList) {
                 employeeReservations = new ArrayList<>(itemList);
                 employeeReservations.removeIf(r -> !r.getEmployeeEmail().equals(currentUser.getEmail()));
-                System.out.println(employeeReservations.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 for (EmployeeReservation er: employeeReservations) {
                     serviceReservationDTOS.add(new ServiceReservationDTO(er));
                 }
@@ -97,21 +144,26 @@ public class ServiceReservationEmployeeOverviewFragment extends Fragment {
                         public void onSuccess(Employee item) {
                             sr.setEmployeeFirstName(item.getFirstName());
                             sr.setEmployeeLastName(item.getLastName());
-                            System.out.println(sr.getEmployeeFirstName() + "BBBBBBBBBBBB");
                             CloudStoreUtil.getOrganizerByEmail(sr.getEventOrganizerEmail(), new CloudStoreUtil.OrganizerByEmailCallback() {
                                 @Override
                                 public void onSuccess(EventOrganizer item) {
                                     sr.setEventOrganizerFirstName(item.getName());
                                     sr.setEventOrganizerLastName(item.getSurname());
-                                    System.out.println(sr.getEventOrganizerFirstName() + "CCCCCCCCCCCCCC" + sr.getEmployeeFirstName());
                                     CloudStoreUtil.getServiceWithRefId(sr.getServiceRefId(), new CloudStoreUtil.ServiceByRefIdCallback() {
                                         @Override
                                         public void onSuccess(Service item) {
                                             sr.setServiceName(item.getName());
                                             sr.setCancellationDeadline(item.getCancellationDeadline());
                                             sr.setConfirmAutomatically(item.isConfirmAutomatically());
-                                            System.out.println(sr.getServiceName() + "DDDDDDDDDDDD" + sr.getEmployeeFirstName());
                                             serviceReservationDTOSfinal.add(sr);
+                                            String s = searchData.getText().toString().toLowerCase();
+                                            if(!s.isEmpty()){
+                                                serviceReservationDTOSfinal.removeIf(sr -> !(sr.getServiceName().toLowerCase().contains(s)
+                                                        || sr.getEventOrganizerFirstName().toLowerCase().contains(s) || sr.getEventOrganizerLastName().toLowerCase().contains(s)));
+                                            }
+                                            if(!selectTag.equals("All")){
+                                                serviceReservationDTOSfinal.removeIf(sr -> !(sr.getStatus().toString().equals(selectTag)));
+                                            }
                                             ServiceReservationEmployeeListAdapter adapter = new ServiceReservationEmployeeListAdapter(getActivity(), serviceReservationDTOSfinal, getActivity());
                                             listView.setAdapter(adapter);
                                         }
