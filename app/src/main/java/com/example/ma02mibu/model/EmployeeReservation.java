@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EmployeeReservation implements Parcelable {
@@ -94,6 +95,15 @@ public class EmployeeReservation implements Parcelable {
 
     public String getEventOrganizerEmail() {
         return eventOrganizerEmail;
+    }
+
+    public boolean isOwnersRes(ArrayList<Employee> employees){
+        for(Employee e : employees){
+            if(e.getEmail().equals(getEmployeeEmail())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setEventOrganizerEmail(String eventOrganizerEmail) {
