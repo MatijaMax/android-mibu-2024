@@ -184,6 +184,12 @@ public class Service implements Parcelable {
         return priceByHour;
     }
 
+    public int getDiscountedHourPrice() {
+        if(discount != 0)
+            return ((100-discount)*priceByHour)/100;
+        else
+            return priceByHour;
+    }
     public void setPriceByHour(int priceByHour) {
         this.priceByHour = priceByHour;
     }
