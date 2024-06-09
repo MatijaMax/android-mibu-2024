@@ -218,11 +218,19 @@ public class BuyProductFragment extends Fragment {
 
         CloudStoreUtil.insertServiceReservation(reservation);
 
-        OurNotification employeeNotification = new OurNotification(selectedEmployee.getEmail(),
-                                                                    "New service reservation",
-                                                                    FirebaseAuth.getInstance().getCurrentUser().getEmail() + " created service reservation",
-                                                                    "notRead");
-        CloudStoreUtil.insertNotification(employeeNotification);
+        if(aPackage == null){
+            OurNotification employeeNotification = new OurNotification(selectedEmployee.getEmail(),
+                                                                        "New service reservation",
+                                                                        FirebaseAuth.getInstance().getCurrentUser().getEmail() + " created service reservation",
+                                                                        "notRead");
+            CloudStoreUtil.insertNotification(employeeNotification);
+        } else {
+            OurNotification employeeNotification = new OurNotification(selectedEmployee.getEmail(),
+                    "New service in package reservation",
+                    FirebaseAuth.getInstance().getCurrentUser().getEmail() + " created package service reservation",
+                    "notRead");
+            CloudStoreUtil.insertNotification(employeeNotification);
+        }
 
         Toast.makeText(getContext(), "Nice, sve je ok", Toast.LENGTH_SHORT).show();
 
