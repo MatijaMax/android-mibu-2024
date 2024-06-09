@@ -25,7 +25,109 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/selectEmployeeList"
-            app:layout_constraintTop_toTopOf="@id/selectEmployeeTextView"/>
+            app:layout_constraintTop_toBottomOf="@id/selectEmployeeTextView"
+            app:layout_constraintBottom_toTopOf="@id/detailsTextView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Details:"
+            app:flow_horizontalAlign="center"
+            android:id="@+id/detailsTextView"
+            app:layout_constraintBottom_toTopOf="@id/selectDate"
+            android:textSize="20sp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select date"
+            android:layout_margin="5dp"
+            android:id="@+id/selectDate"
+            app:layout_constraintBottom_toTopOf="@id/deadlineConstraintLayout"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectedDateTextView"
+            android:text="No date is sellected"
+            app:layout_constraintTop_toBottomOf="@id/selectDate"
+            android:layout_marginTop="-5dp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deadlineConstraintLayout"
+            app:layout_constraintBottom_toTopOf="@id/finishButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="From:"
+                android:id="@+id/fromTextView"
+                android:layout_margin="5dp"
+                android:textSize="20sp"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fromTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="HH:mm"
+                android:id="@+id/fromEditText"
+                android:layout_margin="5dp"
+                android:textSize="20sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/fromEditText"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="To:"
+                android:id="@+id/toTextView"
+                android:layout_margin="5dp"
+                android:textSize="20sp"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/toTextView"
+                app:layout_constraintTop_toBottomOf="@id/fromEditText"
+                android:hint="HH:mm"
+                android:id="@+id/toEditText"
+                android:layout_margin="5dp"
+                android:textSize="20sp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/finishButton"
+            android:text="Finish"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ListView
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:id="@+id/timetableListView"
+            app:layout_constraintTop_toBottomOf="@+id/workingTimeTextView"
+            app:layout_constraintBottom_toTopOf="@+id/finishButton"
+            app:layout_constraintLeft_toRightOf="@+id/deadlineConstraintLayout"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/selectEmployeeList"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/selectDate"
+            android:text="Employee working time"
+            android:textSize="15sp"
+            android:textAlignment="textEnd"
+            android:layout_margin="3dp"
+            android:id="@+id/workingTimeTextView"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

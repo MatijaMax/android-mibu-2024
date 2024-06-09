@@ -16,6 +16,7 @@ import com.example.ma02mibu.databinding.ProductsPageFragmentBinding;
 import com.example.ma02mibu.fragments.products.ProductsListFragment;
 import com.example.ma02mibu.model.Event;
 import com.example.ma02mibu.model.EventTypeDTO;
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.databinding.FragmentExploreAndFilterBinding;
 import com.example.ma02mibu.model.ProductDAO;
@@ -82,8 +83,8 @@ public class ExploreAndFilter extends Fragment {
         auth = FirebaseAuth.getInstance();
         prepareProductList(products, () -> {
             // Callback when prepareProductList completes
-            FragmentTransition.to(ProductsFilterFragment.newInstance(products), getActivity(),
-                    true, R.id.scroll_products_list2, "filterAllPage");
+            FragmentTransition.to(ProductsFilterFragment.newInstance(products, selectedEvent), getActivity(),
+                    true, R.id.scroll_products_list, "filterAllPage");
         });
         return root;
     }
@@ -130,17 +131,27 @@ public class ExploreAndFilter extends Fragment {
 
 
                 });
-        db.collection("packagesFilterTest")
+        db.collection("packages")
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        ProductDAO myItem = documentSnapshot.toObject(ProductDAO.class);
-                        if(myItem!=null){
+                        Package myPackage = documentSnapshot.toObject(Package.class);
+                        ProductDAO myItem = new ProductDAO();
+                        if(myPackage!=null){
+                            myItem.setId(myPackage.getId());
+                            myItem.setPrice(myPackage.getMinPrice());
+                            myItem.setCategory(myPackage.getCategory());
+                            myItem.setDescription(myPackage.getDescription());
+                            myItem.setDiscount(myPackage.getDiscount());
+                            myItem.setName(myPackage.getName());
+                            myItem.setAvailableToBuy(myPackage.isAvailableToBuy());
+                            myItem.setEventTypes(myPackage.getEventTypes());
+                            myItem.setSubCategory("nema");
+                            myItem.setVisible(myPackage.isVisible());
                             myItem.setTypeDAO(2);
                             allProductsPackages.add(myItem);
                             myItem.setDocumentRefId(documentSnapshot.getId());
                             allProducts.add(myItem);
-
                         }
                     }
 
@@ -157,6 +168,8 @@ public class ExploreAndFilter extends Fragment {
                     }*/
                    // this.products = allProducts;
                    // products.addAll(allProducts);
+                    //this.products = allProducts;
+                  //  products.addAll(allProducts);
                     for (ProductDAO product : this.products) {
                         Log.d("ProductX", product.toString());
                         product.setImage(images);

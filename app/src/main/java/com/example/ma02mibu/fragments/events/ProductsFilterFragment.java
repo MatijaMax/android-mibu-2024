@@ -53,14 +53,17 @@ public class ProductsFilterFragment extends ListFragment {
     private ArrayList<String> typeList;
 
     private ProductDAO selectedItem;
+    private Event selectedEvent;
     private static final String ARG_PARAM = "param";
+    private static final String ARG_PARAM2 = "selectedEvent";
 
     public static ArrayList<Event> eventsFake = new ArrayList<>();
-    public static ProductsFilterFragment newInstance(ArrayList<ProductDAO> products){
+    public static ProductsFilterFragment newInstance(ArrayList<ProductDAO> products, Event selectedEvent){
         ProductsFilterFragment fragment = new ProductsFilterFragment();
         Bundle args = new Bundle();
 
         args.putParcelableArrayList(ARG_PARAM, products);
+        args.putParcelable(ARG_PARAM2, selectedEvent);
         fragment.setArguments(args);
 
         return fragment;
@@ -72,7 +75,8 @@ public class ProductsFilterFragment extends ListFragment {
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
             mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ProductFilterAdapter(getActivity(), getActivity(), mProducts);
+            selectedEvent = getArguments().getParcelable(ARG_PARAM2);
+            adapter = new ProductFilterAdapter(getActivity(), mProducts, this.getActivity());
             this.mProductsBackup = new ArrayList<>(mProducts);
             adapter.notifyDataSetChanged();
             setListAdapter(adapter);

@@ -151,10 +151,20 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         buyButton.setOnClickListener(v -> {
             if (!product.isAvailableToBuy()) {
                 Toast.makeText(imageView.getContext(), "Product is not available to buy!", Toast.LENGTH_SHORT).show();
-            } else if (product.getTypeDAO() == 0) {//Type is product
+            } else if (product.getTypeDAO() == 1) {//Type is product
                 Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (product.getTypeDAO() == 0) {//Type is service
                 FragmentTransition.to(BuyProductFragment.newInstance(product), currentActivity, true, R.id.products_container, "productsManagement");
+            } else if (product.getTypeDAO() == 2) {//Type is packet
+                CloudStoreUtil.selectPackage(product.getDocumentRefId(), apackage -> {
+                    if(apackage.getServices().isEmpty()){
+                        Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        FragmentTransition.to(BuyProductFragment.newInstance(product, apackage), currentActivity, true, R.id.products_container, "productsManagement");
+                    }
+                });
+            } else {
+                Toast.makeText(imageView.getContext(), "Greska druze moj dobri!", Toast.LENGTH_SHORT).show();
             }
         });
     }
