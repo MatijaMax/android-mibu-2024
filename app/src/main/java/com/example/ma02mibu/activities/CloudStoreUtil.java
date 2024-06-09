@@ -95,7 +95,7 @@ public class CloudStoreUtil {
         void onFailure(Exception e);
     }
 
-    public static void getEvents(String email, EventsCallback callback) {
+    public static void getEvents(String email, EventsCallback1 callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events")
                 .whereEqualTo("email", email)

@@ -25,8 +25,6 @@ public class ProductDAO implements Parcelable {
     private ArrayList<String> eventTypes;
     private int currentImageIndex;
 
-    private String ownerUuid;
-
     private String email;
 
     private int typeDAO;
@@ -250,12 +248,5 @@ public class ProductDAO implements Parcelable {
         this.email = email;
     }
 
-    public String getOwnerUuid() {
-        return ownerUuid;
-    }
-
-    public void setOwnerUuid(String ownerUuid) {
-        this.ownerUuid = ownerUuid;
-    }
 }
 

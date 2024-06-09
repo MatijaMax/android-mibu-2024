@@ -200,7 +200,7 @@ public class UserProfileFragment extends Fragment {
 
             if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
 
-                CloudStoreUtil.getOrganizer(currentUser.getUid(), new CloudStoreUtil.OrganizerCallback() {
+                CloudStoreUtil.getEventOrganizer(currentUser.getUid(), new CloudStoreUtil.EventOrganizerCallback() {
                     @Override
                     public void onSuccess(EventOrganizer myItem) {
                         mOrganizer = myItem;
