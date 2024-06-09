@@ -213,7 +213,7 @@ public class BuyProductFragment extends Fragment {
                                                                     service.getFirestoreId(),
                                                                     start,
                                                                     end,
-                                                                    null,
+                                                                    aPackage == null ? null : aPackage.getFirestoreId(),
                                                                     EmployeeReservation.ReservationStatus.New);
 
         CloudStoreUtil.insertServiceReservation(reservation);
