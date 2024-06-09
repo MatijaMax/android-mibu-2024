@@ -22,12 +22,12 @@ import com.example.ma02mibu.model.Employee;
 import com.example.ma02mibu.model.EmployeeInService;
 import com.example.ma02mibu.model.EmployeeReservation;
 import com.example.ma02mibu.model.EventModel;
+import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.ProductDAO;
 import com.example.ma02mibu.model.Service;
 import com.example.ma02mibu.model.OurNotification;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -38,7 +38,10 @@ import java.util.Objects;
 public class BuyProductFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "product";
+    private static final String ARG_PARAM2 = "package";
     private Service service;
+    private Package aPackage = null;
+    int i = 0;
     private ProductDAO product;
 
     private EmployeePickupListAdapter adapter;
@@ -66,6 +69,16 @@ public class BuyProductFragment extends Fragment {
         BuyProductFragment fragment = new BuyProductFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM2, null);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static BuyProductFragment newInstance(ProductDAO param1, Package aPackage) {
+        BuyProductFragment fragment = new BuyProductFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM2, aPackage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +88,7 @@ public class BuyProductFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             product = getArguments().getParcelable(ARG_PARAM1);
+            aPackage = getArguments().getParcelable(ARG_PARAM2);
         }
     }
 
@@ -104,7 +118,11 @@ public class BuyProductFragment extends Fragment {
             updateTimeTable();
         });
 
-        getService();
+        if(aPackage == null){
+            getService(product.getDocumentRefId());
+        } else {
+            getService(aPackage.getServices().get(i).getFirestoreId());
+        }
 
         return view;
     }
@@ -208,21 +226,26 @@ public class BuyProductFragment extends Fragment {
 
         Toast.makeText(getContext(), "Nice, sve je ok", Toast.LENGTH_SHORT).show();
 
-        FragmentTransition.to(SelectEventFragment.newInstance(), getActivity(), true, R.id.products_container, "productsManagement");
+        if(aPackage == null){
+            FragmentTransition.to(SelectEventFragment.newInstance(), getActivity(), true, R.id.products_container, "productsManagement");
+        } else {
+            i += 1;
+            if(i == aPackage.getServices().size()){
+                FragmentTransition.to(SelectEventFragment.newInstance(), getActivity(), true, R.id.products_container, "productsManagement");
+            } else {
+                getService(aPackage.getServices().get(i).getFirestoreId());
+                selectedEmployee = null;
+                employee = null;
+                workingTime.setText("Employee working time");
+                timeTableAdapter = new EmployeeTimeTableAdapter(getContext(), new ArrayList<>());
+                timeTableListView.setAdapter(timeTableAdapter);
+            }
+        }
     }
 
-    private boolean isBefore(int firstHour, int firstMinute, int secondHour, int secondMinute, boolean equal){
-        //firstHour:firstMinute is before secondHour:secondMinute
-        //is before (or equal if equal = true)
-        return firstHour < secondHour || (firstHour == secondHour && (firstMinute < secondMinute || (firstMinute == secondMinute && equal)));
-    }
 
-    private boolean isInside(int targetHour, int targetMinute, int firstHour, int firstMinute, int secondHour, int secondMinute){
-        return isBefore(firstHour, firstMinute, targetHour, targetMinute, true) && isBefore(targetHour, targetMinute, secondHour, secondMinute, true);
-    }
-
-    private void getService() {
-        CloudStoreUtil.selectService(product.getDocumentRefId(), result -> {
+    private void getService(String refId) {
+        CloudStoreUtil.selectService(refId, result -> {
             service = result;
             employees = service.getPersons();
             adapter = new EmployeePickupListAdapter(getContext(), employees, getActivity());
@@ -319,5 +342,13 @@ public class BuyProductFragment extends Fragment {
         }
         return new int[]{endH, endM};
     }
+    private boolean isBefore(int firstHour, int firstMinute, int secondHour, int secondMinute, boolean equal){
+        //firstHour:firstMinute is before secondHour:secondMinute
+        //is before (or equal if equal = true)
+        return firstHour < secondHour || (firstHour == secondHour && (firstMinute < secondMinute || (firstMinute == secondMinute && equal)));
+    }
 
+    private boolean isInside(int targetHour, int targetMinute, int firstHour, int firstMinute, int secondHour, int secondMinute){
+        return isBefore(firstHour, firstMinute, targetHour, targetMinute, true) && isBefore(targetHour, targetMinute, secondHour, secondMinute, true);
+    }
 }

@@ -1071,6 +1071,30 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface SinglePackageCallback {
+        void onCallback(Package apackage);
+    }
+
+    public static void selectPackage(String packageFirestoreId, final SinglePackageCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference packageRef = db.collection("packages").document(packageFirestoreId);
+
+        packageRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Package aPackage = documentSnapshot.toObject(Package.class);
+                if (aPackage != null) {
+                    aPackage.setFirestoreId(packageFirestoreId);
+                    callback.onCallback(aPackage);
+                } else {
+                    Log.w("REZ_DB", "Error package data is missing.");
+                }
+            } else {
+                Log.w("REZ_DB", "Error document with id " + packageFirestoreId + " does not exists in collection package.");
+            }
+        });
+    }
+
     public static void blockOrganizer(EventOrganizer organizer){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("eventOrganizers").document(organizer.getDocumentRefId());

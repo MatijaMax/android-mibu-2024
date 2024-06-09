@@ -95,7 +95,13 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             } else if (product.getTypeDAO() == 0) {//Type is service
                 FragmentTransition.to(BuyProductFragment.newInstance(product), currentActivity, true, R.id.products_container, "productsManagement");
             } else if (product.getTypeDAO() == 2) {//Type is packet
-                Toast.makeText(imageView.getContext(), "Not yet implemented!", Toast.LENGTH_SHORT).show();
+                CloudStoreUtil.selectPackage(product.getDocumentRefId(), apackage -> {
+                    if(apackage.getServices().isEmpty()){
+                        Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        FragmentTransition.to(BuyProductFragment.newInstance(product, apackage), currentActivity, true, R.id.products_container, "productsManagement");
+                    }
+                });
             } else {
                 Toast.makeText(imageView.getContext(), "Greska druze moj dobri!", Toast.LENGTH_SHORT).show();
             }
