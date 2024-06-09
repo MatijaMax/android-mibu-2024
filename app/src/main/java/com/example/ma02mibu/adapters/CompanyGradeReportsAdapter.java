@@ -15,6 +15,7 @@ import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.model.CompanyGrade;
 import com.example.ma02mibu.model.CompanyGradeReport;
+import com.example.ma02mibu.model.OurNotification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,20 +49,22 @@ public class CompanyGradeReportsAdapter extends ArrayAdapter<CompanyGradeReport>
             holder.organizersEmailTextView = convertView.findViewById(R.id.text_owners_email);
             holder.createdDateTextView = convertView.findViewById(R.id.text_reported_date);
             holder.rejectButton = convertView.findViewById(R.id.btn_reject);
-            holder.rejectedReasonTextView = convertView.findViewById(R.id.text_reason);
+            holder.acceptButton = convertView.findViewById(R.id.btn_accept);
+            holder.reportedReasonTextView = convertView.findViewById(R.id.text_reason);
+            holder.rejectReasonEditView = convertView.findViewById(R.id.text_reason_rejected);
             holder.reportStatusTextView = convertView.findViewById(R.id.text_reported_status);
             convertView.setTag(holder);
         } else {
             holder = (CompanyGradeReportsAdapter.ViewHolder) convertView.getTag();
         }
 
-//        View view = convertView;
-//        if (view == null) {
-//            LayoutInflater inflater = LayoutInflater.from(getContext());
-//            view = inflater.inflate(R.layout.company_grade_view, null);
-//        }
 
         CompanyGradeReport report = getItem(position);
+
+        if(report.getReportStatus() != CompanyGradeReport.REPORTSTATUS.REPORTED){
+            holder.acceptButton.setVisibility(View.GONE);
+            holder.rejectButton.setVisibility(View.GONE);
+        }
 
         holder.gradeTextView.setText(String.valueOf(report.getGrade()));
         holder.commentTextView.setText(report.getComment());
@@ -69,14 +72,55 @@ public class CompanyGradeReportsAdapter extends ArrayAdapter<CompanyGradeReport>
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String formattedDate = dateFormat.format(report.getReportedDate());
         holder.createdDateTextView.setText("Reported date: " + formattedDate);
-        holder.reportStatusTextView.setText("Status: " + report.getReportstatus().toString());
-        holder.rejectedReasonTextView.setText("Report reason: "+report.getReason());
+        holder.reportStatusTextView.setText("Status: " + report.getReportStatus().toString());
+        holder.reportedReasonTextView.setText("Report reason: "+report.getReason());
+        holder.acceptButton.setOnClickListener(view -> {
+            report.setReportStatus(CompanyGradeReport.REPORTSTATUS.ACCEPTED);
+            CompanyGrade companyGrade = new CompanyGrade(report.getGrade(), "String comment", "String ownerRefId", new Date(), "String organizersEmail", report.getCompanyGradeUID(), true, true);
+            CloudStoreUtil.updateCompanyGradeReport(report, new CloudStoreUtil.UpdateReadCallback() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("Item updated! TTTTTTTTTTTTTTTTTTTTTTTTTT");
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    System.err.println("Error updating item: " + e.getMessage());
+                }
+            });
+            CloudStoreUtil.updateCompanyGrade(companyGrade, new CloudStoreUtil.UpdateReadCallback() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("Item updated!");
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    System.err.println("Error updating item: " + e.getMessage());
+                }
+            });
+            holder.reportStatusTextView.setText("Status: " + report.getReportStatus().toString());
+            holder.rejectButton.setVisibility(View.GONE);
+            holder.acceptButton.setVisibility(View.GONE);
+            holder.rejectReasonEditView.setVisibility(View.GONE);
+        });
+
         holder.rejectButton.setOnClickListener(view -> {
-//            holder.reasonEditText.setVisibility(
-//                    holder.reasonEditText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE
-//            );
-//            CompanyGradeReport companyGradeReport = new CompanyGradeReport(grade.getUuid(), holder.reasonEditText.getText().toString(), new Date(), CompanyGradeReport.REPORTSTATUS.REPORTED);
-//            CloudStoreUtil.insertCompanyGradeReport(companyGradeReport);
+            report.setReportStatus(CompanyGradeReport.REPORTSTATUS.REJECTED);
+            CloudStoreUtil.updateCompanyGradeReport(report, new CloudStoreUtil.UpdateReadCallback() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("Item updated! TTTTTTTTTTTTTTTTTTTTTTTTTT");
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    System.err.println("Error updating item: " + e.getMessage());
+                }
+            });
+            OurNotification notification = new OurNotification(report.getOwnersEmail(), "Rejected report","Reason: " + holder.rejectReasonEditView.getText().toString(), "notRead");
+            CloudStoreUtil.insertNotification(notification);
+            holder.reportStatusTextView.setText("Status: " + report.getReportStatus().toString());
+            holder.rejectButton.setVisibility(View.GONE);
+            holder.acceptButton.setVisibility(View.GONE);
+            holder.rejectReasonEditView.setVisibility(View.GONE);
         });
 
         return convertView;
@@ -87,7 +131,8 @@ public class CompanyGradeReportsAdapter extends ArrayAdapter<CompanyGradeReport>
         TextView commentTextView;
         TextView organizersEmailTextView;
         TextView createdDateTextView;
-        TextView rejectedReasonTextView;
+        TextView reportedReasonTextView;
+        EditText rejectReasonEditView;
         TextView reportStatusTextView;
         Button rejectButton;
         Button acceptButton;

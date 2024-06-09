@@ -1,5 +1,6 @@
 package com.example.ma02mibu.fragments.companyGrading;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,7 +8,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
@@ -21,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -42,6 +47,12 @@ public class CompanyProfileFragment extends Fragment {
     private FirebaseAuth auth;
     private ArrayList<CompanyGrade> companyGrades;
     private String ownerRefId;
+
+    private TextView eventSelectedDateStart;
+    private TextView eventSelectedDateEnd;
+
+    private Date startDate;
+    private Date endDate;
 
     public CompanyProfileFragment() {
         // Required empty public constructor
@@ -77,27 +88,130 @@ public class CompanyProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_company_profile, container, false);
 
         listView = view.findViewById(R.id.list_view);
-
-//        ArrayList<CompanyGrade> data = new ArrayList<>();
-//        data.add(new CompanyGrade(90, "Good job!", "12345",  new Date(), "organizer@example.com"));
-//        data.add(new CompanyGrade(80, "Could be better", "54321", new Date(), "organizer2@example.com"));
-
+        startDate = null;
+        endDate = null;
 
         loadGrades();
+
+        Button btnFilter = view.findViewById(R.id.filterButton);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadGrades();
+            }
+        });
+
+        eventSelectedDateStart = view.findViewById(R.id.eventSelectedDateStart);
+        Button btnPickEventDate = view.findViewById(R.id.btnNewEventDateStart);
+        btnPickEventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog2();
+            }
+        });
+
+        eventSelectedDateEnd = view.findViewById(R.id.eventSelectedDateEnd);
+        Button btnPickEventDateEnd = view.findViewById(R.id.btnNewEventDateEnd);
+        btnPickEventDateEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog1();
+            }
+        });
 
         return view;
     }
 
-    private void loadGrades() {
+    private void showDatePickerDialog2() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-//        EmployeeReservation employeeReservation1 = new EmployeeReservation("boskokulusic97@gmail.com", "pahiva9150@mfyax.com", "225db5NItEHs8OLEFh6p", new Date(2024, 6, 9, 10, 15), new Date(2024, 6, 11, 11, 20), "8AMydRDWtCWgmDKrns7z", EmployeeReservation.ReservationStatus.New);
-//        EmployeeReservation employeeReservation2 = new EmployeeReservation("fawosi5421@nweal.com", "pahiva9150@mfyax.com", "5XOvrBWQUsVRT5YhsG7t", new Date(), new Date(2024, 6, 10, 10, 10), null, EmployeeReservation.ReservationStatus.New);
-//        CloudStoreUtil.insertServiceReservation(employeeReservation1);
-//        CloudStoreUtil.insertServiceReservation(employeeReservation2);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Convert selected date to week number
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(year, month, dayOfMonth);
+                        startDate = selectedCalendar.getTime();
+                        int monthN = month + 1;
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDateStart.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDateStart.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDateStart.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDateStart.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
+                    }
+                },
+                year,
+                month,
+                dayOfMonth
+        );
+
+        datePickerDialog.show();
+    }
+
+    private void showDatePickerDialog1() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Convert selected date to week number
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(year, month, dayOfMonth);
+                        endDate = selectedCalendar.getTime();
+                        int monthN = month + 1;
+                        if(monthN < 10){
+                            if(dayOfMonth < 10){
+                                eventSelectedDateEnd.setText("0" + dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }else {
+                                eventSelectedDateEnd.setText(dayOfMonth + "-" + "0" + monthN + "-" + year);
+                            }
+                        }else{
+                            if(dayOfMonth < 10){
+                                eventSelectedDateEnd.setText("0" + dayOfMonth + "-" + monthN + "-" + year);
+                            }else{
+                                eventSelectedDateEnd.setText(dayOfMonth + "-" + monthN + "-" + year);
+                            }
+                        }
+                    }
+                },
+                year,
+                month,
+                dayOfMonth
+        );
+
+        datePickerDialog.show();
+    }
+
+    private void loadGrades() {
         CloudStoreUtil.getCompanyGradesList(ownerRefId, new CloudStoreUtil.GradesListCallback() {
             @Override
             public void onSuccess(ArrayList<CompanyGrade> itemList) {
                 companyGrades = new ArrayList<>(itemList);
+                companyGrades.removeIf(cg -> cg.isDeleted());
+                if(startDate != null){
+                    companyGrades.removeIf(cg -> cg.getCreatedDate().compareTo(startDate) < 0);
+                }
+                if(endDate != null){
+                    companyGrades.removeIf(cg -> cg.getCreatedDate().compareTo(endDate) > 0);
+                }
                 adapter = new CompanyGradesListAdapter(getActivity(), companyGrades);
                 listView.setAdapter(adapter);
             }
