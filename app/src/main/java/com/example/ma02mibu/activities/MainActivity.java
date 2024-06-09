@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if ("report_form".equals(tag)) {
-                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                fragmentManager.popBackStackImmediate("COMPANY", 0);
                 return;
             }
             if ("eventOrganizerProfile".equals(tag)) {

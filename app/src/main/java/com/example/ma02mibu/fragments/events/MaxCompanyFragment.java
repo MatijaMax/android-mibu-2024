@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.ProductDAO;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,19 +109,8 @@ public class MaxCompanyFragment extends Fragment {
         tvWorkSchedule.setText("Work Schedule: 9 AM - 5 PM");
 
         btnReportCompany.setOnClickListener(v -> {
-
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-            alertDialog.setTitle("Success");
-            alertDialog.setMessage("Company reported");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // You can add actions here if needed
-                }
-            });
-            alertDialog.show();
-
-
-
+            FragmentTransition.to(ReportCompanyFragment.newInstance(product), getActivity(),
+                            true, R.id.scroll_products_list2, "report_form");
         });
 
     }

@@ -98,7 +98,7 @@ public class ReportCompanyFragment extends Fragment {
             OurNotification not = new OurNotification("vejihot961@mfyax.com", "Report","New report for  " + owner.getMyCompany().getName() + " company", "notRead");
             CloudStoreUtil.insertNotification(not);
             FragmentTransition.to(ExploreAndFilter.newInstance(null), getActivity(),
-                    false, R.id.scroll_products_list, "falsh");
+                    false, R.id.scroll_products_list2, "falsh");
         }
 
     }

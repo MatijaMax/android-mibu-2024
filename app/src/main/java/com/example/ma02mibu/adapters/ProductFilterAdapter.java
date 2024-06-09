@@ -90,8 +90,6 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         handleInfoButtonClick(infoButton, product);
 
 
-        Button reportBtn = convertView.findViewById(R.id.report_button);
-        reportBtn.setOnClickListener(v -> openReportForm(product));
         if(product != null){
             int image = product.getImage().get(0);
             imageView.setImageResource(image);
@@ -142,10 +140,6 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             }
         });
         alertDialog.show();
-    }
-    private void openReportForm(ProductDAO product){
-        FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,
-                true, R.id.scroll_products_list, "report_form");
     }
     private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
         buyButton.setOnClickListener(v -> {
