@@ -4,9 +4,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ma02mibu.model.CompanyReport;
+import com.example.ma02mibu.model.CompanyGrade;
+import com.example.ma02mibu.model.CompanyGradeReport;
+import com.example.ma02mibu.model.EmployeeReservation;
+import com.example.ma02mibu.model.ODReport;
+import com.example.ma02mibu.model.OwnerRequest;
 import com.example.ma02mibu.model.Package;
 import com.example.ma02mibu.model.Category;
-import com.example.ma02mibu.model.Company;
 import com.example.ma02mibu.model.Employee;
 
 import com.example.ma02mibu.model.Event;
@@ -20,6 +25,7 @@ import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
 import com.example.ma02mibu.model.Service;
+import com.example.ma02mibu.model.ServiceReservationDTO;
 import com.example.ma02mibu.model.SubcategoryProposal;
 import com.example.ma02mibu.model.User;
 import com.example.ma02mibu.model.Subcategory;
@@ -47,6 +53,7 @@ public class CloudStoreUtil {
     private static final String subcategoryCollection = "subcategory";
     private static final String eventTypeCollection = "eventtype";
     private static final String userRoleCollection = "userrole";
+    private static final String ownerRequestCollection = "ownerrequest";
 
     private static final String myEventsCollection ="events";
 
@@ -78,7 +85,7 @@ public class CloudStoreUtil {
     }
 
 
-    public interface EventsCallback {
+    public interface EventsCallback1 {
         void onSuccess(ArrayList<Event> myItem);
         void onFailure(Exception e);
     }
@@ -122,6 +129,7 @@ public class CloudStoreUtil {
         return ownerRefId;
     }
 
+
     public interface OwnersCallback {
         void onCallback(ArrayList<Owner> owners);
     }
@@ -150,6 +158,24 @@ public class CloudStoreUtil {
         db.collection("employees").add(employee);
     }
 
+    public static void insertCompanyGradeReport(CompanyGradeReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("companyGradeReports").add(report);
+    }
+
+    public static void insertCompanyGrade(CompanyGrade companyGrade){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("companyGrades").add(companyGrade);
+    }
+
+    public static void insertServiceReservation(EmployeeReservation employeeReservation){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("serviceReservations").add(employeeReservation);
+    }
+
     public static void insertEventModel(EventModel eventModel){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -172,6 +198,7 @@ public class CloudStoreUtil {
                 .whereEqualTo("text", notification.getText())
                 .whereEqualTo("title", notification.getTitle())
                 .whereEqualTo("email", notification.getEmail())
+                .whereEqualTo("status", "notRead")
                 .limit(1) // Limit to one result
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
@@ -196,6 +223,126 @@ public class CloudStoreUtil {
                 .addOnFailureListener((OnFailureListener) e -> {
                     callback.onFailure(e);
                 });
+    }
+
+    public static void updateCompanyGrade(CompanyGrade grade, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGrades")
+                .whereEqualTo("uuid", grade.getUuid())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("reported", grade.isReported());
+                        updates.put("deleted", grade.isDeleted());
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateCompanyGradeReport(CompanyGradeReport gradeReport, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGradeReports")
+                .whereEqualTo("companyGradeUID", gradeReport.getCompanyGradeUID())
+                .whereEqualTo("reportedDate", gradeReport.getReportedDate())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("reportStatus", gradeReport.getReportStatus());
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateStatusReservation(ServiceReservationDTO reservationDTO, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("serviceReservations")
+                .whereEqualTo("employeeEmail", reservationDTO.getEmployeeEmail())
+                .whereEqualTo("serviceRefId", reservationDTO.getServiceRefId())
+                .whereEqualTo("eventOrganizerEmail", reservationDTO.getEventOrganizerEmail())
+                .whereEqualTo("start", reservationDTO.getStart())
+                .whereEqualTo("end", reservationDTO.getEnd())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("status", reservationDTO.getStatus());
+                        // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateReservationStatus(EmployeeReservation reservationDTO) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("serviceReservations")
+                .whereEqualTo("employeeEmail", reservationDTO.getEmployeeEmail())
+                .whereEqualTo("serviceRefId", reservationDTO.getServiceRefId())
+                .whereEqualTo("eventOrganizerEmail", reservationDTO.getEventOrganizerEmail())
+                .whereEqualTo("start", reservationDTO.getStart())
+                .whereEqualTo("end", reservationDTO.getEnd())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        itemRef.update("status", reservationDTO.getStatus());
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                });
+    }
+
+
+    public static void updateCompanyReport(CompanyReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("companyReports").document(report.getFirestoreId());
+        docRef.update("status", report.getStatus());
     }
 
     public interface UpdateItemCallback {
@@ -300,6 +447,23 @@ public class CloudStoreUtil {
                 });
     }
 
+
+    public static void updateODReport(ODReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("odReports").document(report.getFirestoreId());
+        docRef.update("status", report.getStatus());
+    }
+    public static void insertCompanyReport(CompanyReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyReports")
+                .add(report);
+    }
+
+    public static void insertODReport(ODReport report){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("odReports")
+                .add(report);
+    }
     public static void insertProduct(Product product, boolean saveNewSubCategory, SubcategoryProposal subCategory){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
@@ -359,6 +523,83 @@ public class CloudStoreUtil {
                     ArrayList<Employee> itemList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         Employee myItem = documentSnapshot.toObject(Employee.class);
+                        myItem.setDocumentRefId(documentSnapshot.getId());
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface GradesListCallback {
+        void onSuccess(ArrayList<CompanyGrade> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getCompanyGradesList(String ownerId, GradesListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGrades")
+                .whereEqualTo("ownerRefId", ownerId)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<CompanyGrade> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        CompanyGrade myItem = documentSnapshot.toObject(CompanyGrade.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface GradesReportsListCallback {
+        void onSuccess(ArrayList<CompanyGradeReport> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getCompanyGradeReportsList(GradesReportsListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGradeReports")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<CompanyGradeReport> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        CompanyGradeReport myItem = documentSnapshot.toObject(CompanyGradeReport.class);
+                        itemList.add(myItem);
+                    }
+                    if (!itemList.isEmpty()) {
+                        callback.onSuccess(itemList);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface ServiceReservationsListCallback {
+        void onSuccess(ArrayList<EmployeeReservation> myItems);
+        void onFailure(Exception e);
+    }
+    public static void getServieReservationsList(ServiceReservationsListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("serviceReservations")
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    ArrayList<EmployeeReservation> itemList = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        EmployeeReservation myItem = documentSnapshot.toObject(EmployeeReservation.class);
                         itemList.add(myItem);
                     }
                     if (!itemList.isEmpty()) {
@@ -418,6 +659,7 @@ public class CloudStoreUtil {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         Owner myItem = documentSnapshot.toObject(Owner.class);
+                        myItem.setDocumentRefId(documentSnapshot.getId());
                         callback.onSuccess(myItem);
                     } else {
                         callback.onFailure(new Exception("No documents found with the specified tag"));
@@ -428,16 +670,21 @@ public class CloudStoreUtil {
                 });
     }
 
-    public static void getOrganizer(String organizerId, OrganizerCallback callback) {
+    public interface EventOrganizerCallback {
+        void onSuccess(EventOrganizer myItem);
+        void onFailure(Exception e);
+    }
+    public static void getEventOrganizer(String userId, EventOrganizerCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("eventOrganizers")
-                .whereEqualTo("userUID", organizerId)
+                .whereEqualTo("userUID", userId)
                 .limit(1)
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         EventOrganizer myItem = documentSnapshot.toObject(EventOrganizer.class);
+                        myItem.setDocumentRefId(documentSnapshot.getId());
                         callback.onSuccess(myItem);
                     } else {
                         callback.onFailure(new Exception("No documents found with the specified tag"));
@@ -446,6 +693,104 @@ public class CloudStoreUtil {
                 .addOnFailureListener((OnFailureListener) e -> {
                     callback.onFailure(e);
                 });
+    }
+
+    public static void getEventOrganizerByEmail(String email, EventOrganizerCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("eventOrganizers")
+                .whereEqualTo("email", email)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        EventOrganizer myItem = documentSnapshot.toObject(EventOrganizer.class);
+                        myItem.setDocumentRefId(documentSnapshot.getId());
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface EmployeeByEmailCallback {
+        void onSuccess(Employee myItem);
+        void onFailure(Exception e);
+    }
+    public static void getEmployeeByEmail(String email, EmployeeByEmailCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("employees")
+                .whereEqualTo("email", email)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        Employee myItem = documentSnapshot.toObject(Employee.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface OrganizerByEmailCallback {
+        void onSuccess(EventOrganizer myItem);
+        void onFailure(Exception e);
+    }
+    public static void getOrganizerByEmail(String email, OrganizerByEmailCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("eventOrganizers")
+                .whereEqualTo("email", email)
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        EventOrganizer myItem = documentSnapshot.toObject(EventOrganizer.class);
+                        myItem.setDocumentRefId(documentSnapshot.getId());
+                        callback.onSuccess(myItem);
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface ServiceByRefIdCallback {
+        void onSuccess(Service myItem);
+        void onFailure(Exception e);
+    }
+    public static void getServiceWithRefId(String refId, ServiceByRefIdCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("services").document(refId);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Service myItem = document.toObject(Service.class);
+                        callback.onSuccess(myItem);
+                    } else {
+                        // Document doesn't exist
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                } else {
+                    // Error occurred while getting document
+                    Log.d("ERROR", "Error getting document: ", task.getException());
+                }
+            }
+        });
     }
 
     public interface ServiceByUserCallback {
@@ -586,6 +931,60 @@ public class CloudStoreUtil {
                 });
     }
 
+    public interface CompanyReportCallback {
+        void onCallbackCompanyReports(ArrayList<CompanyReport> companyReports);
+    }
+    public static void selectCompanyReports(final CompanyReportCallback callback){
+        ArrayList<CompanyReport> companyReports = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyReports")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                                CompanyReport report = document.toObject(CompanyReport.class);
+                                report.setFirestoreId(document.getId());
+                                companyReports.add(report);
+                            }
+                            callback.onCallbackCompanyReports(companyReports);
+                        } else {
+                            Log.w("REZ_DB", "Error getting documents.", task.getException());
+                            callback.onCallbackCompanyReports(null);
+                        }
+                    }
+                });
+    }
+
+    public interface ODReportCallback {
+        void onCallbackODReports(ArrayList<ODReport> odReports);
+    }
+    public static void selectODReports(final ODReportCallback callback){
+        ArrayList<ODReport> companyReports = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("odReports")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                                ODReport report = document.toObject(ODReport.class);
+                                report.setFirestoreId(document.getId());
+                                companyReports.add(report);
+                            }
+                            callback.onCallbackODReports(companyReports);
+                        } else {
+                            Log.w("REZ_DB", "Error getting documents.", task.getException());
+                            callback.onCallbackODReports(null);
+                        }
+                    }
+                });
+    }
+
 
 
     public interface PackageCallback {
@@ -616,6 +1015,21 @@ public class CloudStoreUtil {
                 });
     }
 
+    public static void blockOrganizer(EventOrganizer organizer){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("eventOrganizers").document(organizer.getDocumentRefId());
+        docRef.update("blocked", true);
+    }
+    public static void blockOwner(Owner owner){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("owners").document(owner.getDocumentRefId());
+        docRef.update("blocked", true);
+    }
+    public static void blockEmployee(Employee employee){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("employees").document(employee.getDocumentRefId());
+        docRef.update("blocked", true);
+    }
     public static void deletePackage(String firestoreId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("packages")
@@ -634,6 +1048,29 @@ public class CloudStoreUtil {
                 "discount", aPackage.getDiscount(),
                 "products", aPackage.getProducts(),
                 "services", aPackage.getServices());
+    }
+    public static void disablePackage(Package aPackage){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("packages").document(aPackage.getFirestoreId());
+        docRef.update("availableToBuy", false);
+    }
+
+    public static void disableService(Service service){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("services").document(service.getFirestoreId());
+        docRef.update("availableToBuy", false);
+    }
+
+    public static void disableProduct(Product product){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("products").document(product.getFirestoreId());
+        docRef.update("availableToBuy", false);
+    }
+
+    public static void updatePackageDiscount(Package aPackage){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("packages").document(aPackage.getFirestoreId());
+        docRef.update("discount", aPackage.getDiscount());
     }
 
     public static void deleteService(String firestoreId){
@@ -757,6 +1194,35 @@ public class CloudStoreUtil {
                     } else {
                         Log.w("updateFav", "Error getting documents: ", task.getException());
                     }
+                });
+    }
+    
+    public interface EventsCallback {
+        void onCallback(ArrayList<Event> events);
+    }
+
+    public static void selectEventsFrom(String userEmail, EventsCallback callback){
+        ArrayList<Event> events = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("events")
+                .whereEqualTo("email", userEmail)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            Event temp = document.toObject(Event.class);
+                            events.add(temp);
+                        }
+                        callback.onCallback(events);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.w("REZ_DB", "Error getting collection: " + "events", e);
                 });
     }
 
@@ -1141,8 +1607,75 @@ public class CloudStoreUtil {
                     }
                 }).addOnFailureListener(e -> {
                     callback.onCallback(null);
-                    Log.w("REZ_DB", "Error getting collection: " + subcategoryCollection, e);
+                    Log.w("REZ_DB", "Error getting collection: " + userRoleCollection, e);
                 });
     }
+
+
+
+
+    //OwnerRequests/////////////////////////////////////////////////////////////////////////////////
+    public static String insertOwnerRequest(OwnerRequest newOwnerRequest){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference ownerRequestRef = db.collection(ownerRequestCollection).document();
+
+        String ownerRequestRefId = ownerRequestRef.getId();
+        ownerRequestRef.set(newOwnerRequest)
+                .addOnSuccessListener(command -> Log.d("REZ_DB", "insert owner request: " + ownerRequestRefId))
+                .addOnFailureListener(command -> Log.d("REZ_DB", "insert owner request failed"));
+        return ownerRequestRefId;
+    }
+
+    public interface OwnerRequestCallback {
+        void onCallback(ArrayList<OwnerRequest> ownerRequests);
+    }
+
+    public static void selectOwnerRequest(final OwnerRequestCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(ownerRequestCollection)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<OwnerRequest> owners = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("REZ_DB", document.getId() + " => " + document.getData());
+                            OwnerRequest temp = document.toObject(OwnerRequest.class);
+                            owners.add(temp);
+                            break;
+                        }
+                        callback.onCallback(owners);
+                    } else {
+                        Log.w("REZ_DB", "Error getting documents.", task.getException());
+                        callback.onCallback(null);
+                    }
+                }).addOnFailureListener(e -> {
+                    callback.onCallback(null);
+                    Log.w("REZ_DB", "Error getting collection: " + ownerRequestCollection, e);
+                });
+    }
+
+    private static void privateDeleteOwnerRequest(OwnerRequest ownerRequest){
+        if(ownerRequest.getDocumentRefId() == null){
+            Log.w("REZ_DB", "Error document reference id not provided.");
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(categoryCollection).document(ownerRequest.getDocumentRefId()).delete()
+                .addOnSuccessListener(task -> Log.d("REZ_DB", "owner request deleted: " + ownerRequest.getDocumentRefId()))
+                .addOnFailureListener(e -> Log.w("REZ_DB", "Error deleting owner request: " + ownerRequest.getDocumentRefId(), e));
+    }
+    public static void deleteOwnerRequest(OwnerRequest ownerRequest){
+        privateDeleteOwnerRequest(ownerRequest);
+    }
+
+    public static void activate(OwnerRequest ownerRequest){
+        privateDeleteOwnerRequest(ownerRequest);
+
+        insertOwner(ownerRequest.getOwner());
+    }
+
 
 }

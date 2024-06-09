@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/prvi">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/eventSelectedDateStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" . "
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/btnNewEventDateStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Date"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/drugi"
+        android:layout_below="@id/prvi">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/eventSelectedDateEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" . "
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/btnNewEventDateEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Date"
+            />
+    </LinearLayout>
+
+
+    <!-- Button to trigger filtering -->
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:layout_below="@id/drugi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/filterButton"/>
+
+</RelativeLayout>

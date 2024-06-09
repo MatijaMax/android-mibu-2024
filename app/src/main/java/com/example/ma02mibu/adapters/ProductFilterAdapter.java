@@ -22,6 +22,11 @@ import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.fragments.events.InfoMaxFragment;
+import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
+import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
+import com.example.ma02mibu.model.CompanyReport;
+import com.example.ma02mibu.fragments.events.BuyProductFragment;
+import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,7 +41,7 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     private Context contextMax;
 
     private FragmentActivity activityMax;
-
+    private FragmentActivity currentActivity;
     private FirebaseUser currentUser;
     public ProductFilterAdapter(Context context, FragmentActivity fragmentActivity, ArrayList<ProductDAO> products) {
         super(context, R.layout.product_card, products);
@@ -45,6 +50,7 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         aProducts = products;
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
+        currentActivity = fragmentActivity;
     }
     @Override
     public int getCount() {
@@ -83,6 +89,8 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         handleInfoButtonClick(infoButton, product);
 
 
+        Button reportBtn = convertView.findViewById(R.id.report_button);
+        reportBtn.setOnClickListener(v -> openReportForm(product));
         if(product != null){
             int image = product.getImage().get(0);
             imageView.setImageResource(image);
@@ -92,6 +100,8 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             subCategory.setText(product.getSubCategory());
             price.setText(String.valueOf(product.getPrice()));
         }
+        Button buyButton = convertView.findViewById(R.id.buyProduct);
+        handleBuyProductButton(buyButton, imageView, product);
 
         return convertView;
     }
@@ -131,6 +141,21 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
             }
         });
         alertDialog.show();
+    }
+    private void openReportForm(ProductDAO product){
+        FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,
+                true, R.id.scroll_products_list, "report_form");
+    }
+    private void handleBuyProductButton(Button buyButton, ImageView imageView, ProductDAO product) {
+        buyButton.setOnClickListener(v -> {
+            if (!product.isAvailableToBuy()) {
+                Toast.makeText(imageView.getContext(), "Product is not available to buy!", Toast.LENGTH_SHORT).show();
+            } else if (product.getTypeDAO() == 0) {//Type is product
+                Toast.makeText(imageView.getContext(), "Product is added to the budget!", Toast.LENGTH_SHORT).show();
+            } else {
+                FragmentTransition.to(BuyProductFragment.newInstance(product), currentActivity, true, R.id.products_container, "productsManagement");
+            }
+        });
     }
 }
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.serviceReservationsOverview.ServiceReservationsOrganizerOverviewFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/prviSeg">
+        <EditText
+            android:layout_width="205dp"
+            android:id="@+id/textSearch"
+            android:layout_height="wrap_content"
+            android:hint="Search"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            />
+    </LinearLayout>
+    <Spinner
+        android:id="@+id/spinner_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/prviSeg"/>
+    <ListView
+        android:id="@+id/listViewOwnerReservations"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinner_options"/>
+
+</RelativeLayout>

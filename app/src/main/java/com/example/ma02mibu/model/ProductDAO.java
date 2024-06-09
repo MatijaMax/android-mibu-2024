@@ -11,10 +11,12 @@ import java.util.ArrayList;
 
 public class ProductDAO implements Parcelable {
     private Long id;
+    private String documentRefId;
     private String name;
     private String description;
     private String category;
     private String subCategory;
+    private String ownerUuid;
     private int price;
     private int discount;
     private boolean visible;
@@ -74,6 +76,14 @@ public class ProductDAO implements Parcelable {
         this.name = name;
     }
 
+    public String getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(String ownerUuid) {
+        this.ownerUuid = ownerUuid;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -124,6 +134,14 @@ public class ProductDAO implements Parcelable {
 
     public ArrayList<Integer> getImage() {
         return images;
+    }
+
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 
     public int getDiscount() {

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <!-- Employee Information -->
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/employeeNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <!-- Event Organizer Information -->
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/eventOrganizerNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Service Information -->
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/serviceInfoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/cancelationDeadlineTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Reservation Status -->
+    <TextView
+        android:textSize="16dp"
+        android:id="@+id/statusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"/>
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/buttonGrade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Grade" />
+
+</LinearLayout>

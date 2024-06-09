@@ -11,6 +11,13 @@
         android:label="Home page"
         tools:layout="@layout/home_fragment" />
     <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.example.ma02mibu.fragments.notifications.NotificationsPageFragment"
+        android:label="Notifications"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/notification_page_fragment" />
+    <fragment
         android:id="@+id/nav_products"
         android:name="com.example.ma02mibu.fragments.products.ProductsPageFragment"
         android:label="Products"
@@ -33,6 +40,30 @@
         tools:layout="@layout/packages_page_fragment"
         />
     <fragment
+        android:id="@+id/nav_pricelist_prod"
+        android:name="com.example.ma02mibu.fragments.pricelist.ProductsPricelistPageFragment"
+        android:label="Pricelist"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/products_pricelist_page_fragment"
+        />
+    <fragment
+        android:id="@+id/nav_pricelist_serv"
+        android:name="com.example.ma02mibu.fragments.pricelist.ServicesPricelistPageFragment"
+        android:label="Pricelist"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/services_pricelist_page_fragment"
+        />
+    <fragment
+        android:id="@+id/nav_pricelist_pack"
+        android:name="com.example.ma02mibu.fragments.pricelist.PackagesPricelistPageFragment"
+        android:label="Pricelist"
+        app:popUpTo="@+id/nav_home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/packages_pricelist_page_fragment"
+        />
+    <fragment
         android:id="@+id/nav_employees"
         android:name="com.example.ma02mibu.fragments.employees.EmployeePageFragment"
         android:label="Employees"
@@ -43,12 +74,48 @@
         android:name="com.example.ma02mibu.fragments.events.EventPageFragment"
         android:label="Events"
         tools:layout="@layout/fragment_event_page" />
+        
+    <fragment
+        android:id="@+id/nav_grade_reports"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeReportsFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_company_grade_reports" />
 
     <fragment
         android:id="@+id/nav_employee_personal"
         android:name="com.example.ma02mibu.fragments.employees.EmployeePersonalFragment"
         android:label="Employee"
         tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_grading_company"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyGradeFormFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_employee_personal" />
+
+    <fragment
+        android:id="@+id/nav_reservations_organizer_view"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOverviewPageFragment"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservations_organizer_overview" />
+
+    <fragment
+        android:id="@+id/nav_company_profile"
+        android:name="com.example.ma02mibu.fragments.companyGrading.CompanyProfileFragment"
+        android:label="GradingCompany"
+        tools:layout="@layout/fragment_company_profile" />
+
+    <fragment
+        android:id="@+id/nav_owner_reservations"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationsOwnerOverviewPageFragment"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservations_owner_overview_page" />
+
+    <fragment
+        android:id="@+id/nav_employee_reservations"
+        android:name="com.example.ma02mibu.fragments.serviceReservationsOverview.ServiceReservationEmployeeOverviewFragment"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservation_employee_overview" />
 
     <fragment
         android:id="@+id/nav_admin_category_management"
@@ -61,6 +128,16 @@
         android:label="Event type management"
         tools:layout="@layout/fragment_event_type_management_container" />
     <fragment
+        android:id="@+id/nav_company_reports"
+        android:name="com.example.ma02mibu.fragments.reporting.CompanyReportsPageFragment"
+        android:label="Company reports"
+        tools:layout="@layout/company_reports_page_fragment" />
+    <fragment
+        android:id="@+id/nav_od_reports"
+        android:name="com.example.ma02mibu.fragments.reporting.ODReportsPageFragment"
+        android:label="OD reports"
+        tools:layout="@layout/od_reports_page_fragment" />
+    <fragment
         android:id="@+id/nav_event_creation"
         android:name="com.example.ma02mibu.fragments.events.EventFormFragment"
         android:label="Event Creation"
@@ -68,9 +145,15 @@
         />
     <fragment
         android:id="@+id/nav_explore_and_filter"
-        android:name="com.example.ma02mibu.fragments.events.ExploreAndFilter"
-        android:label="Explore and Filter"
-        tools:layout="@layout/fragment_explore_and_filter"
+        android:name="com.example.ma02mibu.fragments.events.ProductsContainerFragment"
+        android:label="@string/Products"
+        tools:layout="@layout/fragment_products_container"
+        />
+    <fragment
+        android:id="@+id/nav_owner_request_managment"
+        android:name="com.example.ma02mibu.fragments.adminsManagement.OwnerRequestManagmentFragment"
+        android:label="Owner request management"
+        tools:layout="@layout/fragment_owner_request_managment"
         />
     <fragment
         android:id="@+id/nav_fav_list"
