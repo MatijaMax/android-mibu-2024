@@ -112,7 +112,7 @@ public class CompanyGradeFormFragment extends Fragment {
         int grade = numberPickerGrade.getValue();
         String comment = editTextComment.getText().toString().trim();
         String uuid = UUID.randomUUID().toString();
-        CompanyGrade companyGrade = new CompanyGrade(grade, comment, ownerRefId, new Date(), organizerEmail, uuid);
+        CompanyGrade companyGrade = new CompanyGrade(grade, comment, ownerRefId, new Date(), organizerEmail, uuid, false, false);
 
         CloudStoreUtil.insertCompanyGrade(companyGrade);
         String message = "Graded!";

@@ -159,6 +159,7 @@ public class CloudStoreUtil {
                 .whereEqualTo("text", notification.getText())
                 .whereEqualTo("title", notification.getTitle())
                 .whereEqualTo("email", notification.getEmail())
+                .whereEqualTo("status", "notRead")
                 .limit(1) // Limit to one result
                 .get()
                 .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
@@ -169,6 +170,64 @@ public class CloudStoreUtil {
                         Map<String, Object> updates = new HashMap<>();
                         updates.put("status", notification.getStatus());
                         // Update the document
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateCompanyGrade(CompanyGrade grade, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGrades")
+                .whereEqualTo("uuid", grade.getUuid())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("reported", grade.isReported());
+                        updates.put("deleted", grade.isDeleted());
+                        itemRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        callback.onFailure(new Exception("No documents found with the specified tag"));
+                    }
+                })
+                .addOnFailureListener((OnFailureListener) e -> {
+                    callback.onFailure(e);
+                });
+    }
+
+    public static void updateCompanyGradeReport(CompanyGradeReport gradeReport, UpdateReadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("companyGradeReports")
+                .whereEqualTo("companyGradeUID", gradeReport.getCompanyGradeUID())
+                .whereEqualTo("reportedDate", gradeReport.getReportedDate())
+                .limit(1)
+                .get()
+                .addOnSuccessListener((OnSuccessListener<QuerySnapshot>) queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        DocumentReference itemRef = documentSnapshot.getReference();
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("reportStatus", gradeReport.getReportStatus());
                         itemRef.update(updates)
                                 .addOnSuccessListener(aVoid -> {
                                     callback.onSuccess();
