@@ -32,7 +32,6 @@ public class OwnerRequestManagmentFragment extends Fragment {
     private OwnerRequestListAdapter adapter;
     private ArrayList<OwnerRequest> requests;
     private ArrayList<OwnerRequest> backupRequests;
-    private Function<T, U> getOwner;
 
     public OwnerRequestManagmentFragment() { }
 
