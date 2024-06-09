@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Company Information -->
+        <TextView
+            android:id="@+id/tv_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Company Name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_company_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: example@example.com"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_company_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address: 123 Example Street"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_company_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone: (123) 456-7890"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_company_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description: This is an example company."
+            android:paddingBottom="8dp" />
+
+        <!-- Work Schedule -->
+        <TextView
+            android:id="@+id/tv_work_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Work Schedule: 9 AM - 5 PM"
+            android:paddingBottom="8dp" />
+
+        <!-- Ratings and Comments -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ratings and Comments"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <!-- ListView or RecyclerView for Ratings and Comments -->
+        <ListView
+            android:id="@+id/lv_ratings_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <!-- Button to Report Company -->
+        <Button
+            android:id="@+id/btn_report_company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report"
+            android:background="@color/design_default_color_error"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</ScrollView>

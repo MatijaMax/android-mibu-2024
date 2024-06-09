@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             if(result == null) {
                 return;
             }
-
             if(result.getUserRole() == UserRole.USERROLE.ADMIN){
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
@@ -123,26 +122,34 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_grade_reports).setVisible(true);
                 m.findItem(R.id.nav_owner_request_managment).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
+                m.findItem(R.id.nav_user_profile).setVisible(true);
                 m.findItem(R.id.nav_event_creation).setVisible(true);
                 m.findItem(R.id.nav_explore_and_filter).setVisible(true);
                 m.findItem(R.id.nav_events).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
                 m.findItem(R.id.nav_grading_company).setVisible(true);
                 m.findItem(R.id.nav_reservations_organizer_view).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.OWNER){
+                m.findItem(R.id.nav_user_profile).setVisible(true);
                 m.findItem(R.id.nav_employees).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
                 m.findItem(R.id.nav_pricelist_prod).setVisible(true);
                 m.findItem(R.id.nav_pricelist_serv).setVisible(true);
                 m.findItem(R.id.nav_pricelist_pack).setVisible(true);
                 m.findItem(R.id.nav_company_profile).setVisible(true);
                 m.findItem(R.id.nav_owner_reservations).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.EMPLOYEE){
+                m.findItem(R.id.nav_user_profile).setVisible(true);
                 m.findItem(R.id.nav_employee_personal).setVisible(true);
                 m.findItem(R.id.nav_services).setVisible(true);
                 m.findItem(R.id.nav_products).setVisible(true);
                 m.findItem(R.id.nav_packages).setVisible(true);
+                m.findItem(R.id.nav_explore_and_filter).setVisible(true);
+                m.findItem(R.id.nav_fav_list).setVisible(true);
                 m.findItem(R.id.nav_employee_reservations).setVisible(true);
                 m.findItem(R.id.nav_pricelist_prod).setVisible(true);
                 m.findItem(R.id.nav_pricelist_serv).setVisible(true);
@@ -240,6 +247,45 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("eventsPage", 0);
                 return;
             }
+
+            if ("FavInfoPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("FavInfoPage", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                return;
+            }
+
+            if ("MaxInfoPage".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+
+            if ("INFOMAX".equals(tag)) {
+                fragmentManager.popBackStackImmediate("filterAllPage", 0);
+                return;
+            }
+
+            if ("MAXEAF".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
+            if ("MAXEAF".equals(tag)) {
+                fragmentManager.popBackStackImmediate("MaxInfoPage", 0);
+                return;
+            }
+
+            if ("CHAT".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
+            if ("COMPANY".equals(tag)) {
+                fragmentManager.popBackStackImmediate("INFOMAX", 0);
+                return;
+            }
+
+
+
+
             if ("edit_product_price".equals(tag)) {
                 fragmentManager.popBackStackImmediate("productsPricelist1", 0);
                 return;

@@ -1,6 +1,10 @@
 package com.example.ma02mibu.adapters;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,22 +22,36 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.events.InfoMaxFragment;
 import com.example.ma02mibu.fragments.pricelist.EditProductPriceFragment;
 import com.example.ma02mibu.fragments.reporting.ReportCompanyFragment;
 import com.example.ma02mibu.model.CompanyReport;
 import com.example.ma02mibu.fragments.events.BuyProductFragment;
 import com.example.ma02mibu.model.Product;
 import com.example.ma02mibu.model.ProductDAO;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
 public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
     private ArrayList<ProductDAO> aProducts;
+
+    private FirebaseAuth auth;
+
+    private Context contextMax;
+
+    private FragmentActivity activityMax;
     private FragmentActivity currentActivity;
-    public ProductFilterAdapter(Context context, ArrayList<ProductDAO> products, FragmentActivity activity){
+    private FirebaseUser currentUser;
+    public ProductFilterAdapter(Context context, FragmentActivity fragmentActivity, ArrayList<ProductDAO> products) {
         super(context, R.layout.product_card, products);
+        contextMax = context;
+        activityMax = fragmentActivity; // Assigning the activity context
         aProducts = products;
-        currentActivity = activity;
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+        currentActivity = fragmentActivity;
     }
     @Override
     public int getCount() {
@@ -66,6 +83,13 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         TextView category = convertView.findViewById(R.id.product_category);
         TextView subCategory = convertView.findViewById(R.id.product_subcategory);
         TextView price = convertView.findViewById(R.id.product_price);
+
+        Button favButton = convertView.findViewById(R.id.buttonFavMax);
+        handleFavButtonClick(favButton, product);
+        Button infoButton = convertView.findViewById(R.id.buttonInfoMax);
+        handleInfoButtonClick(infoButton, product);
+
+
         Button reportBtn = convertView.findViewById(R.id.report_button);
         reportBtn.setOnClickListener(v -> openReportForm(product));
         if(product != null){
@@ -81,6 +105,43 @@ public class ProductFilterAdapter extends ArrayAdapter<ProductDAO> {
         handleBuyProductButton(buyButton, imageView, product);
 
         return convertView;
+    }
+
+    private void handleFavButtonClick(Button detailsButton, ProductDAO product){
+        detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               product.setEmail(currentUser.getEmail());
+                createFav(product);
+
+            }
+        });
+    }
+
+    private void handleInfoButtonClick(Button detailsButton, ProductDAO product){
+
+
+        detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(InfoMaxFragment.newInstance(product, product.getOwnerUuid(), false), activityMax,
+                        true, R.id.scroll_products_list2, "MaxEAF");
+            }
+        });
+    }
+
+    private void createFav(ProductDAO item) {
+        Log.d(TAG, "createProduct:" + item.getName());
+        CloudStoreUtil.insertFavNew(item);
+        AlertDialog alertDialog = new AlertDialog.Builder(contextMax).create();
+        alertDialog.setTitle("Success");
+        alertDialog.setMessage("Fav created successfully!");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // You can add actions here if needed
+            }
+        });
+        alertDialog.show();
     }
     private void openReportForm(ProductDAO product){
         FragmentTransition.to(ReportCompanyFragment.newInstance(product), currentActivity,

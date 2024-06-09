@@ -25,6 +25,8 @@ public class ProductDAO implements Parcelable {
     private ArrayList<String> eventTypes;
     private int currentImageIndex;
 
+    private String email;
+
     private int typeDAO;
     public ProductDAO(Long id, String name, String description, String category, String subCategory, int price, ArrayList<Integer> images, ArrayList<String> eventTypes, int discount, int typeDAO) {
         this.id = id;
@@ -201,20 +203,30 @@ public class ProductDAO implements Parcelable {
         dest.writeString(description);
         dest.writeString(category);
         dest.writeString(subCategory);
+        dest.writeInt(price);
+        dest.writeInt(discount);
+        dest.writeByte((byte) (visible ? 1 : 0));
+        dest.writeByte((byte) (availableToBuy ? 1 : 0));
         dest.writeList(images);
         dest.writeList(eventTypes);
+        dest.writeInt(currentImageIndex);
+        dest.writeString(ownerUuid);
+        dest.writeString(email);
+        dest.writeInt(typeDAO);
     }
-    public static final Creator<Product> CREATOR = new Creator<Product>() {
+
+    public static final Creator<ProductDAO> CREATOR = new Creator<ProductDAO>() {
         @Override
-        public Product createFromParcel(Parcel in) {
-            return new Product(in);
+        public ProductDAO createFromParcel(Parcel in) {
+            return new ProductDAO(in);
         }
 
         @Override
-        public Product[] newArray(int size) {
-            return new Product[size];
+        public ProductDAO[] newArray(int size) {
+            return new ProductDAO[size];
         }
     };
+
 
     public int getTypeDAO() {
         return typeDAO;
@@ -227,5 +239,14 @@ public class ProductDAO implements Parcelable {
     public int getCurrentImageIndex() {
         return 0;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }
 

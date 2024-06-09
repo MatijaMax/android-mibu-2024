@@ -29,9 +29,9 @@ public class EventPageFragment extends Fragment {
         View root = binding.getRoot();
         FragmentTransition.to(MyEventListFragment.newInstance(), getActivity(),
                 true, R.id.scroll_events_list, "eventsPage");
-
         return root;
     }
+
 
     @Override
     public void onDestroyView() {
