@@ -27,8 +27,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
+    }
+    packaging{
+        resources{
+            excludes += "META-INF/NOTICE.md"
+            excludes += "META-INF/LICENSE.md"
+        }
     }
 }
 
@@ -53,6 +59,8 @@ dependencies {
     implementation ("com.itextpdf:itext7-core:7.1.17")
 
 
+    implementation("com.sun.mail:android-mail:1.6.6")
+    implementation("com.sun.mail:android-activation:1.6.6")
 
 
     androidTestImplementation(libs.ext.junit)
