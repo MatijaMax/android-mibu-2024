@@ -84,7 +84,7 @@ public class ExploreAndFilter extends Fragment {
         prepareProductList(products, () -> {
             // Callback when prepareProductList completes
             FragmentTransition.to(ProductsFilterFragment.newInstance(products, selectedEvent), getActivity(),
-                    true, R.id.scroll_products_list, "filterAllPage");
+                    true, R.id.scroll_products_list2, "filterAllPage");
         });
         return root;
     }

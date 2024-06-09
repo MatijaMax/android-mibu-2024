@@ -76,7 +76,7 @@ public class ProductsFilterFragment extends ListFragment {
         if (getArguments() != null) {
             mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
             selectedEvent = getArguments().getParcelable(ARG_PARAM2);
-            adapter = new ProductFilterAdapter(getActivity(), mProducts, this.getActivity());
+            adapter = new ProductFilterAdapter(getActivity(), this.getActivity(), mProducts);
             this.mProductsBackup = new ArrayList<>(mProducts);
             adapter.notifyDataSetChanged();
             setListAdapter(adapter);
