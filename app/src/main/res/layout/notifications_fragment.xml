@@ -25,23 +25,27 @@
         android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/checkBoxAll"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="All" />
 
         <RadioButton
+            android:id="@+id/checkBoxNotRead"
             android:layout_width="108dp"
             android:layout_height="wrap_content"
             android:text="Unread" />
 
         <RadioButton
+            android:id="@+id/checkBoxRead"
             android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:text="Read" />
     </RadioGroup>
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/notification_item"/>
+        tools:listitem="@layout/notification_item" />
 </LinearLayout>
