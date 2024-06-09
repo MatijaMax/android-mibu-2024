@@ -34,6 +34,7 @@ import com.example.ma02mibu.adapters.ProductPricelistAdapter;
 import com.example.ma02mibu.databinding.FragmentLoginBinding;
 import com.example.ma02mibu.fragments.employees.EmployeePersonalWorkCalendarFragment;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.WorkSchedule;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -187,7 +188,16 @@ public class LoginFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(Exception e) {
-                        callback.onResult(false);
+                        CloudStoreUtil.getEventOrganizer(userId, new CloudStoreUtil.EventOrganizerCallback() {
+                            @Override
+                            public void onSuccess(EventOrganizer myItem) {
+                                callback.onResult(myItem.isBlocked());
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                callback.onResult(false);
+                            }
+                        });
                     }
                 });
             }

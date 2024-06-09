@@ -75,8 +75,6 @@ public class PackagesPricelistFragment extends ListFragment {
                     public void onFailure(Exception e) {
                         isOwner = false;
                         getEmployeesPackages();
-                        adapter = new PackagesPricelistAdapter(getActivity(), mPackages, getActivity(), isOwner);
-                        setListAdapter(adapter);
                     }
                 });
 
@@ -104,6 +102,8 @@ public class PackagesPricelistFragment extends ListFragment {
             @Override
             public void onSuccess(Employee myItem) {
                 mPackages.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
+                adapter = new PackagesPricelistAdapter(getActivity(), mPackages, getActivity(), isOwner);
+                setListAdapter(adapter);
             }
             @Override
             public void onFailure(Exception e) {

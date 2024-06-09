@@ -77,7 +77,7 @@ public class ProductPricelistAdapter extends ArrayAdapter<Product> {
         if(product != null){
             productName.setText(product.getName());
             productSerialNumber.setText(String.valueOf(position));
-            oldPrice.setText(String.valueOf(product.getPrice()));
+            oldPrice.setText(product.getPrice() + "din");
             String discountText = product.getDiscount() + "% off";
             discount.setText(discountText);
             String currentPrice = "Current price: "+ product.getNewPrice();

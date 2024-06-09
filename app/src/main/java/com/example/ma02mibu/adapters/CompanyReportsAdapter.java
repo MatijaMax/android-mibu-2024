@@ -23,6 +23,7 @@ import com.example.ma02mibu.fragments.reporting.CompanyReportsListFragment;
 import com.example.ma02mibu.fragments.reporting.ProfilePageFragment;
 import com.example.ma02mibu.model.CompanyReport;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EmployeeReservation;
 import com.example.ma02mibu.model.EventOrganizer;
 import com.example.ma02mibu.model.OurNotification;
 import com.example.ma02mibu.model.Owner;
@@ -167,6 +168,37 @@ public class CompanyReportsAdapter extends ArrayAdapter<CompanyReport> {
         disableOwnerPackages(report.getOwnerUuid());
         disableOwnerProducts(report.getOwnerUuid());
         disableOwnerServices(report.getOwnerUuid());
+        cancelOwnerReservations(report.getOwnerUuid(), report.getCompanyName());
+    }
+    private void cancelOwnerReservations(String ownerId, String companyName){
+        CloudStoreUtil.getServieReservationsList(new CloudStoreUtil.ServiceReservationsListCallback() {
+            @Override
+            public void onSuccess(ArrayList<EmployeeReservation> itemList) {
+                itemList.removeIf(r -> r.getStatus() != EmployeeReservation.ReservationStatus.New);
+                for(EmployeeReservation reservation : itemList){
+                    CloudStoreUtil.getServiceWithRefId(reservation.getServiceRefId(), new CloudStoreUtil.ServiceByRefIdCallback() {
+                        @Override
+                        public void onSuccess(Service item) {
+                            if(item.getOwnerUuid().equals(ownerId)){
+                                reservation.setStatus(EmployeeReservation.ReservationStatus.CanceledByAdmin);
+                                CloudStoreUtil.updateReservationStatus(reservation);
+                                OurNotification not = new OurNotification(reservation.getEventOrganizerEmail(), "Reservation canceled",
+                                        "Reservation from "+companyName+ " owner canceled", "notRead");
+                                CloudStoreUtil.insertNotification(not);
+                            }
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            System.err.println("Error fetching documents: " + e.getMessage());
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                System.err.println("Error fetching documents: " + e.getMessage());
+            }
+        });
     }
     private void disableOwnerPackages(String userId){
         CloudStoreUtil.selectPackages(new CloudStoreUtil.PackageCallback(){

@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 m.findItem(R.id.nav_admin_category_management).setVisible(true);
                 m.findItem(R.id.nav_event_type_management).setVisible(true);
                 m.findItem(R.id.nav_company_reports).setVisible(true);
+                m.findItem(R.id.nav_od_reports).setVisible(true);
                 m.findItem(R.id.nav_grade_reports).setVisible(true);
                 m.findItem(R.id.nav_owner_request_managment).setVisible(true);
             } else if(result.getUserRole() == UserRole.USERROLE.ORGANIZER){
@@ -254,8 +255,17 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate("filterAllPage", 0);
                 return;
             }
-            if ("productsManagement".equals(tag)) {
-                fragmentManager.popBackStackImmediate("productsManagement", 0);
+            if ("eventOrganizerProfile".equals(tag)) {
+                fragmentManager.popBackStackImmediate("servicesResOwnerList", 0);
+                return;
+            }
+            if ("profilePageOwner".equals(tag)) {
+                fragmentManager.popBackStackImmediate("od_reports", 0);
+                return;
+            }
+            if ("profilePageOrganizer".equals(tag)) {
+                fragmentManager.popBackStackImmediate("od_reports", 0);
+                return;
             }
         }
         super.onBackPressed();

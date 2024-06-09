@@ -11,9 +11,13 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.ma02mibu.FragmentTransition;
 import com.example.ma02mibu.R;
 import com.example.ma02mibu.activities.CloudStoreUtil;
+import com.example.ma02mibu.fragments.packages.PackageListFragment;
+import com.example.ma02mibu.fragments.reporting.OrganizerProfilePageFragment;
 import com.example.ma02mibu.model.EmployeeReservation;
+import com.example.ma02mibu.model.OrganizerProfilePageData;
 import com.example.ma02mibu.model.ServiceReservationDTO;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +52,7 @@ public class ServiceReservationOwnerListAdapter extends ArrayAdapter<ServiceRese
         TextView serviceInfoTextView = convertView.findViewById(R.id.serviceInfoTextView);
         TextView cancelationDeadlineTextView = convertView.findViewById(R.id.cancelationDeadlineTextView);
         TextView statusTextView = convertView.findViewById(R.id.statusTextView);
-
+        eventOrganizerNameTextView.setOnClickListener(v -> openOrganizerProfile(reservation));
         Button cancelButton = convertView.findViewById(R.id.cancelButton);
         handleCancelButtonClick(cancelButton, reservation, statusTextView);
 
@@ -104,4 +108,11 @@ public class ServiceReservationOwnerListAdapter extends ArrayAdapter<ServiceRese
             }
         });
     }
+    private void openOrganizerProfile(ServiceReservationDTO reservationDTO){
+        OrganizerProfilePageData profilePageData = new OrganizerProfilePageData();
+        profilePageData.setEmail(reservationDTO.getEventOrganizerEmail());
+        FragmentTransition.to(OrganizerProfilePageFragment.newInstance(profilePageData), currFragActivity,
+                true, R.id.scroll_services_res_list_owner, "eventOrganizerProfile");
+    }
+
 }

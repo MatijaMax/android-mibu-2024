@@ -18,7 +18,12 @@
         android:textSize="16dp"
         android:id="@+id/eventOrganizerNameTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_blue_dark"
+        android:clickable="true"
+        android:autoLink="web"
+        android:linksClickable="true"
+        />
 
     <!-- Service Information -->
     <TextView

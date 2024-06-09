@@ -76,9 +76,6 @@ public class ServicesPricelistFragment extends ListFragment {
                     public void onFailure(Exception e) {
                         isOwner = false;
                         getEmployeesServices();
-                        mServices.removeIf(s -> s.isPending());
-                        adapter = new ServicesPricelistAdapter(getActivity(), mServices, getActivity(), isOwner);
-                        setListAdapter(adapter);
                     }
                 });
 
@@ -101,6 +98,9 @@ public class ServicesPricelistFragment extends ListFragment {
             @Override
             public void onSuccess(Employee myItem) {
                 mServices.removeIf(s -> !s.getOwnerUuid().equals(myItem.getOwnerRefId()));
+                mServices.removeIf(s -> s.isPending());
+                adapter = new ServicesPricelistAdapter(getActivity(), mServices, getActivity(), isOwner);
+                setListAdapter(adapter);
             }
             @Override
             public void onFailure(Exception e) {

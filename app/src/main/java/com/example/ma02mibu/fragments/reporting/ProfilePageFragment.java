@@ -38,6 +38,7 @@ public class ProfilePageFragment extends Fragment {
         TextView lastName = binding.lastNameTextView;
         TextView address = binding.addressText;
         TextView phoneNumber = binding.phoneNumberText;
+        TextView emailText = binding.emailText;
         TextView header = binding.header;
         if(profileData.getRole() == 0){
             CloudStoreUtil.getOwner(profileData.getUserId(), new CloudStoreUtil.OwnerCallback() {
@@ -48,6 +49,7 @@ public class ProfilePageFragment extends Fragment {
                     lastName.setText(owner.getSurname());
                     address.setText(owner.getAddressOfResidence());
                     phoneNumber.setText(owner.getPhoneNumber());
+                    emailText.setText(owner.getEmail());
                     header.setText("Owner");
                 }
                 @Override
@@ -63,6 +65,7 @@ public class ProfilePageFragment extends Fragment {
                     lastName.setText(organizer.getSurname());
                     address.setText(organizer.getAddressOfResidence());
                     phoneNumber.setText(organizer.getPhoneNumber());
+                    emailText.setText(organizer.getEmail());
                     header.setText("Organizer");
                 }
                 @Override

@@ -71,7 +71,7 @@ public class ServicesPricelistAdapter extends ArrayAdapter<Service> {
         if(service != null){
             productName.setText(service.getName());
             productSerialNumber.setText(String.valueOf(position));
-            oldPrice.setText(String.valueOf(service.getPriceByHour()));
+            oldPrice.setText(service.getPriceByHour() + " din");
             String discountText = service.getDiscount() + "% off";
             discount.setText(discountText);
             String currentPrice = "Current price: "+ service.getDiscountedHourPrice();

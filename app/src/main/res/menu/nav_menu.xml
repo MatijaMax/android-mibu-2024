@@ -125,6 +125,11 @@
             android:icon="@drawable/ic_product"
             android:orderInCategory="600"
             android:visible="false"/>
+        <item android:id="@+id/nav_od_reports"
+            android:title="OD reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="600"
+            android:visible="false"/>
         <item android:id="@+id/nav_owner_request_managment"
             android:title="Owner request management"
             android:icon="@drawable/ic_product"

@@ -1,5 +1,7 @@
 package com.example.ma02mibu.model;
 
+import com.google.firebase.firestore.Exclude;
+
 public class EventOrganizer {
     private String email;
     private String name;
@@ -7,6 +9,8 @@ public class EventOrganizer {
     private String phoneNumber;
     private String addressOfResidence;
     private String userUID;
+    private boolean blocked;
+    private String documentRefId;
 
     public EventOrganizer(){}
 
@@ -65,5 +69,21 @@ public class EventOrganizer {
 
     public void setUserUID(String userUID) {
         this.userUID = userUID;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+    @Exclude
+    public String getDocumentRefId() {
+        return documentRefId;
+    }
+
+    public void setDocumentRefId(String documentRefId) {
+        this.documentRefId = documentRefId;
     }
 }
