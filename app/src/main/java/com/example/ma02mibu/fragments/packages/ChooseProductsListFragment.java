@@ -91,6 +91,7 @@ public class ChooseProductsListFragment extends ListFragment {
                 }
                 mProducts.removeIf(p -> !p.getOwnerUuid().equals(userId));
                 mProducts.removeIf(p -> !p.getCategory().equals(category));
+                mProducts.removeIf(p -> p.isPending());
                 adapter = new ProductListAdapter(getActivity(), mProducts, getActivity(), true, fragment, false);
                 setListAdapter(adapter);
             }

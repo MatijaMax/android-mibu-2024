@@ -10,6 +10,11 @@
             android:orderInCategory="100"
             />
 
+        <item android:id="@+id/nav_notifications"
+            android:title="notifications"
+            android:icon="@drawable/products_icon"
+            android:orderInCategory="100"/>
+
         <item android:id="@+id/nav_products"
             android:title="products"
             android:icon="@drawable/products_icon"
@@ -28,6 +33,21 @@
             android:orderInCategory="200"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_pricelist_prod"
+            android:title="Products pricelist"
+            android:icon="@drawable/pricelist"
+            android:orderInCategory="200"
+            android:visible="false"/>
+        <item android:id="@+id/nav_pricelist_serv"
+            android:title="Services pricelist"
+            android:icon="@drawable/pricelist"
+            android:orderInCategory="200"
+            android:visible="false"/>
+        <item android:id="@+id/nav_pricelist_pack"
+            android:title="Packages pricelist"
+            android:icon="@drawable/pricelist"
+            android:orderInCategory="200"
+            android:visible="false"/>
         <item android:id="@+id/nav_event_creation"
             android:title="Create Event"
             android:icon="@drawable/ic_product"
@@ -36,6 +56,12 @@
 
         <item android:id="@+id/nav_explore_and_filter"
             android:title="Explore and Filter"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="200"
+            android:visible="false"/>
+
+        <item android:id="@+id/nav_events"
+            android:title="Events"
             android:icon="@drawable/ic_product"
             android:orderInCategory="200"
             android:visible="false"/>
@@ -100,6 +126,16 @@
             android:orderInCategory="600"
             android:visible="false"/>
 
+        <item android:id="@+id/nav_company_reports"
+            android:title="Company reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="600"
+            android:visible="false"/>
+        <item android:id="@+id/nav_od_reports"
+            android:title="OD reports"
+            android:icon="@drawable/ic_product"
+            android:orderInCategory="600"
+            android:visible="false"/>
         <item android:id="@+id/nav_owner_request_managment"
             android:title="Owner request management"
             android:icon="@drawable/ic_product"

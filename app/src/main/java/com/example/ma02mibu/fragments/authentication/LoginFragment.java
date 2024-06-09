@@ -30,9 +30,12 @@ import com.example.ma02mibu.activities.AuthenticationActivity;
 import com.example.ma02mibu.activities.CloudStoreUtil;
 import com.example.ma02mibu.activities.MainActivity;
 import com.example.ma02mibu.activities.SplashScreenActivity;
+import com.example.ma02mibu.adapters.ProductPricelistAdapter;
 import com.example.ma02mibu.databinding.FragmentLoginBinding;
 import com.example.ma02mibu.fragments.employees.EmployeePersonalWorkCalendarFragment;
 import com.example.ma02mibu.model.Employee;
+import com.example.ma02mibu.model.EventOrganizer;
+import com.example.ma02mibu.model.Owner;
 import com.example.ma02mibu.model.WorkSchedule;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -124,8 +127,17 @@ public class LoginFragment extends Fragment {
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = auth.getCurrentUser();
                         if(user.isEmailVerified()){
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            startActivity(intent);
+                            isUserBlocked(user.getUid(), new UserBlockedCallback() {
+                                @Override
+                                public void onResult(boolean isBlocked) {
+                                    if (isBlocked) {
+                                        Toast.makeText(getContext(), "Your account is blocked", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
 //                            CloudStoreUtil.getEmployee(user.getUid(), new CloudStoreUtil.EmployeeCallback() {
 //                                @Override
 //                                public void onSuccess(Employee myItem) {
@@ -157,5 +169,38 @@ public class LoginFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    public interface UserBlockedCallback {
+        void onResult(boolean isBlocked);
+    }
+    private void isUserBlocked(String userId, UserBlockedCallback callback){
+        CloudStoreUtil.getOwner(userId, new CloudStoreUtil.OwnerCallback() {
+            @Override
+            public void onSuccess(Owner myItem) {
+                callback.onResult(myItem.isBlocked());
+            }
+            @Override
+            public void onFailure(Exception e) {
+                CloudStoreUtil.getEmployee(userId, new CloudStoreUtil.EmployeeCallback() {
+                    @Override
+                    public void onSuccess(Employee myItem) {
+                        callback.onResult(myItem.isBlocked());
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        CloudStoreUtil.getEventOrganizer(userId, new CloudStoreUtil.EventOrganizerCallback() {
+                            @Override
+                            public void onSuccess(EventOrganizer myItem) {
+                                callback.onResult(myItem.isBlocked());
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                callback.onResult(false);
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 }

@@ -77,6 +77,8 @@ public class EditPackageFragment extends Fragment {
         binding.productsNum.setText(productsNum);
         binding.servicesNum.setText(servicesNum);
         binding.discountPackage.setText(String.valueOf(mPackage.getDiscount()));
+        binding.checkBoxODAvailable.setChecked(mPackage.isVisible());
+        binding.checkBoxBuyAvailable.setChecked(mPackage.isAvailableToBuy());
         Button selectProductsButton = binding.selectProducts;
         Button selectServicesButton = binding.selectServices;
         selectProductsButton.setOnClickListener(v -> {

@@ -156,6 +156,8 @@ public class NewPackage extends Fragment {
         Package newPackage = new Package(0L, packageCreateDto.getName(), packageCreateDto.getDescription(), category,
                 0, mChosenServices, mChosenProducts);
         newPackage.setOwnerUuid(ownerId);
+        newPackage.setVisible(binding.checkBoxODAvailable.isChecked());
+        newPackage.setAvailableToBuy(binding.checkBoxBuyAvailable.isChecked());
         CloudStoreUtil.insertPackage(newPackage);
         FragmentTransition.to(PackageListFragment.newInstance(), getActivity(),
                 false, R.id.scroll_packages_list, "falsh");
